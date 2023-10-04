@@ -1,6 +1,7 @@
 import React from 'react';
 import PreLoginDashBoard from './src/containers/PreLoginDashBoard';
 import OnBoardingScreenFirst from './src/containers/OnBoardingScreenFirst';
+import AccountPreview from './src/containers/AccountPreview';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator();
@@ -22,6 +23,13 @@ const App = () => {
         }}
           name="OnBoardingScreenFirst"
           component={OnBoardingScreenFirst}
+        />
+        <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
+          name="AccountPreview"
+          component={AccountPreview}
         />
       </Stack.Navigator>
     </NavigationContainer>
