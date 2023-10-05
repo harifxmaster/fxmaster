@@ -4,5 +4,7 @@ export default {
     black:"#000000",
     smokeWhite:"#F8F8F8",
     lightGrey:"#DDE0E6",
-    tintGrey:"#767676"
+    tintGrey:"#767676",
+    backgroundColor: "#dfeaf0",
+    bodyBackgroundColor: "#ffffff"
 }
