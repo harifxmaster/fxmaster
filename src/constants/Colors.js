@@ -6,5 +6,6 @@ export default {
     lightGrey:"#DDE0E6",
     tintGrey:"#767676",
     backgroundColor: "#dfeaf0",
-    bodyBackgroundColor: "#ffffff"
+    bodyBackgroundColor: "#ffffff",
+    radioButton: "#5cd169"
 }
