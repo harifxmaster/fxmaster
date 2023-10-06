@@ -2,12 +2,15 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import OnBoardingScreenFirst from '../containers/OnBoardingScreenFirst';
 import PreLoginDashBoard from '../containers/PreLoginDashBoard';
+import Register from '../containers/Register';
 import Login from '../containers/Login';
 
 const Stack = createNativeStackNavigator();
+
+
 const MainStack = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator >
       <Stack.Screen
         options={{headerShown: false}}
         name="PreLoginDashBoard"
@@ -22,6 +25,13 @@ const MainStack = () => {
         options={{headerShown: false}}
         name="Login"
         component={Login}
+        
+      />
+
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="Register"
+        component={Register}
       />
     </Stack.Navigator>
   );

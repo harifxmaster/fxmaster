@@ -6,6 +6,8 @@ import {
   Image,
   Pressable,
   KeyboardAvoidingView,
+  Modal,
+  TouchableOpacity,
 } from 'react-native';
 import React, {useState} from 'react';
 import PngLocation from '../constants/PngLocation';
@@ -16,11 +18,17 @@ import Fonts from '../constants/Fonts';
 import Input from '../components/Input';
 import {LockIcon} from '../constants/SvgLocation';
 
-const Login = () => {
+const Login = ({navigation}) => {
   const loginHandler = () => {};
 
   const [emailPhone, setEmailPhone] = useState('');
   const [pin, setPin] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [terms, setTerms] = useState(false);
+
+  const registerHandler = val => {
+    setModalVisible(val);
+  };
 
   return (
     <View style={{flex: 1}}>
@@ -38,6 +46,14 @@ const Login = () => {
             textstyle={styles.textInput}
             placeholder={'Email or Phone'}
             maxLength={20}
+            iconRight={true}
+            icon={() => (
+              <LockIcon
+                width={actuatedNormalize(15)}
+                height={actuatedNormalize(15)}
+                style={{height: '100%'}}
+              />
+            )}
           />
 
           <Input
@@ -71,11 +87,65 @@ const Login = () => {
             <TextComponent style={[styles.registerText, {color: Colors.white}]}>
               Don't have an account?
               <TextComponent
-                style={[styles.registerText, {color: Colors.primary,textDecorationLine: 'underline',}]}>
+                onPress={() => registerHandler(true)}
+                style={[
+                  styles.registerText,
+                  {color: Colors.primary, textDecorationLine: 'underline'},
+                ]}>
                 Register now
               </TextComponent>
             </TextComponent>
           </View>
+          <Modal transparent={true} animationType="none" visible={modalVisible}>
+            <View
+              style={{alignSelf: 'center', justifyContent: 'center', flex: 1}}>
+              <View
+                style={{
+                  width: actuatedNormalize(324),
+                  backgroundColor: Colors.white,
+                  height: actuatedNormalize(172),
+                  borderRadius: 11,
+                  paddingHorizontal: actuatedNormalize(15),
+                }}>
+                <TextComponent style={styles.termText}>
+                  Terms and privacy policy
+                </TextComponent>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    marginTop: actuatedNormalize(16),
+                  }}>
+                  <TouchableOpacity
+                    onPress={() => setTerms(prev => !prev)}
+                    style={{
+                      top: actuatedNormalize(6),
+                      height: actuatedNormalize(20),
+                      width: actuatedNormalize(20),
+                      borderRadius: 10,
+                      borderWidth: !terms ? 1 : 0,
+                      borderColor: Colors.tintGrey,
+                      backgroundColor: terms ? Colors.primary : Colors.white,
+                    }}></TouchableOpacity>
+                  <TextComponent style={styles.confirmationTitle}>
+                    By signing up, you are agree with our{'\n'}
+                    <TextComponent style={styles.confirmationTitleRed}>
+                      Terms and Privacy Policy
+                    </TextComponent>
+                  </TextComponent>
+                </View>
+                {terms ? (
+                  <TextComponent
+                    onPress={() => {
+                      navigation.navigate('Register');
+                      setModalVisible(false);
+                    }}
+                    style={styles.continueText}>
+                    Continue{'>>'}
+                  </TextComponent>
+                ) : null}
+              </View>
+            </View>
+          </Modal>
         </View>
       </ImageBackground>
     </View>
@@ -137,6 +207,31 @@ const styles = StyleSheet.create({
   textInput: {
     fontSize: actuatedNormalize(16),
     paddingLeft: actuatedNormalize(13),
+  },
+  termText: {
+    marginTop: actuatedNormalize(31),
+    fontFamily: Fonts.Rubik_Regular,
+    color: Colors.black,
+    fontSize: actuatedNormalize(16),
+    marginLeft: actuatedNormalize(2),
+  },
+  confirmationTitle: {
+    fontFamily: Fonts.Rubik_Regular,
+    fontSize: actuatedNormalize(16),
+    color: Colors.tintGrey,
+    marginLeft: actuatedNormalize(10),
+  },
+  confirmationTitleRed: {
+    fontFamily: Fonts.Rubik_Regular,
+    fontSize: actuatedNormalize(16),
+    color: Colors.primary,
+  },
+  continueText: {
+    fontSize: actuatedNormalize(12),
+    fontFamily: Fonts.Rubik_Regular,
+    color: Colors.primary,
+    marginTop: actuatedNormalize(31),
+    textAlign: 'right',
   },
 });
 

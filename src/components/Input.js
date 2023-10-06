@@ -5,6 +5,7 @@ import {
   Pressable,
   TextInput,
   Platform,
+  
 } from 'react-native';
 import React from 'react';
 import Colors from '../constants/Colors';
@@ -13,6 +14,7 @@ import Fonts from '../constants/Fonts';
 import {actuatedNormalize} from '../constants/PixelScaling';
 
 const Input = props => {
+  console.log('icon',props.icon)
   let viewstyle = [
     styles.viewstyle,
     {backgroundColor: props.editable === false ? Colors.white : '#EEEEEE'},
@@ -24,6 +26,9 @@ const Input = props => {
       <Pressable
         style={viewstyle}
         removeClippedSubviews={props.removeClippedSubviews}>
+          {/* {
+           props.icon ? props.icon(): null
+          } */}
         <TextInput
           {...props}
           style={[
@@ -54,7 +59,7 @@ const Input = props => {
           multiline={props.multiline}
           onBlur={props.onBlur}
         />
-        {props.icon ? <>{props.icon()}</> : null}
+        {/* {props.icon ? props.icon() : null} */}
       </Pressable>
     </View>
   );
