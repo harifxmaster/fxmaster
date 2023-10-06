@@ -72,7 +72,7 @@ const Login = ({navigation}) => {
             <TextComponent style={styles.buttonText}>LOGIN</TextComponent>
           </Pressable>
           <View style={{flex: 1, width: '80%'}}>
-            <TextComponent style={styles.forgotPinText}>
+            <TextComponent onPress={() => navigation.push("ResetPin")} style={styles.forgotPinText}>
               Forgot PIN?
             </TextComponent>
             <TextComponent
