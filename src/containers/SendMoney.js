@@ -6,7 +6,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import Entypo from 'react-native-vector-icons/Entypo'
-import SelectDropdown from 'react-native-select-dropdown'
 import Input from '../components/Input';
 
 export default function SendMoney({ navigation }) {

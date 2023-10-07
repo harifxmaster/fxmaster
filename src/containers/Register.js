@@ -8,7 +8,7 @@ import {
   Pressable,
   Dimensions,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import Colors from '../constants/Colors';
 import {
   SCREEN_HEIGHT,
@@ -21,10 +21,11 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Input from '../components/Input';
 import TextComponent from '../components/TextComponent';
 import Fonts from '../constants/Fonts';
-import {PrimaryButtonSmall} from '../components/ButtonCollection';
+import { PrimaryButtonSmall } from '../components/ButtonCollection';
 import DropDownPicker from 'react-native-dropdown-picker';
 
-const Register = ({navigation}) => {
+
+const Register = ({ navigation }) => {
   const [firstName, setFirstName] = useState('');
   const [middleName, setMiddleName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -39,47 +40,47 @@ const Register = ({navigation}) => {
 
   const [value, setValue] = useState([]);
   const [title, setTitle] = useState([
-    {label: 'Spain', value: 'spain'},
-    {label: 'Madrid', value: 'madrid', parent: 'spain'},
-    {label: 'Barcelona', value: 'barcelona', parent: 'spain'},
+    { label: 'Spain', value: 'spain' },
+    { label: 'Madrid', value: 'madrid', parent: 'spain' },
+    { label: 'Barcelona', value: 'barcelona', parent: 'spain' },
 
-    {label: 'Italy', value: 'italy'},
-    {label: 'Rome', value: 'rome', parent: 'italy'},
+    { label: 'Italy', value: 'italy' },
+    { label: 'Rome', value: 'rome', parent: 'italy' },
 
-    {label: 'Finland', value: 'finland'},
+    { label: 'Finland', value: 'finland' },
   ]);
 
   const [occupation, setOccupation] = useState([
-    {label: 'Spain', value: 'spain'},
-    {label: 'Madrid', value: 'madrid', parent: 'spain'},
-    {label: 'Barcelona', value: 'barcelona', parent: 'spain'},
+    { label: 'Spain', value: 'spain' },
+    { label: 'Madrid', value: 'madrid', parent: 'spain' },
+    { label: 'Barcelona', value: 'barcelona', parent: 'spain' },
 
-    {label: 'Italy', value: 'italy'},
-    {label: 'Rome', value: 'rome', parent: 'italy'},
+    { label: 'Italy', value: 'italy' },
+    { label: 'Rome', value: 'rome', parent: 'italy' },
 
-    {label: 'Finland', value: 'finland'},
+    { label: 'Finland', value: 'finland' },
   ]);
 
   const [purpose, setPurpose] = useState([
-    {label: 'Spain', value: 'spain'},
-    {label: 'Madrid', value: 'madrid', parent: 'spain'},
-    {label: 'Barcelona', value: 'barcelona', parent: 'spain'},
+    { label: 'Spain', value: 'spain' },
+    { label: 'Madrid', value: 'madrid', parent: 'spain' },
+    { label: 'Barcelona', value: 'barcelona', parent: 'spain' },
 
-    {label: 'Italy', value: 'italy'},
-    {label: 'Rome', value: 'rome', parent: 'italy'},
+    { label: 'Italy', value: 'italy' },
+    { label: 'Rome', value: 'rome', parent: 'italy' },
 
-    {label: 'Finland', value: 'finland'},
+    { label: 'Finland', value: 'finland' },
   ]);
 
   const [destination, setDestination] = useState([
-    {label: 'Spain', value: 'spain'},
-    {label: 'Madrid', value: 'madrid', parent: 'spain'},
-    {label: 'Barcelona', value: 'barcelona', parent: 'spain'},
+    { label: 'Spain', value: 'spain' },
+    { label: 'Madrid', value: 'madrid', parent: 'spain' },
+    { label: 'Barcelona', value: 'barcelona', parent: 'spain' },
 
-    {label: 'Italy', value: 'italy'},
-    {label: 'Rome', value: 'rome', parent: 'italy'},
+    { label: 'Italy', value: 'italy' },
+    { label: 'Rome', value: 'rome', parent: 'italy' },
 
-    {label: 'Finland', value: 'finland'},
+    { label: 'Finland', value: 'finland' },
   ]);
 
 
@@ -88,8 +89,10 @@ const Register = ({navigation}) => {
     console.log('hey button');
   };
   return (
-    <View style={{flex: 1}}>
-      <View style={styles.topBg}></View>
+    <View style={{ flex: 1 }}>
+      <View style={styles.topBg}>
+      <Pressable onPress={() => navigation.goBack()}><Ionicons name="arrow-back-outline" size={30} /></Pressable>
+      </View>
       <View style={styles.centerBg}>
         <Image
           source={PngLocation.FXWordMarkLogo}
@@ -97,7 +100,7 @@ const Register = ({navigation}) => {
         />
         <TextComponent style={styles.create}>Create an Account</TextComponent>
         <ScrollView
-          style={{flex: 1, backgroundColor: Colors.white, width: '90%'}}>
+          style={{ flex: 1, backgroundColor: Colors.white, width: '90%' }}>
           <DropDownPicker
             searchable={true}
             placeholderStyle={{
@@ -129,7 +132,7 @@ const Register = ({navigation}) => {
             setOpen={setOpenTitle}
             setValue={setValue}
             setItems={setTitle}
-            style={{borderColor: Colors.lightGrey,marginTop:actuatedNormalize(21)}}
+            style={{ borderColor: Colors.lightGrey, marginTop: actuatedNormalize(21) }}
             theme="LIGHT"
             multiple={true}
             mode="BADGE"
@@ -141,7 +144,7 @@ const Register = ({navigation}) => {
             onChangeText={value => setFirstName(value)}
             editable={true}
             returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
-            viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
+            viewstyle={[styles.viewStyle, { marginTop: actuatedNormalize(20) }]}
             multiline={false}
             textstyle={styles.textInput}
             placeholder={'First Name'}
@@ -155,7 +158,7 @@ const Register = ({navigation}) => {
             onChangeText={value => setMiddleName(value)}
             editable={true}
             returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
-            viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
+            viewstyle={[styles.viewStyle, { marginTop: actuatedNormalize(20) }]}
             multiline={false}
             textstyle={styles.textInput}
             placeholder={'Middle Name(optional)'}
@@ -169,7 +172,7 @@ const Register = ({navigation}) => {
             onChangeText={value => setLastName(value)}
             editable={true}
             returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
-            viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
+            viewstyle={[styles.viewStyle, { marginTop: actuatedNormalize(20) }]}
             multiline={false}
             textstyle={styles.textInput}
             placeholder={'Last Name'}
@@ -183,7 +186,7 @@ const Register = ({navigation}) => {
             onChangeText={value => setPin(value)}
             editable={true}
             returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
-            viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
+            viewstyle={[styles.viewStyle, { marginTop: actuatedNormalize(20) }]}
             multiline={false}
             textstyle={styles.textInput}
             placeholder={'Enter your 6-digit PIN'}
@@ -197,7 +200,7 @@ const Register = ({navigation}) => {
             onChangeText={value => setConfirmPin(value)}
             editable={true}
             returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
-            viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
+            viewstyle={[styles.viewStyle, { marginTop: actuatedNormalize(20) }]}
             multiline={false}
             textstyle={styles.textInput}
             placeholder={'Re-enter your 6-digit pin'}
@@ -243,7 +246,7 @@ const Register = ({navigation}) => {
             theme="LIGHT"
             multiple={true}
             mode="BADGE"
-            badgeColors={{color: 'red'}}
+            badgeColors={{ color: 'red' }}
             badgeDotColors={[Colors.lightGrey]}
           />
 
@@ -317,7 +320,7 @@ const Register = ({navigation}) => {
             setOpen={setOpenDestination}
             setValue={setValue}
             setItems={setDestination}
-            style={{borderColor: Colors.lightGrey}}
+            style={{ borderColor: Colors.lightGrey }}
             theme="LIGHT"
             multiple={true}
             mode="BADGE"
@@ -325,7 +328,7 @@ const Register = ({navigation}) => {
           />
           <View style={styles.buttonContainer}>
             <PrimaryButtonSmall
-              primaryButtonContainer={{width: '100%'}}
+              primaryButtonContainer={{ width: '100%' }}
               onPress={() => submitHandler()}
               label={'Continue'}
             />
@@ -345,6 +348,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.backgroundColor,
     borderBottomStartRadius: 10,
     borderBottomEndRadius: 10,
+    paddingLeft:15,
+    paddingTop:50
   },
   bottomBg: {
     height: Dimensions.get('screen').height * 0.5,
@@ -357,7 +362,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     borderRadius: 22,
     backgroundColor: 'white',
-    top: actuatedNormalize(100),
+    top: actuatedNormalize(90),
     zIndex: 1,
     alignItems: 'center',
     alignSelf: 'center',
@@ -383,7 +388,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     width: actuatedNormalize(375),
   },
-  buttonContainer:{
-    marginVertical:actuatedNormalize(20)
+  buttonContainer: {
+    marginVertical: actuatedNormalize(20)
   }
 });

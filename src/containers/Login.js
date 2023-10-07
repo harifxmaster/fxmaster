@@ -8,18 +8,19 @@ import {
   KeyboardAvoidingView,
   Modal,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import PngLocation from '../constants/PngLocation';
 import Colors from '../constants/Colors';
-import {actuatedNormalize} from '../constants/PixelScaling';
+import { SCREEN_HEIGHT, SCREEN_WIDTH, actuatedNormalize } from '../constants/PixelScaling';
 import TextComponent from '../components/TextComponent';
 import Fonts from '../constants/Fonts';
 import Input from '../components/Input';
-import {LockIcon} from '../constants/SvgLocation';
+import { LockIcon } from '../constants/SvgLocation';
 
-const Login = ({navigation}) => {
-  const loginHandler = () => {};
+const Login = ({ navigation }) => {
+  const loginHandler = () => { };
 
   const [emailPhone, setEmailPhone] = useState('');
   const [pin, setPin] = useState('');
@@ -31,8 +32,8 @@ const Login = ({navigation}) => {
   };
 
   return (
-    <View style={{flex: 1}}>
-      <ImageBackground source={PngLocation.Background} style={{flex: 1}}>
+    <ScrollView style={{ flex: 1 }}>
+      <ImageBackground source={PngLocation.Background} style={{ flex: 1,width:SCREEN_WIDTH,height:SCREEN_HEIGHT }}>
         <View style={styles.mainContainer}>
           <Image source={PngLocation.FXWordMarkLogo} style={styles.logoImage} />
           <TextComponent style={styles.welcomeText}>Welcome</TextComponent>
@@ -41,7 +42,7 @@ const Login = ({navigation}) => {
             onChangeText={value => setEmailPhone(value)}
             editable={true}
             returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
-            viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(60)}]}
+            viewstyle={[styles.viewStyle, { marginTop: actuatedNormalize(20) }]}
             multiline={false}
             textstyle={styles.textInput}
             placeholder={'Email or Phone'}
@@ -51,7 +52,7 @@ const Login = ({navigation}) => {
               <LockIcon
                 width={actuatedNormalize(15)}
                 height={actuatedNormalize(15)}
-                style={{height: '100%'}}
+                style={{ height: '100%' }}
               />
             )}
           />
@@ -61,7 +62,7 @@ const Login = ({navigation}) => {
             onChangeText={value => setPin(value)}
             editable={true}
             returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
-            viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
+            viewstyle={[styles.viewStyle, { marginTop: actuatedNormalize(20) }]}
             multiline={false}
             textstyle={styles.textInput}
             placeholder={'Enter 6-digit pin'}
@@ -71,26 +72,26 @@ const Login = ({navigation}) => {
           <Pressable onPress={() => loginHandler()} style={styles.button}>
             <TextComponent style={styles.buttonText}>LOGIN</TextComponent>
           </Pressable>
-          <View style={{flex: 1, width: '80%'}}>
+          <View style={{ flex: 1, width: '80%' }}>
             <TextComponent onPress={() => navigation.push("ResetPin")} style={styles.forgotPinText}>
               Forgot PIN?
             </TextComponent>
             <TextComponent
-              style={[styles.loginRedText, {marginTop: actuatedNormalize(45)}]}>
+              style={[styles.loginRedText, { marginTop: actuatedNormalize(15) }]}>
               Login with Fingerprint
             </TextComponent>
             <TextComponent
-              style={[styles.loginRedText, {marginTop: actuatedNormalize(17)}]}>
+              style={[styles.loginRedText, { marginTop: actuatedNormalize(15) }]}>
               Login with Face ID
             </TextComponent>
 
-            <TextComponent style={[styles.registerText, {color: Colors.white}]}>
+            <TextComponent style={[styles.registerText, { color: Colors.white }]}>
               Don't have an account?
               <TextComponent
                 onPress={() => registerHandler(true)}
                 style={[
                   styles.registerText,
-                  {color: Colors.primary, textDecorationLine: 'underline'},
+                  { color: Colors.primary, textDecorationLine: 'underline' },
                 ]}>
                 Register now
               </TextComponent>
@@ -98,7 +99,7 @@ const Login = ({navigation}) => {
           </View>
           <Modal transparent={true} animationType="none" visible={modalVisible}>
             <View
-              style={{alignSelf: 'center', justifyContent: 'center', flex: 1}}>
+              style={{ alignSelf: 'center', justifyContent: 'center', flex: 1 }}>
               <View
                 style={{
                   width: actuatedNormalize(324),
@@ -127,7 +128,7 @@ const Login = ({navigation}) => {
                       backgroundColor: terms ? Colors.primary : Colors.white,
                     }}></TouchableOpacity>
                   <TextComponent style={styles.confirmationTitle}>
-                    By signing up, you are agree with our{'\n'}
+                    By signing up, you are agree with our 
                     <TextComponent style={styles.confirmationTitleRed}>
                       Terms and Privacy Policy
                     </TextComponent>
@@ -148,7 +149,7 @@ const Login = ({navigation}) => {
           </Modal>
         </View>
       </ImageBackground>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -162,7 +163,7 @@ const styles = StyleSheet.create({
   logoImage: {
     width: actuatedNormalize(156),
     height: actuatedNormalize(30),
-    marginTop: actuatedNormalize(102),
+    marginTop: actuatedNormalize(60),
   },
   button: {
     backgroundColor: Colors.primary,
@@ -182,7 +183,7 @@ const styles = StyleSheet.create({
     fontSize: actuatedNormalize(14),
     color: Colors.white,
     textAlign: 'right',
-    marginTop: actuatedNormalize(28),
+    marginTop: actuatedNormalize(15),
     fontFamily: Fonts.Rubik_Regular,
   },
   loginRedText: {
@@ -198,7 +199,7 @@ const styles = StyleSheet.create({
   registerText: {
     fontFamily: Fonts.Rubik_SemiBold,
     fontSize: actuatedNormalize(16),
-    marginTop: actuatedNormalize(70),
+    marginTop: actuatedNormalize(40),
   },
   viewStyle: {
     backgroundColor: Colors.white,
@@ -230,7 +231,7 @@ const styles = StyleSheet.create({
     fontSize: actuatedNormalize(12),
     fontFamily: Fonts.Rubik_Regular,
     color: Colors.primary,
-    marginTop: actuatedNormalize(31),
+    marginTop: actuatedNormalize(20),
     textAlign: 'right',
   },
 });
