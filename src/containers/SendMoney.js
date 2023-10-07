@@ -1,7 +1,7 @@
-import { View, Text, ScrollView, StyleSheet, Image, StatusBar, Pressable } from 'react-native'
+import { View, Text, ScrollView, StyleSheet, Dimensions, StatusBar, Pressable } from 'react-native'
 import React from 'react'
 import Colors from '../constants/Colors';
-import { SCREEN_HEIGHT, SCREEN_WIDTH, actuatedNormalize, } from '../constants/PixelScaling'
+import { SCREEN_HEIGHT, SCREEN_WIDTH, actuatedNormalize, actuatedNormalizeVertical, } from '../constants/PixelScaling'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
@@ -13,11 +13,10 @@ export default function SendMoney({ navigation }) {
 
     return (
         <View style={styles.layout}>
-            <View style={{ width: SCREEN_WIDTH, padding: 15, flexDirection: 'row', justifyContent: 'flex-start', }}>
-                <Pressable onPress={() => navigation.goBack()} style={{ width: "35%" }}><Ionicons name="arrow-back-outline" size={30} /></Pressable>
-                <Text style={styles.heading}>Enter Amount</Text>
+           <View style={styles.topBg}>
+                <Pressable onPress={() => navigation.goBack()}><Ionicons name="arrow-back-outline" size={30} /></Pressable>
             </View>
-            <View style={styles.body}>
+            <View style={styles.centerBg}>
                 <ScrollView style={styles.scrollView}>
                     <View style={{ flexDirection: 'row' }}>
                         <View style={{ width: "20%" }}>
@@ -119,6 +118,7 @@ export default function SendMoney({ navigation }) {
                     </View>
                 </ScrollView>
             </View>
+            <View style={styles.bottomBg}></View>
             <StatusBar
                 animated
                 backgroundColor="transparent"
@@ -131,7 +131,32 @@ export default function SendMoney({ navigation }) {
 
 
 const styles = StyleSheet.create({
-    layout: { backgroundColor: Colors.backgroundColor, flex: 1, justifyContent: 'center', alignItems: 'center' },
+    topBg: {
+        height: Dimensions.get('screen').height * 0.6,
+        backgroundColor: Colors.backgroundColor,
+        borderBottomStartRadius: 10,
+        borderBottomEndRadius: 10,
+        paddingLeft: 15,
+        paddingTop: 50
+    },
+    bottomBg: {
+        height: Dimensions.get('screen').height * 0.5,
+        backgroundColor: Colors.smokeWhite,
+    },
+    centerBg: {
+        flex: 1,
+        height: actuatedNormalizeVertical(678),
+        width: actuatedNormalize(339),
+        elevation: 5,
+        borderRadius: 22,
+        backgroundColor: 'white',
+        top: actuatedNormalize(90),
+        zIndex: 1,
+        alignItems: 'center',
+        alignSelf: 'center',
+        position: 'absolute',
+      },
+    layout: { flex: 1, },
     body: { backgroundColor: Colors.bodyBackgroundColor, width: "90%", justifyContent: 'center', alignItems: 'center', borderRadius: 10, height: SCREEN_HEIGHT - 100 },
     heading: { fontWeight: 'bold', fontSize: 17, marginBottom: 6 },
     normalText: { fontSize: 15, marginBottom: 10 },
