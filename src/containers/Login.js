@@ -32,9 +32,11 @@ const Login = ({ navigation }) => {
   };
 
   return (
-    <ScrollView style={{ flex: 1 }}>
-      <ImageBackground source={PngLocation.Background} style={{ flex: 1,width:SCREEN_WIDTH,height:SCREEN_HEIGHT }}>
+    <View style={{ flex: 1 }}>
+     
+      <ImageBackground source={PngLocation.Background} style={{ flex: 1}}>
         <View style={styles.mainContainer}>
+           <ScrollView style={{flex:1,width:"100%",paddingHorizontal:actuatedNormalize(30)}}>
           <Image source={PngLocation.FXWordMarkLogo} style={styles.logoImage} />
           <TextComponent style={styles.welcomeText}>Welcome</TextComponent>
           <Input
@@ -48,13 +50,13 @@ const Login = ({ navigation }) => {
             placeholder={'Email or Phone'}
             maxLength={20}
             iconRight={true}
-            icon={() => (
-              <LockIcon
-                width={actuatedNormalize(15)}
-                height={actuatedNormalize(15)}
-                style={{ height: '100%' }}
-              />
-            )}
+            // icon={() => (
+            //   <LockIcon
+            //     width={actuatedNormalize(15)}
+            //     height={actuatedNormalize(15)}
+            //     style={{ height: '100%' }}
+            //   />
+            // )}
           />
 
           <Input
@@ -147,9 +149,11 @@ const Login = ({ navigation }) => {
               </View>
             </View>
           </Modal>
+            </ScrollView>
         </View>
       </ImageBackground>
-    </ScrollView>
+    
+    </View>
   );
 };
 
@@ -163,11 +167,12 @@ const styles = StyleSheet.create({
   logoImage: {
     width: actuatedNormalize(156),
     height: actuatedNormalize(30),
-    marginTop: actuatedNormalize(60),
+    marginTop: actuatedNormalize(102),
+    alignSelf:"center"
   },
   button: {
     backgroundColor: Colors.primary,
-    width: '80%',
+    width: '100%',
     height: actuatedNormalize(50),
     borderRadius: 8,
     justifyContent: 'center',
@@ -178,6 +183,7 @@ const styles = StyleSheet.create({
     fontSize: actuatedNormalize(25),
     marginTop: actuatedNormalize(34),
     color: Colors.white,
+    textAlign:"center"
   },
   forgotPinText: {
     fontSize: actuatedNormalize(14),
@@ -202,12 +208,14 @@ const styles = StyleSheet.create({
     marginTop: actuatedNormalize(40),
   },
   viewStyle: {
+   
     backgroundColor: Colors.white,
     width: '100%',
   },
   textInput: {
     fontSize: actuatedNormalize(16),
     paddingLeft: actuatedNormalize(13),
+    width:"100%"
   },
   termText: {
     marginTop: actuatedNormalize(31),

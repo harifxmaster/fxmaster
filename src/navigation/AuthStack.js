@@ -5,6 +5,7 @@ import PreLoginDashBoard from '../containers/PreLoginDashBoard';
 import Register from '../containers/Register';
 import Login from '../containers/Login';
 import ResetPin from '../containers/ResetPin';
+import Instructions from '../containers/Instructions';
 
 const Stack = createNativeStackNavigator();
 
@@ -37,6 +38,11 @@ const MainStack = () => {
         options={{headerShown: false}}
         name="ResetPin"
         component={ResetPin}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="Instructions"
+        component={Instructions}
       />
     </Stack.Navigator>
   );
