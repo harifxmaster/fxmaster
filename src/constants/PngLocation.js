@@ -3,7 +3,10 @@ const PngLocation = {
     Undraw:require("../../assets/images/Prelogin/undraw3x.png"),
     Path:require("../../assets/images/Prelogin/Path3x.png"),
     Background:require("../../assets/images/Prelogin/background3x.png"),
-    Group:require("../../assets/images/Prelogin/Group3x.png")
+    Group:require("../../assets/images/Prelogin/Group3x.png"),
+    Fingerprint:require("../../assets/images/Prelogin/fingerprint3x.png"),
+    FingerprintActive:require("../../assets/images/Prelogin/fingerprintactive3x.png"),
+    FaceID:require("../../assets/images/Prelogin/faceid3x.png"),
 }
 
 export default PngLocation

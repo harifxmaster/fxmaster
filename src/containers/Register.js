@@ -546,7 +546,7 @@ const Register = ({navigation}) => {
           <View style={styles.buttonContainer}>
             <PrimaryButtonSmall
               primaryButtonContainer={{width: '100%'}}
-              onPress={() => submitHandler()}
+              onPress={() =>navigation.push("NationalityScreen")}
               label={'Continue'}
             />
           </View>

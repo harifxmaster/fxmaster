@@ -79,10 +79,12 @@ const Login = ({ navigation }) => {
               Forgot PIN?
             </TextComponent>
             <TextComponent
+            onPress={() => navigation.push("FingerPrintLogin")}
               style={[styles.loginRedText, { marginTop: actuatedNormalize(15) }]}>
               Login with Fingerprint
             </TextComponent>
             <TextComponent
+            onPress={() => navigation.push("FaceId")}
               style={[styles.loginRedText, { marginTop: actuatedNormalize(15) }]}>
               Login with Face ID
             </TextComponent>

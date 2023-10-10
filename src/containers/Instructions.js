@@ -41,7 +41,7 @@ const Instructions = ({navigation}) => {
               fontSize: actuatedNormalize(14),
               color: Colors.white,
             }}
-            onPress={() => submitHandler()}
+            onPress={() =>navigation.push("Login")}
             label={'Go back to Login'}
           />
         </View>
