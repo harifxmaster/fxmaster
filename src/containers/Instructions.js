@@ -1,25 +1,22 @@
-import {StyleSheet, Text, View, Image, Dimensions,Pressable} from 'react-native';
-import PngLocation from '../constants/PngLocation';
+import {Image, StyleSheet, View, Dimensions,Pressable} from 'react-native';
+import React from 'react';
 import TextComponent from '../components/TextComponent';
-import React, {useState} from 'react';
 import Colors from '../constants/Colors';
+import PngLocation from '../constants/PngLocation';
 import {
   actuatedNormalize,
   actuatedNormalizeVertical,
 } from '../constants/PixelScaling';
 import Fonts from '../constants/Fonts';
-import Input from '../components/Input';
-import {PrimaryButton} from '../components/ButtonCollection';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const ResetPin = ({navigation}) => {
-  const [email, setEmail] = useState('');
 
-  const submitHandler = () => {
-    navigation.push('Instructions');
-  };
+import {PrimaryButton} from '../components/ButtonCollection';
+
+const Instructions = ({navigation}) => {
   return (
     <View style={{flex: 1}}>
+        
       <View style={styles.topBg}>
       <Pressable style={{marginTop:actuatedNormalize(55),paddingLeft:actuatedNormalize(24)}} onPress={() => navigation.goBack()}>
           <Ionicons color={Colors.black} name="arrow-back-outline" size={30}  />
@@ -30,24 +27,12 @@ const ResetPin = ({navigation}) => {
           source={PngLocation.FXWordMarkLogo}
           style={styles.wordMarkLogo}
         />
-        <TextComponent style={styles.reset}>Reset PIN</TextComponent>
+        <Image source={PngLocation.Group} style={styles.groupLogo} />
+        <TextComponent style={styles.checkText}>Check your email</TextComponent>
         <TextComponent style={styles.subTitle}>
-          You will receive an email to your registered {'\n'} email address to
-          create new 6 digit PIN
+          We've sent you instructions on how to reset the 6 digit {'\n'}
+          PIN(also check the Spam folder)
         </TextComponent>
-        <Input
-          value={email}
-          onChangeText={value => setEmail(value)}
-          editable={true}
-          returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
-          viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(45)}]}
-          multiline={false}
-          textstyle={styles.textInput}
-          placeholder={'Email address'}
-          maxLength={50}
-          borderWidth={1}
-          borderColor={Colors.lightGrey}
-        />
         <View style={styles.buttonContainer}>
           <PrimaryButton
             primaryButtonContainer={{width: '100%', borderRadius: 8}}
@@ -57,7 +42,7 @@ const ResetPin = ({navigation}) => {
               color: Colors.white,
             }}
             onPress={() => submitHandler()}
-            label={'Continue'}
+            label={'Go back to Login'}
           />
         </View>
       </View>
@@ -66,7 +51,7 @@ const ResetPin = ({navigation}) => {
   );
 };
 
-export default ResetPin;
+export default Instructions;
 
 const styles = StyleSheet.create({
   topBg: {
@@ -81,7 +66,7 @@ const styles = StyleSheet.create({
   },
   centerBg: {
     flex: 1,
-    height: actuatedNormalizeVertical(451),
+    height: actuatedNormalizeVertical(498),
     width: actuatedNormalize(339),
     elevation: 5,
     borderRadius: 22,
@@ -95,31 +80,28 @@ const styles = StyleSheet.create({
   wordMarkLogo: {
     width: actuatedNormalize(156),
     height: actuatedNormalize(30),
-    marginTop: actuatedNormalize(20),
-  },
-  reset: {
-    fontFamily: Fonts.Rubik_Medium,
-    color: Colors.black,
-    fontSize: actuatedNormalize(24),
-    marginTop: actuatedNormalize(57),
-  },
-  subTitle: {
-    fontFamily: Fonts.Rubik_SemiBold,
-    color: Colors.black,
-    fontSize: actuatedNormalize(12),
-    marginTop: actuatedNormalize(16),
-  },
-  textInput: {
-    fontSize: actuatedNormalize(14),
-    paddingLeft: actuatedNormalize(13),
-    color: Colors.tintGrey,
-  },
-  viewStyle: {
-    backgroundColor: Colors.white,
-    width: '110%',
+    marginTop: actuatedNormalize(34),
   },
   buttonContainer: {
     marginTop: actuatedNormalize(36),
-    width: '90%',
+    width: '80%',
   },
+  groupLogo:{
+    width: actuatedNormalize(140),
+    height: actuatedNormalize(140),
+    marginTop: actuatedNormalize(34),
+  },
+  checkText:{
+    fontFamily: Fonts.Rubik_Medium,
+    color: Colors.black,
+    fontSize: actuatedNormalize(24),
+    marginTop: actuatedNormalize(40),
+  },
+  subTitle:{
+    fontFamily: Fonts.Rubik_Regular,
+    color: Colors.tintGrey,
+    fontSize: actuatedNormalize(12),
+    marginTop: actuatedNormalize(15),
+    textAlign:"center"
+  }
 });
