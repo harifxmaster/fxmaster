@@ -6,6 +6,9 @@ import Register from '../containers/Register';
 import Login from '../containers/Login';
 import ResetPin from '../containers/ResetPin';
 import Instructions from '../containers/Instructions';
+import FingerPrintLogin from '../containers/FingerPrintLogin';
+import FaceId from '../containers/FaceId';
+import NationalityScreen from '../containers/NationalityScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -43,6 +46,21 @@ const MainStack = () => {
         options={{headerShown: false}}
         name="Instructions"
         component={Instructions}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="FingerPrintLogin"
+        component={FingerPrintLogin}
+      />
+       <Stack.Screen
+        options={{headerShown: false}}
+        name="FaceId"
+        component={FaceId}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="NationalityScreen"
+        component={NationalityScreen}
       />
     </Stack.Navigator>
   );

@@ -10,9 +10,7 @@ import {
 import Fonts from '../constants/Fonts';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const FingerPrintLogin = ({navigation}) => {
-
-const [fingerPrint,setFingerPrint] = useState(false)
+const FaceId = ({navigation}) => {
   return (
     <View style={{flex: 1}}>
         
@@ -26,14 +24,16 @@ const [fingerPrint,setFingerPrint] = useState(false)
         source={PngLocation.FXWordMarkLogo}
         style={styles.wordMarkLogo}
       />
-      <Pressable  onPress={() => setFingerPrint(true)}>
-     {!fingerPrint?
-      <Image source={PngLocation.Fingerprint} style={styles.fingerprint} />
-      :
-     <Image source={PngLocation.FingerprintActive} style={styles.fingerprint} />
-     }
-      </Pressable>
-     <View style={{flexDirection:"row",marginTop:actuatedNormalize(73),alignItems:"center"}}>
+   
+    
+      <Image source={PngLocation.FaceID} style={styles.faceid} />
+      <TextComponent style={styles.faceRecognition}>Face Recognition</TextComponent>
+        <TextComponent style={styles.subTitle}>
+         Scan your face to verify your identity
+        </TextComponent>
+     
+   
+     <View style={{flexDirection:"row",marginTop:actuatedNormalize(86),alignItems:"center"}}>
       <View style={{backgroundColor:Colors.lightGrey,width:actuatedNormalize(112), height:actuatedNormalize(1)}}></View>
       <TextComponent style={{color:Colors.tintGrey,paddingHorizontal:actuatedNormalize(15)}}>Or</TextComponent>
       <View style={{backgroundColor:Colors.lightGrey,width:actuatedNormalize(112), height:actuatedNormalize(1)}}></View>
@@ -42,12 +42,10 @@ const [fingerPrint,setFingerPrint] = useState(false)
     </View>
     <View style={styles.bottomBg}></View>
   </View>
-
   )
 }
 
-export default FingerPrintLogin
-
+export default FaceId
 
 const styles = StyleSheet.create({
   topBg: {
@@ -79,10 +77,10 @@ const styles = StyleSheet.create({
     marginTop: actuatedNormalize(34),
   },
  
-  fingerprint:{
-    width: actuatedNormalize(172),
-    height: actuatedNormalize(183),
-    marginTop: actuatedNormalize(85),
+  faceid:{
+    width: actuatedNormalize(140),
+    height: actuatedNormalize(140),
+    marginTop: actuatedNormalize(25),
   },
   pin:{
     color:Colors.primary,
@@ -90,6 +88,19 @@ const styles = StyleSheet.create({
     fontSize:actuatedNormalize(12),
     marginTop:actuatedNormalize( 16),
 
+  },
+  faceRecognition:{
+    fontFamily: Fonts.Rubik_Regular,
+    color: Colors.black,
+    fontSize: actuatedNormalize(24),
+    marginTop: actuatedNormalize(25),
+  },
+  subTitle:{
+    fontFamily: Fonts.Rubik_Regular,
+    color: Colors.black,
+    fontSize: actuatedNormalize(12),
+    marginTop: actuatedNormalize(10),
+    textAlign:"center"
   }
 
 });
