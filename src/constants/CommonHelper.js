@@ -16,3 +16,5 @@ const CommonHelper = {
     }
 
 }
+
+export default CommonHelper;

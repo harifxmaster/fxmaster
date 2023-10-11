@@ -1,5 +1,5 @@
 import { StyleSheet, View,Dimensions,Pressable,Image} from 'react-native'
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import TextComponent from '../components/TextComponent';
 import Colors from '../constants/Colors';
 import PngLocation from '../constants/PngLocation';
@@ -9,8 +9,48 @@ import {
 } from '../constants/PixelScaling';
 import Fonts from '../constants/Fonts';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import ReactNativeBiometrics, { BiometryTypes } from 'react-native-biometrics'
+
 
 const FingerPrintLogin = ({navigation}) => {
+
+
+const rnBiometrics = new ReactNativeBiometrics()
+
+useEffect(() => {
+
+  rnBiometrics.isSensorAvailable()
+  .then((resultObject) => {
+    const { available, biometryType } = resultObject
+
+    if (available && biometryType === BiometryTypes.TouchID) {
+      console.log('TouchID is supported')
+    } else if (available && biometryType === BiometryTypes.FaceID) {
+      console.log('FaceID is supported')
+    } else if (available && biometryType === BiometryTypes.Biometrics) {
+      rnBiometrics.simplePrompt({promptMessage: 'Confirm fingerprint'})
+      .then((resultObject) => {
+        const { success } = resultObject
+    
+        if (success) {
+          setFingerPrint(true)
+        } else {
+          console.log('user cancelled biometric prompt')
+        }
+      })
+      .catch(() => {
+        console.log('biometrics failed')
+      })
+    } else {
+      console.log('Biometrics not supported')
+    }
+  })
+
+},[])
+
+
+
+
 
 const [fingerPrint,setFingerPrint] = useState(false)
   return (
