@@ -1,11 +1,11 @@
 import * as errorCodes from './ValidationErrors';
 
 const showErrorMessage = props => {
-  console.log(props);
-  const {errorMsg, validationRules} = properties;
-  const errorMsgs = errorMsg.split(',');
-  let errorStr = '';
-  errorMsgs.forEach(errorCode => {
+  console.log('showprops',props);
+  const {errorMsg, validationRules} = props;
+  const errorMsgs = errorMsg.split(",");
+  let errorStr = "";
+  errorMsgs.forEach((errorCode) => {
     switch (errorCode) {
       case errorCodes.MIN_LENGTH_ERR:
         errorStr = setErroMsg(
@@ -34,6 +34,10 @@ const showErrorMessage = props => {
       case errorCodes.IS_DATE:
         errorStr = setErroMsg(errorStr, 'Select Date');
         break;
+
+        default:
+          errorStr = setErroMsg(errorStr,errorCode);
+          break;
     }
   });
   return errorStr;

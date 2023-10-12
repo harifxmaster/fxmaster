@@ -23,6 +23,9 @@ import TextComponent from '../components/TextComponent';
 import Fonts from '../constants/Fonts';
 import {PrimaryButtonSmall} from '../components/ButtonCollection';
 import DropDownPicker from 'react-native-dropdown-picker';
+import Validate from '../utils/Validate';
+import CommonHelper from '../constants/CommonHelper';
+
 
 const Register = ({navigation}) => {
   const initialState = {
@@ -45,16 +48,23 @@ const Register = ({navigation}) => {
         ],
         errorMsg:"",
         validationRules:{
-          isRequired:true
+          isRequired:false
         }
       },
       firstName: {
-        value: '',
+        value: "",
         valid: false,
         touched: false,
         errorMsg:"",
+        customErrors: {
+          MANDATORY_ERR: "Please enter your name",
+          NUMBER_ERR:"Please enter a number",
+          MIN_LENGTH_ERR:"Please enter atleast 10 digits"
+        },
         validationRules:{
-          isRequired:true
+          isRequired:true,
+         
+         
         }
       },
       middleName: {
@@ -62,6 +72,9 @@ const Register = ({navigation}) => {
         valid: false,
         touched: false,
         errorMsg:"",
+        customErrors: {
+          MANDATORY_ERR: "Please enter your middle name",
+        },
         validationRules:{
           isRequired:true
         }
@@ -71,6 +84,9 @@ const Register = ({navigation}) => {
         valid: false,
         touched: false,
         errorMsg:"",
+        customErrors: {
+          MANDATORY_ERR: "Please enter your last name",
+        },
         validationRules:{
           isRequired:true
         }
@@ -80,6 +96,9 @@ const Register = ({navigation}) => {
         valid: false,
         touched: false,
         errorMsg:"",
+        customErrors: {
+          MANDATORY_ERR: "Please enter your pin",
+        },
         validationRules:{
           isRequired:true
         }
@@ -89,6 +108,9 @@ const Register = ({navigation}) => {
         valid: false,
         touched: false,
         errorMsg:"",
+        customErrors: {
+          MANDATORY_ERR: "Please re-enter your pin",
+        },
         validationRules:{
           isRequired:true
         }
@@ -111,7 +133,7 @@ const Register = ({navigation}) => {
         ],
         errorMsg:"",
         validationRules:{
-          isRequired:true
+          isRequired:false
         }
       },
       purpose: {
@@ -132,7 +154,7 @@ const Register = ({navigation}) => {
         ],
         errorMsg:"",
         validationRules:{
-          isRequired:true
+          isRequired:false
         }
       },
       destinationCountry: {
@@ -153,7 +175,7 @@ const Register = ({navigation}) => {
         ],
         errorMsg:"",
         validationRules:{
-          isRequired:true
+          isRequired:false
         }
       },
     },
@@ -180,6 +202,8 @@ const Register = ({navigation}) => {
 
 
   const handleChange = (value, name) => {
+    console.log(value)
+    console.log(name)
     let tempState = state;
     let tempFormData = tempState['formData']
 
@@ -215,11 +239,7 @@ const Register = ({navigation}) => {
 
   
 
-  const [firstName, setFirstName] = useState('');
-  const [middleName, setMiddleName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [pin, setPin] = useState('');
-  const [confirmPin, setConfirmPin] = useState('');
+
 
   const [openTitle, setOpenTitle] = useState(false);
   const [openOccupation, setOpenOccupation] = useState(false);
@@ -295,17 +315,19 @@ const Register = ({navigation}) => {
       isFormValid = false
     }
     console.log("isFormValid>>>>>>>", isFormValid)
-    if(isFormValid){
-      //navigation.navigate("")
-    }
+   
    }
+   if(isFormValid){
+    console.log('inside', isFormValid)
+    navigation.push("NationalityScreen")
+  }
   };
   return (
     <View style={{flex: 1}}>
       <View style={styles.topBg}>
-        <Pressable  onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back-outline" size={30}  />
-        </Pressable>
+      <Pressable  onPress={() => navigation.goBack()}>
+        <Ionicons color={Colors.black} name="arrow-back-outline" size={actuatedNormalize(24)}  />
+      </Pressable>
       </View>
       <View style={styles.centerBg}>
         <Image
@@ -357,27 +379,33 @@ const Register = ({navigation}) => {
           />
 
           <Input
-            value={firstName}
-            onChangeText={value => setFirstName(value)}
+            value={state.formData.firstName.value}
             editable={true}
             returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
             viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
             multiline={false}
+            errorView={[styles.viewStyle,{marginTop:actuatedNormalize(10)}]}
             textstyle={styles.textInput}
             placeholder={'First Name'}
             maxLength={50}
+            errorMsg={state.formData.firstName.errorMsg}
+            validationRules={state.formData.firstName.validationRules}
             borderWidth={1}
+            onChangeText={(value) => handleChange(value,"firstName")}
             borderColor={Colors.lightGrey}
           />
 
           <Input
-            value={middleName}
-            onChangeText={value => setMiddleName(value)}
+            value={state.formData.middleName.value}
+            onChangeText={(value) => handleChange(value,"middleName")}
             editable={true}
             returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
             viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
             multiline={false}
             textstyle={styles.textInput}
+            errorMsg={state.formData.middleName.errorMsg}
+            errorView={[styles.viewStyle,{marginTop:actuatedNormalize(10)}]}
+            validationRules={state.formData.middleName.validationRules}
             placeholder={'Middle Name(optional)'}
             maxLength={50}
             borderWidth={1}
@@ -385,13 +413,16 @@ const Register = ({navigation}) => {
           />
 
           <Input
-            value={lastName}
-            onChangeText={value => setLastName(value)}
+            value={state.formData.lastName.value}
+            onChangeText={(value) => handleChange(value,"lastName")}
             editable={true}
             returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
             viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
             multiline={false}
             textstyle={styles.textInput}
+            errorMsg={state.formData.lastName.errorMsg}
+            errorView={[styles.viewStyle,{marginTop:actuatedNormalize(10)}]}
+            validationRules={state.formData.lastName.validationRules}
             placeholder={'Last Name'}
             maxLength={50}
             borderWidth={1}
@@ -399,13 +430,17 @@ const Register = ({navigation}) => {
           />
 
           <Input
-            value={pin}
-            onChangeText={value => setPin(value)}
+            value={state.formData.enterPin.value}
+            onChangeText={(value) => handleChange(value,"enterPin")}
+
             editable={true}
             returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
             viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
             multiline={false}
             textstyle={styles.textInput}
+            errorMsg={state.formData.enterPin.errorMsg}
+            errorView={[styles.viewStyle,{marginTop:actuatedNormalize(10)}]}
+            validationRules={state.formData.enterPin.validationRules}
             placeholder={'Enter your 6-digit PIN'}
             maxLength={50}
             borderWidth={1}
@@ -413,19 +448,22 @@ const Register = ({navigation}) => {
           />
 
           <Input
-            value={confirmPin}
-            onChangeText={value => setConfirmPin(value)}
-            editable={true}
+           value={state.formData.reEnterPin.value}
+           onChangeText={(value) => handleChange(value,"reEnterPin")}
+           editable={true}
             returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
             viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
             multiline={false}
             textstyle={styles.textInput}
+            errorMsg={state.formData.reEnterPin.errorMsg}
+            errorView={[styles.viewStyle,{marginTop:actuatedNormalize(10)}]}
+            validationRules={state.formData.reEnterPin.validationRules}
             placeholder={'Re-enter your 6-digit pin'}
             maxLength={50}
             borderWidth={1}
             borderColor={Colors.lightGrey}
           />
-
+ {/*
           <DropDownPicker
             searchable={true}
             placeholderStyle={{
@@ -542,11 +580,11 @@ const Register = ({navigation}) => {
             multiple={true}
             mode="BADGE"
             badgeDotColors={[Colors.lightGrey]}
-          />
+          /> */}
           <View style={styles.buttonContainer}>
             <PrimaryButtonSmall
               primaryButtonContainer={{width: '100%'}}
-              onPress={() =>navigation.push("NationalityScreen")}
+              onPress={() =>submitHandler()}
               label={'Continue'}
             />
           </View>
@@ -600,10 +638,14 @@ const styles = StyleSheet.create({
     fontSize: actuatedNormalize(14),
     paddingLeft: actuatedNormalize(13),
     color: Colors.tintGrey,
+    width:"100%",
+   
   },
   viewStyle: {
     backgroundColor: Colors.white,
-    width: actuatedNormalize(375),
+    width:"100%",
+  
+   
   },
   buttonContainer: {
     marginVertical: actuatedNormalize(20),
