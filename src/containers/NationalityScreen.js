@@ -232,7 +232,7 @@ style={[styles.dropdownView,{flex:1}]}
               fontSize: actuatedNormalize(14),
               color: Colors.white,
             }}
-            onPress={() =>navigation.push("Login")}
+            onPress={() =>navigation.push("VerifyPhone")}
             label={'Continue'}
           />
         </View>
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
         textAlign:"center"
       },
       buttonContainer: {
-        // marginTop: actuatedNormalize(36),
+       bottom:actuatedNormalize(30),
         width: '80%',
       },
       textInput: {

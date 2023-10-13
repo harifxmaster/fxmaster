@@ -9,14 +9,14 @@ import Instructions from '../containers/Instructions';
 import FingerPrintLogin from '../containers/FingerPrintLogin';
 import FaceId from '../containers/FaceId';
 import NationalityScreen from '../containers/NationalityScreen';
-import CustomDropdown from '../constants/CustomDropdown';
+import VerifyPhone from '../containers/VerifyPhone';
+import OtpScreen from '../containers/OtpScreen';
 
 const Stack = createNativeStackNavigator();
 
-
 const MainStack = () => {
   return (
-    <Stack.Navigator initialRouteName='PreLoginDashBoard' >
+    <Stack.Navigator initialRouteName="PreLoginDashBoard">
       <Stack.Screen
         options={{headerShown: false}}
         name="PreLoginDashBoard"
@@ -24,8 +24,8 @@ const MainStack = () => {
       />
       {/* <Stack.Screen
         options={{headerShown: false}}
-        name="CustomDropdown"
-        component={CustomDropdown}
+        name="OtpScreen"
+        component={OtpScreen}
       /> */}
       <Stack.Screen
         options={{headerShown: false}}
@@ -36,14 +36,13 @@ const MainStack = () => {
         options={{headerShown: false}}
         name="Login"
         component={Login}
-        
       />
       <Stack.Screen
         options={{headerShown: false}}
         name="Register"
         component={Register}
       />
-       <Stack.Screen
+      <Stack.Screen
         options={{headerShown: false}}
         name="ResetPin"
         component={ResetPin}
@@ -58,7 +57,7 @@ const MainStack = () => {
         name="FingerPrintLogin"
         component={FingerPrintLogin}
       />
-       <Stack.Screen
+      <Stack.Screen
         options={{headerShown: false}}
         name="FaceId"
         component={FaceId}
@@ -67,6 +66,12 @@ const MainStack = () => {
         options={{headerShown: false}}
         name="NationalityScreen"
         component={NationalityScreen}
+      />
+
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="VerifyPhone"
+        component={VerifyPhone}
       />
     </Stack.Navigator>
   );

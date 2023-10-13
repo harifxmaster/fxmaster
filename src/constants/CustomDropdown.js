@@ -1,4 +1,4 @@
-import { StyleSheet, View,TouchableOpacity,Image,TextInput,FlatList } from 'react-native'
+import { StyleSheet, View,TouchableOpacity,Image,TextInput,FlatList, ScrollView } from 'react-native'
 import React,{useRef, useState} from 'react'
 import { actuatedNormalize } from './PixelScaling'
 import Colors from './Colors'
@@ -11,6 +11,12 @@ const countries = [
     {country: 'Albania', code: '355', iso: 'AL'},
     {country: 'Algeria', code: '213', iso: 'DZ'},
     {country: 'American Samoa', code: '1-684', iso: 'AS'},
+    {country: 'Andorra', code: '376', iso: 'AD'},
+    {country: 'Angola', code: '244', iso: 'AO'},
+    {country: 'Anguilla', code: '1-264', iso: 'AI'},
+    {country: 'Antarctica', code: '672', iso: 'AQ'},
+    {country: 'Antigua and Barbuda', code: '1-268', iso: 'AG'},
+    {country: 'Argentina', code: '54', iso: 'AR'},
     {country: 'Andorra', code: '376', iso: 'AD'},
     {country: 'Angola', code: '244', iso: 'AO'},
     {country: 'Anguilla', code: '1-264', iso: 'AI'},
@@ -44,9 +50,10 @@ const searchHandler = (value) => {
      </TouchableOpacity>
   {   
   clicked?
+  
   <View style={styles.dropdownArea}>
     <TextInput ref={searchRef} placeholder='Type into search' style={styles.searchInput} onChangeText={(val) => searchHandler(val)}  placeholderTextColor={Colors.tintGrey}  />
-    <FlatList
+    {/* <FlatList
     data={data}
     renderItem={({item,index}) => {
         return(
@@ -62,11 +69,33 @@ const searchHandler = (value) => {
         );
     }}
     
-    />
+    /> */}
+    <ScrollView>
+   { data.map((item, index) => {
+    return(
+      
+        <TouchableOpacity key={item.code} style={styles.countryItem} onPress={() => {
+            setSelectedCountry(item.country) ;
+            searchHandler('');
+            setClicked(false);
+            searchRef.current.clear();
+        }}
+            >
+            <TextComponent style={styles.listItem}>{item.country}</TextComponent>
+        </TouchableOpacity>
+      
+    )
+    })}
+    </ScrollView>
      </View>
+  
+   
      : null
      }
+     
     </View>
+    
+    
   )
 }
 
