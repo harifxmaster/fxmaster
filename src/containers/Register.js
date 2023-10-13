@@ -25,6 +25,7 @@ import {PrimaryButtonSmall} from '../components/ButtonCollection';
 import DropDownPicker from 'react-native-dropdown-picker';
 import Validate from '../utils/Validate';
 import CommonHelper from '../constants/CommonHelper';
+import CustomDropdown from '../constants/CustomDropdown';
 
 
 const Register = ({navigation}) => {
@@ -44,7 +45,6 @@ const Register = ({navigation}) => {
           {label: 'England', value: 'England'},
           {label: 'Srilanka', value: 'Srilanka'},
           {label: 'New Zealand', value: 'New Zealand'},
-          {label: 'India', value: 'India'},
         ],
         errorMsg:"",
         validationRules:{
@@ -62,7 +62,7 @@ const Register = ({navigation}) => {
           MIN_LENGTH_ERR:"Please enter atleast 10 digits"
         },
         validationRules:{
-          isRequired:true,
+          isRequired:false,
          
          
         }
@@ -76,7 +76,7 @@ const Register = ({navigation}) => {
           MANDATORY_ERR: "Please enter your middle name",
         },
         validationRules:{
-          isRequired:true
+          isRequired:false
         }
       },
       lastName: {
@@ -88,7 +88,7 @@ const Register = ({navigation}) => {
           MANDATORY_ERR: "Please enter your last name",
         },
         validationRules:{
-          isRequired:true
+          isRequired:false
         }
       },
       enterPin: {
@@ -100,7 +100,7 @@ const Register = ({navigation}) => {
           MANDATORY_ERR: "Please enter your pin",
         },
         validationRules:{
-          isRequired:true
+          isRequired:false
         }
       },
       reEnterPin: {
@@ -112,7 +112,7 @@ const Register = ({navigation}) => {
           MANDATORY_ERR: "Please re-enter your pin",
         },
         validationRules:{
-          isRequired:true
+          isRequired:false
         }
       },
       occupation: {
@@ -120,16 +120,16 @@ const Register = ({navigation}) => {
         valid: false,
         touched: false,
         options: [
-          {label: 'Uk', value: 'Uk'},
-          {label: 'England', value: 'England'},
-          {label: 'Srilanka', value: 'Srilanka'},
-          {label: 'New Zealand', value: 'New Zealand'},
-          {label: 'India', value: 'India'},
-          {label: 'Uk', value: 'Uk'},
-          {label: 'England', value: 'England'},
-          {label: 'Srilanka', value: 'Srilanka'},
-          {label: 'New Zealand', value: 'New Zealand'},
-          {label: 'India', value: 'India'},
+          {label: 'Welder', value: 'Welder'},
+          {label: 'Engineer', value: 'Engineer'},
+          {label: 'Pilot', value: 'Pilot'},
+          {label: 'Tailor', value: 'Tailor'},
+          {label: 'Scientist', value: 'Scientist'},
+          {label: 'Doctor', value: 'Doctor'},
+          {label: 'Army', value: 'Army'},
+          {label: 'Teacher', value: 'Teacher'},
+          {label: 'Data Scientist', value: 'Data Scientist'},
+          {label: 'Manager', value: 'Manager'},
         ],
         errorMsg:"",
         validationRules:{
@@ -238,15 +238,8 @@ const Register = ({navigation}) => {
   }
 
   
-
-
-
   const [openTitle, setOpenTitle] = useState(false);
-  const [openOccupation, setOpenOccupation] = useState(false);
-  const [openPurpose, setOpenPurpose] = useState(false);
-  const [openDestination, setOpenDestination] = useState(false);
-
-  const [value, setValue] = useState([]);
+  const [value, setValue] = useState(null);
   const [title, setTitle] = useState([
     {label: 'Spain', value: 'spain'},
     {label: 'Madrid', value: 'madrid', parent: 'spain'},
@@ -258,38 +251,7 @@ const Register = ({navigation}) => {
     {label: 'Finland', value: 'finland'},
   ]);
 
-  const [occupation, setOccupation] = useState([
-    {label: 'Spain', value: 'spain'},
-    {label: 'Madrid', value: 'madrid', parent: 'spain'},
-    {label: 'Barcelona', value: 'barcelona', parent: 'spain'},
 
-    {label: 'Italy', value: 'italy'},
-    {label: 'Rome', value: 'rome', parent: 'italy'},
-
-    {label: 'Finland', value: 'finland'},
-  ]);
-
-  const [purpose, setPurpose] = useState([
-    {label: 'Spain', value: 'spain'},
-    {label: 'Madrid', value: 'madrid', parent: 'spain'},
-    {label: 'Barcelona', value: 'barcelona', parent: 'spain'},
-
-    {label: 'Italy', value: 'italy'},
-    {label: 'Rome', value: 'rome', parent: 'italy'},
-
-    {label: 'Finland', value: 'finland'},
-  ]);
-
-  const [destination, setDestination] = useState([
-    {label: 'Spain', value: 'spain'},
-    {label: 'Madrid', value: 'madrid', parent: 'spain'},
-    {label: 'Barcelona', value: 'barcelona', parent: 'spain'},
-
-    {label: 'Italy', value: 'italy'},
-    {label: 'Rome', value: 'rome', parent: 'italy'},
-
-    {label: 'Finland', value: 'finland'},
-  ]);
 
   const submitHandler = () => {
    let isFormValid =  true;
@@ -337,46 +299,13 @@ const Register = ({navigation}) => {
         <TextComponent style={styles.create}>Create an Account</TextComponent>
         <ScrollView
           style={{flex: 1, backgroundColor: Colors.white, width: '90%'}}>
-          <DropDownPicker
-            searchable={true}
-            placeholderStyle={{
-              color: Colors.tintGrey,
-              fontFamily: Fonts.Rubik_Regular,
-              fontSize: actuatedNormalize(14),
-            }}
-            dropDownContainerStyle={{
-              borderColor: Colors.lightGrey,
-              // marginTop:actuatedNormalize(20)
-            }}
-            searchContainerStyle={{
-              borderBottomColor: Colors.white,
-            }}
-            searchTextInputStyle={{
-              borderColor: Colors.lightGrey,
-            }}
-            selectedItemContainerStyle={{
-              backgroundColor: Colors.lightGrey,
-            }}
-            listItemLabelStyle={{
-              color: Colors.tintGrey,
-            }}
-            searchPlaceholder="Type into search"
-            placeholder="Select title"
-            open={openTitle}
-            value={value}
-            items={title}
-            setOpen={setOpenTitle}
-            setValue={setValue}
-            setItems={setTitle}
-            style={{
-              borderColor: Colors.lightGrey,
-              marginTop: actuatedNormalize(21),
-            }}
-            theme="LIGHT"
-            multiple={true}
-            mode="BADGE"
-            badgeDotColors={[Colors.tintGrey]}
-          />
+            
+            <CustomDropdown
+              placeholder = {"Select title"}
+              // data={state.formData.title.options}
+            />
+            
+    
 
           <Input
             value={state.formData.firstName.value}
@@ -432,7 +361,6 @@ const Register = ({navigation}) => {
           <Input
             value={state.formData.enterPin.value}
             onChangeText={(value) => handleChange(value,"enterPin")}
-
             editable={true}
             returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
             viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
@@ -463,124 +391,25 @@ const Register = ({navigation}) => {
             borderWidth={1}
             borderColor={Colors.lightGrey}
           />
- {/*
-          <DropDownPicker
-            searchable={true}
-            placeholderStyle={{
-              color: Colors.tintGrey,
-              fontFamily: Fonts.Rubik_Regular,
-              fontSize: actuatedNormalize(14),
-            }}
-            dropDownContainerStyle={{
-              borderColor: Colors.lightGrey,
-            }}
-            searchContainerStyle={{
-              borderBottomColor: Colors.white,
-            }}
-            searchTextInputStyle={{
-              borderColor: Colors.lightGrey,
-            }}
-            selectedItemContainerStyle={{
-              backgroundColor: Colors.lightGrey,
-            }}
-            listItemLabelStyle={{
-              color: Colors.tintGrey,
-            }}
-            searchPlaceholder="Type into search"
-            placeholder="Select title"
-            open={openOccupation}
-            value={value}
-            items={occupation}
-            setOpen={setOpenOccupation}
-            setValue={setValue}
-            setItems={setOccupation}
-            style={{
-              borderColor: Colors.lightGrey,
-              marginTop: actuatedNormalize(20),
-            }}
-            theme="LIGHT"
-            multiple={true}
-            mode="BADGE"
-            badgeColors={{color: 'red'}}
-            badgeDotColors={[Colors.lightGrey]}
-          />
 
-          <DropDownPicker
-            searchable={true}
-            placeholderStyle={{
-              color: Colors.tintGrey,
-              fontFamily: Fonts.Rubik_Regular,
-              fontSize: actuatedNormalize(14),
-            }}
-            dropDownContainerStyle={{
-              borderColor: Colors.lightGrey,
-            }}
-            searchContainerStyle={{
-              borderBottomColor: Colors.white,
-            }}
-            searchTextInputStyle={{
-              borderColor: Colors.lightGrey,
-            }}
-            selectedItemContainerStyle={{
-              backgroundColor: Colors.lightGrey,
-            }}
-            listItemLabelStyle={{
-              color: Colors.tintGrey,
-            }}
-            searchPlaceholder="Type into search"
-            placeholder="Select title"
-            open={openPurpose}
-            value={value}
-            items={purpose}
-            setOpen={openPurpose}
-            setValue={setValue}
-            setItems={setPurpose}
-            style={{
-              borderColor: Colors.lightGrey,
-              marginVertical: actuatedNormalize(20),
-            }}
-            theme="LIGHT"
-            multiple={true}
-            mode="BADGE"
-            badgeDotColors={[Colors.lightGrey]}
-          />
+<CustomDropdown
+viewStyle={styles.dropdownView}
+              placeholder = {"Occupation"}
+              // data={state.formData.occupation.options}
+            />
 
-          <DropDownPicker
-            searchable={true}
-            placeholderStyle={{
-              color: Colors.tintGrey,
-              fontFamily: Fonts.Rubik_Regular,
-              fontSize: actuatedNormalize(14),
-            }}
-            dropDownContainerStyle={{
-              borderColor: Colors.lightGrey,
-            }}
-            searchContainerStyle={{
-              borderBottomColor: Colors.white,
-            }}
-            searchTextInputStyle={{
-              borderColor: Colors.lightGrey,
-            }}
-            selectedItemContainerStyle={{
-              backgroundColor: Colors.lightGrey,
-            }}
-            listItemLabelStyle={{
-              color: Colors.tintGrey,
-            }}
-            searchPlaceholder="Type into search"
-            placeholder="Select title"
-            open={openDestination}
-            value={value}
-            items={destination}
-            setOpen={setOpenDestination}
-            setValue={setValue}
-            setItems={setDestination}
-            style={{borderColor: Colors.lightGrey}}
-            theme="LIGHT"
-            multiple={true}
-            mode="BADGE"
-            badgeDotColors={[Colors.lightGrey]}
-          /> */}
+<CustomDropdown
+viewStyle={styles.dropdownView}
+              placeholder = {"Purpose of account"}
+              // data={state.formData.purpose.options}
+            />
+
+<CustomDropdown
+viewStyle={styles.dropdownView}
+              placeholder = {"Destination Country"}
+              // data={state.formData.destinationCountry.options}
+            />
+
           <View style={styles.buttonContainer}>
             <PrimaryButtonSmall
               primaryButtonContainer={{width: '100%'}}
@@ -633,6 +462,7 @@ const styles = StyleSheet.create({
     color: Colors.black,
     fontSize: actuatedNormalize(20),
     marginTop: actuatedNormalize(19),
+    marginBottom:actuatedNormalize(21)
   },
   textInput: {
     fontSize: actuatedNormalize(14),
@@ -650,4 +480,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     marginVertical: actuatedNormalize(20),
   },
+  dropdownView:{
+    marginTop:actuatedNormalize(20)
+  }
 });

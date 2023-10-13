@@ -9,6 +9,7 @@ import Instructions from '../containers/Instructions';
 import FingerPrintLogin from '../containers/FingerPrintLogin';
 import FaceId from '../containers/FaceId';
 import NationalityScreen from '../containers/NationalityScreen';
+import CustomDropdown from '../constants/CustomDropdown';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,6 +22,11 @@ const MainStack = () => {
         name="PreLoginDashBoard"
         component={PreLoginDashBoard}
       />
+      {/* <Stack.Screen
+        options={{headerShown: false}}
+        name="CustomDropdown"
+        component={CustomDropdown}
+      /> */}
       <Stack.Screen
         options={{headerShown: false}}
         name="OnBoardingScreenFirst"

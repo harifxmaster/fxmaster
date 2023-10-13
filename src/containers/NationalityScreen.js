@@ -1,4 +1,4 @@
-import { StyleSheet, View,Dimensions,Pressable,Image} from 'react-native'
+import { StyleSheet, View,Dimensions,Pressable,Image, ScrollView} from 'react-native'
 import React,{useState,useReducer} from 'react'
 import TextComponent from '../components/TextComponent';
 import Colors from '../constants/Colors';
@@ -13,6 +13,7 @@ import {PrimaryButtonSmall} from '../components/ButtonCollection';
 import DropDownPicker from 'react-native-dropdown-picker';
 import Validate from '../utils/Validate';
 import CommonHelper from '../constants/CommonHelper';
+import CustomDropdown from '../constants/CustomDropdown';
 
 import Input from '../components/Input';
 
@@ -44,6 +45,30 @@ const NationalityScreen = ({navigation}) => {
           isRequired:true
         }
       },
+      mailId:{
+        value: '',
+        valid: false,
+        touched: false,
+        errorMsg:"",
+        customErrors: {
+          MANDATORY_ERR: "Please enter your mail id",
+        },
+        validationRules:{
+          isRequired:false
+        }
+      },
+      phoneNumber:{
+        value: '',
+        valid: false,
+        touched: false,
+        errorMsg:"",
+        customErrors: {
+          MANDATORY_ERR: "Please enter your phone number",
+        },
+        validationRules:{
+          isRequired:false
+        }
+      }
     }
   
   }
@@ -150,50 +175,42 @@ const NationalityScreen = ({navigation}) => {
       />
       <TextComponent style={styles.title}>Almost there</TextComponent>
       <TextComponent style={styles.subTitle}>Help us serve you better.Your data is safe with us</TextComponent>
+      <ScrollView style={{flex:1,backgroundColor:Colors.white,width:"90%"}}>
+      <CustomDropdown
+      viewStyle={styles.dropdownView}
+      placeholder = {"Nationality"}
+      />
 
-      {/* <DropDownPicker
-            searchable={true}
-            placeholderStyle={{
-              color: Colors.tintGrey,
-              fontFamily: Fonts.Rubik_Regular,
-              fontSize: actuatedNormalize(14),
-            }}
-            dropDownContainerStyle={{
-              borderColor: Colors.lightGrey,
-              // marginTop:actuatedNormalize(20)
-            }}
-            searchContainerStyle={{
-              borderBottomColor: Colors.white,
-            }}
-            searchTextInputStyle={{
-              borderColor: Colors.lightGrey,
-            }}
-            selectedItemContainerStyle={{
-              backgroundColor: Colors.lightGrey,
-            }}
-            listItemLabelStyle={{
-              color: Colors.tintGrey,
-            }}
-            searchPlaceholder="Type into search"
-            placeholder="Select title"
-            open={openTitle}
-            value={value}
-            items={state.formData.nationality.options}
-            setOpen={setOpenTitle}
-            setValue={setValue}
-            setItems={setTitle}
-            style={{
-              borderColor: Colors.lightGrey,
-              marginTop: actuatedNormalize(21),
-            }}
-            theme="LIGHT"
-            multiple={true}
-            mode="BADGE"
-            badgeDotColors={[Colors.tintGrey]}
-          /> */}
+<CustomDropdown
+      viewStyle={styles.dropdownView}
+      placeholder = {"Country of Residence"}
+      />
+
+<View style={{flexDirection:"row",alignItems:"center",width:"100%",justifyContent:"space-between",marginTop:actuatedNormalize(20)}}>
+
+<CustomDropdown
+style={[styles.dropdownView,{flex:1}]}
+            placeholder={"+44"}
+            />
       <Input
             value={email}
             onChangeText={value => setEmail(value)}
+            editable={true}
+            returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
+            viewstyle={[styles.viewStyle, {width:"75%",left:actuatedNormalize(50)}]}
+            multiline={false}
+            textstyle={styles.textInput}
+            placeholder={'Enter your phone number'}
+            maxLength={50}
+            borderWidth={1}
+            borderColor={Colors.lightGrey}
+          />
+        
+        </View>
+          
+             <Input
+            value={state.formData.phoneNumber.value}
+            onChangeText={(value) => handleChange(value,"phoneNumber")}
             editable={true}
             returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
             viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
@@ -204,6 +221,9 @@ const NationalityScreen = ({navigation}) => {
             borderWidth={1}
             borderColor={Colors.lightGrey}
           />
+        
+
+</ScrollView>
       <View style={styles.buttonContainer}>
           <PrimaryButtonSmall
             primaryButtonContainer={{width: '100%', borderRadius: 8}}
@@ -237,7 +257,7 @@ const styles = StyleSheet.create({
       },
       centerBg: {
         flex: 1,
-        height: actuatedNormalizeVertical(512),
+        height: actuatedNormalizeVertical(560),
         width: actuatedNormalize(339),
         elevation: 5,
         borderRadius: 22,
@@ -268,16 +288,22 @@ const styles = StyleSheet.create({
         textAlign:"center"
       },
       buttonContainer: {
-        marginTop: actuatedNormalize(36),
+        // marginTop: actuatedNormalize(36),
         width: '80%',
       },
       textInput: {
         fontSize: actuatedNormalize(14),
         paddingLeft: actuatedNormalize(13),
         color: Colors.tintGrey,
+        width:"100%"
       },
       viewStyle: {
         backgroundColor: Colors.white,
-        width: "110%",
+        width: "100%",
       },
+      dropdownView:{
+        marginTop:actuatedNormalize(12),
+        
+      }
+     
 })
