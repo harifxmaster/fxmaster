@@ -7,6 +7,8 @@ const PngLocation = {
     Fingerprint:require("../../assets/images/Prelogin/fingerprint3x.png"),
     FingerprintActive:require("../../assets/images/Prelogin/fingerprintactive3x.png"),
     FaceID:require("../../assets/images/Prelogin/faceid3x.png"),
+    Dropdown:require("../../assets/images/Prelogin/dropdown.png"),
+    EditPen:require("../../assets/images/Prelogin/EditPen.png"),
 }
 
 export default PngLocation
