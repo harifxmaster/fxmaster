@@ -9,6 +9,7 @@ const PngLocation = {
     FaceID:require("../../assets/images/Prelogin/faceid3x.png"),
     Dropdown:require("../../assets/images/Prelogin/dropdown.png"),
     EditPen:require("../../assets/images/Prelogin/EditPen.png"),
+    Verified:require("../../assets/images/Prelogin/Verified.png"),
 }
 
 export default PngLocation

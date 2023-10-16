@@ -38,9 +38,10 @@ const VerifyPhone = ({navigation}) => {
           source={PngLocation.FXWordMarkLogo}
           style={styles.wordMarkLogo}
         />
-        <TextComponent style={styles.title}>Verify your phone</TextComponent>
+        <TextComponent style={styles.title}>Verify your email</TextComponent>
         <TextComponent style={styles.subTitle}>
-          We have sent you an OTP to your {'\n'} registered mobile number
+          We have sent an one time password {'\n'} to your registered Email
+          address
         </TextComponent>
         {!change ? (
           <View
@@ -49,7 +50,9 @@ const VerifyPhone = ({navigation}) => {
               alignItems: 'center',
               marginTop: actuatedNormalize(23),
             }}>
-            <TextComponent style={styles.phoneno}>+447789986935</TextComponent>
+            <TextComponent style={styles.phoneno}>
+              johndoe@gmail.com
+            </TextComponent>
             <View
               style={{
                 flexDirection: 'row',
@@ -77,7 +80,7 @@ const VerifyPhone = ({navigation}) => {
               marginTop: actuatedNormalize(23),
             }}>
             <TextInput
-              placeholder="Enter your mobile number"
+              placeholder="Enter your Email"
               placeholderTextColor="#8D8D8D"
               style={styles.textInput}
             />
@@ -94,9 +97,7 @@ const VerifyPhone = ({navigation}) => {
             </TextComponent>
           </View>
         )}
-        <OtpScreen
-        onPress= {() =>  navigation.push("PhoneNumberVerified")}
-        />
+        <OtpScreen onPress={() => navigation.push('EmailVerified')} />
       </View>
       <View style={styles.bottomBg}></View>
     </View>

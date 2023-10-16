@@ -11,6 +11,10 @@ import FaceId from '../containers/FaceId';
 import NationalityScreen from '../containers/NationalityScreen';
 import VerifyPhone from '../containers/VerifyPhone';
 import OtpScreen from '../containers/OtpScreen';
+import PhoneNumberVerified from '../containers/PhoneNumberVerified';
+import VerifyEmail from '../containers/VerifyEmail';
+import EmailVerified from '../containers/EmailVerified';
+import DobAddress from '../containers/DobAddress';
 
 const Stack = createNativeStackNavigator();
 
@@ -72,6 +76,30 @@ const MainStack = () => {
         options={{headerShown: false}}
         name="VerifyPhone"
         component={VerifyPhone}
+      />
+
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="PhoneNumberVerified"
+        component={PhoneNumberVerified}
+      />
+
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="VerifyEmail"
+        component={VerifyEmail}
+      />
+
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="EmailVerified"
+        component={EmailVerified}
+      />
+
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="DobAddress"
+        component={DobAddress}
       />
     </Stack.Navigator>
   );

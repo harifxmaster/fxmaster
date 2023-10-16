@@ -6,7 +6,7 @@ import Fonts from '../constants/Fonts';
 import {PrimaryButtonSmall} from '../components/ButtonCollection';
 import TextComponent from '../components/TextComponent';
 
-const OtpScreen = () => {
+const OtpScreen = (props) => {
   const et1 = useRef();
   const et2 = useRef();
   const et3 = useRef();
@@ -38,7 +38,7 @@ const OtpScreen = () => {
     let otp = '123456';
     let enteredOtp = f1 + f2 + f3 + f4 + f5 + f6;
     if (enteredOtp == otp) {
-      NavigationContainer.navigate('Login');
+      props.onPress();
     } else {
       Alert.alert('Entered OTP is incorrect');
     }
