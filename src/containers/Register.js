@@ -8,7 +8,7 @@ import {
   Pressable,
   Dimensions,
 } from 'react-native';
-import React, {useState, useReducer} from 'react';
+import React, { useState, useReducer, useEffect } from 'react';
 import Colors from '../constants/Colors';
 import {
   SCREEN_HEIGHT,
@@ -21,14 +21,15 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Input from '../components/Input';
 import TextComponent from '../components/TextComponent';
 import Fonts from '../constants/Fonts';
-import {PrimaryButtonSmall} from '../components/ButtonCollection';
+import { PrimaryButtonSmall } from '../components/ButtonCollection';
 import DropDownPicker from 'react-native-dropdown-picker';
 import Validate from '../utils/Validate';
 import CommonHelper from '../constants/CommonHelper';
 import CustomDropdown from '../constants/CustomDropdown';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-const Register = ({navigation}) => {
+const Register = ({ navigation }) => {
   const initialState = {
     formData: {
       title: {
@@ -36,83 +37,83 @@ const Register = ({navigation}) => {
         valid: false,
         touched: false,
         options: [
-          {label: 'Uk', value: 'Uk'},
-          {label: 'England', value: 'England'},
-          {label: 'Srilanka', value: 'Srilanka'},
-          {label: 'New Zealand', value: 'New Zealand'},
-          {label: 'India', value: 'India'},
-          {label: 'Uk', value: 'Uk'},
-          {label: 'England', value: 'England'},
-          {label: 'Srilanka', value: 'Srilanka'},
-          {label: 'New Zealand', value: 'New Zealand'},
+          { label: 'Uk', value: 'Uk' },
+          { label: 'England', value: 'England' },
+          { label: 'Srilanka', value: 'Srilanka' },
+          { label: 'New Zealand', value: 'New Zealand' },
+          { label: 'India', value: 'India' },
+          { label: 'Uk', value: 'Uk' },
+          { label: 'England', value: 'England' },
+          { label: 'Srilanka', value: 'Srilanka' },
+          { label: 'New Zealand', value: 'New Zealand' },
         ],
-        errorMsg:"",
-        validationRules:{
-          isRequired:false
+        errorMsg: "",
+        validationRules: {
+          isRequired: false
         }
       },
       firstName: {
         value: "",
         valid: false,
         touched: false,
-        errorMsg:"",
+        errorMsg: "",
         customErrors: {
           MANDATORY_ERR: "Please enter your name",
-          NUMBER_ERR:"Please enter a number",
-          MIN_LENGTH_ERR:"Please enter atleast 10 digits"
+          NUMBER_ERR: "Please enter a number",
+          MIN_LENGTH_ERR: "Please enter atleast 10 digits"
         },
-        validationRules:{
-          isRequired:false,
-         
-         
+        validationRules: {
+          isRequired: false,
+
+
         }
       },
       middleName: {
         value: '',
         valid: false,
         touched: false,
-        errorMsg:"",
+        errorMsg: "",
         customErrors: {
           MANDATORY_ERR: "Please enter your middle name",
         },
-        validationRules:{
-          isRequired:false
+        validationRules: {
+          isRequired: false
         }
       },
       lastName: {
         value: '',
         valid: false,
         touched: false,
-        errorMsg:"",
+        errorMsg: "",
         customErrors: {
           MANDATORY_ERR: "Please enter your last name",
         },
-        validationRules:{
-          isRequired:false
+        validationRules: {
+          isRequired: false
         }
       },
       enterPin: {
         value: '',
         valid: false,
         touched: false,
-        errorMsg:"",
+        errorMsg: "",
         customErrors: {
           MANDATORY_ERR: "Please enter your pin",
         },
-        validationRules:{
-          isRequired:false
+        validationRules: {
+          isRequired: false
         }
       },
       reEnterPin: {
         value: '',
         valid: false,
         touched: false,
-        errorMsg:"",
+        errorMsg: "",
         customErrors: {
           MANDATORY_ERR: "Please re-enter your pin",
         },
-        validationRules:{
-          isRequired:false
+        validationRules: {
+          isRequired: false
         }
       },
       occupation: {
@@ -120,20 +121,20 @@ const Register = ({navigation}) => {
         valid: false,
         touched: false,
         options: [
-          {label: 'Welder', value: 'Welder'},
-          {label: 'Engineer', value: 'Engineer'},
-          {label: 'Pilot', value: 'Pilot'},
-          {label: 'Tailor', value: 'Tailor'},
-          {label: 'Scientist', value: 'Scientist'},
-          {label: 'Doctor', value: 'Doctor'},
-          {label: 'Army', value: 'Army'},
-          {label: 'Teacher', value: 'Teacher'},
-          {label: 'Data Scientist', value: 'Data Scientist'},
-          {label: 'Manager', value: 'Manager'},
+          { label: 'Welder', value: 'Welder' },
+          { label: 'Engineer', value: 'Engineer' },
+          { label: 'Pilot', value: 'Pilot' },
+          { label: 'Tailor', value: 'Tailor' },
+          { label: 'Scientist', value: 'Scientist' },
+          { label: 'Doctor', value: 'Doctor' },
+          { label: 'Army', value: 'Army' },
+          { label: 'Teacher', value: 'Teacher' },
+          { label: 'Data Scientist', value: 'Data Scientist' },
+          { label: 'Manager', value: 'Manager' },
         ],
-        errorMsg:"",
-        validationRules:{
-          isRequired:false
+        errorMsg: "",
+        validationRules: {
+          isRequired: false
         }
       },
       purpose: {
@@ -141,20 +142,20 @@ const Register = ({navigation}) => {
         valid: false,
         touched: false,
         options: [
-          {label: 'Uk', value: 'Uk'},
-          {label: 'England', value: 'England'},
-          {label: 'Srilanka', value: 'Srilanka'},
-          {label: 'New Zealand', value: 'New Zealand'},
-          {label: 'India', value: 'India'},
-          {label: 'Uk', value: 'Uk'},
-          {label: 'England', value: 'England'},
-          {label: 'Srilanka', value: 'Srilanka'},
-          {label: 'New Zealand', value: 'New Zealand'},
-          {label: 'India', value: 'India'},
+          { label: 'Uk', value: 'Uk' },
+          { label: 'England', value: 'England' },
+          { label: 'Srilanka', value: 'Srilanka' },
+          { label: 'New Zealand', value: 'New Zealand' },
+          { label: 'India', value: 'India' },
+          { label: 'Uk', value: 'Uk' },
+          { label: 'England', value: 'England' },
+          { label: 'Srilanka', value: 'Srilanka' },
+          { label: 'New Zealand', value: 'New Zealand' },
+          { label: 'India', value: 'India' },
         ],
-        errorMsg:"",
-        validationRules:{
-          isRequired:false
+        errorMsg: "",
+        validationRules: {
+          isRequired: false
         }
       },
       destinationCountry: {
@@ -162,48 +163,46 @@ const Register = ({navigation}) => {
         valid: false,
         touched: false,
         options: [
-          {label: 'Uk', value: 'Uk'},
-          {label: 'England', value: 'England'},
-          {label: 'Srilanka', value: 'Srilanka'},
-          {label: 'New Zealand', value: 'New Zealand'},
-          {label: 'India', value: 'India'},
-          {label: 'Uk', value: 'Uk'},
-          {label: 'England', value: 'England'},
-          {label: 'Srilanka', value: 'Srilanka'},
-          {label: 'New Zealand', value: 'New Zealand'},
-          {label: 'India', value: 'India'},
+          { label: 'Uk', value: 'Uk' },
+          { label: 'England', value: 'England' },
+          { label: 'Srilanka', value: 'Srilanka' },
+          { label: 'New Zealand', value: 'New Zealand' },
+          { label: 'India', value: 'India' },
+          { label: 'Uk', value: 'Uk' },
+          { label: 'England', value: 'England' },
+          { label: 'Srilanka', value: 'Srilanka' },
+          { label: 'New Zealand', value: 'New Zealand' },
+          { label: 'India', value: 'India' },
         ],
-        errorMsg:"",
-        validationRules:{
-          isRequired:false
+        errorMsg: "",
+        validationRules: {
+          isRequired: false
         }
       },
     },
   };
 
 
-  const reducer = (state,action) => {
-    switch(action.type){
+  const reducer = (state, action) => {
+    switch (action.type) {
       case "commonUpdate":
-        return{
+        return {
           ...state,
           ...action.payload
         };
-        case "reset":
-          return initialState;
-          default:
-            return{
-              ...state
-            }
+      case "reset":
+        return initialState;
+      default:
+        return {
+          ...state
+        }
     }
   }
 
-  const [state,dispatch]= useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
 
   const handleChange = (value, name) => {
-    console.log(value)
-    console.log(name)
     let tempState = state;
     let tempFormData = tempState['formData']
 
@@ -215,81 +214,83 @@ const Register = ({navigation}) => {
     updatedFormElement.touched = true
 
     let ValidatonResult = Validate(
-      value, 
+      value,
       updatedFormElement.validationRules,
       null,
       null
     )
 
-    updatedFormElement.valid= ValidatonResult.valid;
-    if(!updatedFormElement.valid && updatedFormElement.touched){
+    updatedFormElement.valid = ValidatonResult.valid;
+    if (!updatedFormElement.valid && updatedFormElement.touched) {
       updatedFormElement.errorMsg = ValidatonResult.errorMsg;
-    }else{
+    } else {
       updatedFormElement.errorMsg = ""
     }
 
-    tempFormData[name]= updatedFormElement;
-    tempState["formData"]= tempFormData
+    tempFormData[name] = updatedFormElement;
+    tempState["formData"] = tempFormData
 
     dispatch({
-      type:"commonUpdate",
-      payload:tempState
+      type: "commonUpdate",
+      payload: tempState
     })
   }
 
-  
+  useEffect(()=>{
+    getData()
+  },[])
+  const getData = async() =>{
+    setTitle([await AsyncStorage.getItem('salutation_title')]);
+    setOccupation([await AsyncStorage.getItem('occupation')]);
+    setPurposeOfAccount([await AsyncStorage.getItem('purpose_of_account')]);
+    setCountries([await AsyncStorage.getItem('countries')]);
+  }
   const [openTitle, setOpenTitle] = useState(false);
   const [value, setValue] = useState(null);
-  const [title, setTitle] = useState([
-    {label: 'Spain', value: 'spain'},
-    {label: 'Madrid', value: 'madrid', parent: 'spain'},
-    {label: 'Barcelona', value: 'barcelona', parent: 'spain'},
-
-    {label: 'Italy', value: 'italy'},
-    {label: 'Rome', value: 'rome', parent: 'italy'},
-
-    {label: 'Finland', value: 'finland'},
-  ]);
+  const [title, setTitle] = useState([]);
+  const [occupation, setOccupation] = useState([]);
+  const [purposeOfAccount, setPurposeOfAccount] = useState([]);
+  const [countries, setCountries] = useState([]);
 
 
 
   const submitHandler = () => {
-   let isFormValid =  true;
-   let formData = state.formData;
-   for(let key in  formData){
-    console.log('for loop key', key);
-    let input = formData[key]
-    let fieldValidations = Validate(input.value, input.validationRules);
-    input.valid = fieldValidations.valid
-    console.log('Handle submit fieldValidation', fieldValidations);
-    input.touched = true;
-    input.errorMsg =  CommonHelper.CustomError(
-      fieldValidations.errorMsg,
-      input.customErrors
-    );
-    formData[key] = input;
-    console.log("INPUT>>>>", input);
-    dispatch({
-      type:"commonUpdate",
-      payload:formData
-    })
-    if(!input.valid){
-      isFormValid = false
+    let isFormValid = true;
+    let formData = state.formData;
+    for (let key in formData) {
+      console.log('for loop key', key);
+      let input = formData[key]
+      let fieldValidations = Validate(input.value, input.validationRules);
+      input.valid = fieldValidations.valid
+      console.log('Handle submit fieldValidation', fieldValidations);
+      input.touched = true;
+      input.errorMsg = CommonHelper.CustomError(
+        fieldValidations.errorMsg,
+        input.customErrors
+      );
+      formData[key] = input;
+      console.log("INPUT>>>>", input);
+      dispatch({
+        type: "commonUpdate",
+        payload: formData
+      })
+      if (!input.valid) {
+        isFormValid = false
+      }
+      console.log("isFormValid>>>>>>>", isFormValid)
+
     }
-    console.log("isFormValid>>>>>>>", isFormValid)
-   
-   }
-   if(isFormValid){
-    console.log('inside', isFormValid)
-    navigation.push("NationalityScreen")
-  }
+    if (isFormValid) {
+      console.log('inside', isFormValid)
+      navigation.push("NationalityScreen")
+    }
   };
   return (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       <View style={styles.topBg}>
-      <Pressable  onPress={() => navigation.goBack()}>
-        <Ionicons color={Colors.black} name="arrow-back-outline" size={actuatedNormalize(24)}  />
-      </Pressable>
+        <Pressable onPress={() => navigation.goBack()}>
+          <Ionicons color={Colors.black} name="arrow-back-outline" size={actuatedNormalize(24)} />
+        </Pressable>
       </View>
       <View style={styles.centerBg}>
         <Image
@@ -298,42 +299,43 @@ const Register = ({navigation}) => {
         />
         <TextComponent style={styles.create}>Create an Account</TextComponent>
         <ScrollView
-          style={{flex: 1, backgroundColor: Colors.white, width: '90%'}}>
-            
-            <CustomDropdown
-              placeholder = {"Select title"}
-              // data={state.formData.title.options}
-            />
-            
-    
+          style={{ flex: 1, backgroundColor: Colors.white, width: '90%' }} contentContainerStyle={{ flexGrow: 1 }}>
+          {title ?
+          <CustomDropdown
+            placeholder={"Select title"}
+            data={title}
+          />
+          :""}
+
+
 
           <Input
             value={state.formData.firstName.value}
             editable={true}
             returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
-            viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
+            viewstyle={[styles.viewStyle, { marginTop: actuatedNormalize(20) }]}
             multiline={false}
-            errorView={[styles.viewStyle,{marginTop:actuatedNormalize(10)}]}
+            errorView={[styles.viewStyle, { marginTop: actuatedNormalize(10) }]}
             textstyle={styles.textInput}
             placeholder={'First Name'}
             maxLength={50}
             errorMsg={state.formData.firstName.errorMsg}
             validationRules={state.formData.firstName.validationRules}
             borderWidth={1}
-            onChangeText={(value) => handleChange(value,"firstName")}
+            onChangeText={(value) => handleChange(value, "firstName")}
             borderColor={Colors.lightGrey}
           />
 
           <Input
             value={state.formData.middleName.value}
-            onChangeText={(value) => handleChange(value,"middleName")}
+            onChangeText={(value) => handleChange(value, "middleName")}
             editable={true}
             returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
-            viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
+            viewstyle={[styles.viewStyle, { marginTop: actuatedNormalize(20) }]}
             multiline={false}
             textstyle={styles.textInput}
             errorMsg={state.formData.middleName.errorMsg}
-            errorView={[styles.viewStyle,{marginTop:actuatedNormalize(10)}]}
+            errorView={[styles.viewStyle, { marginTop: actuatedNormalize(10) }]}
             validationRules={state.formData.middleName.validationRules}
             placeholder={'Middle Name(optional)'}
             maxLength={50}
@@ -343,14 +345,14 @@ const Register = ({navigation}) => {
 
           <Input
             value={state.formData.lastName.value}
-            onChangeText={(value) => handleChange(value,"lastName")}
+            onChangeText={(value) => handleChange(value, "lastName")}
             editable={true}
             returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
-            viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
+            viewstyle={[styles.viewStyle, { marginTop: actuatedNormalize(20) }]}
             multiline={false}
             textstyle={styles.textInput}
             errorMsg={state.formData.lastName.errorMsg}
-            errorView={[styles.viewStyle,{marginTop:actuatedNormalize(10)}]}
+            errorView={[styles.viewStyle, { marginTop: actuatedNormalize(10) }]}
             validationRules={state.formData.lastName.validationRules}
             placeholder={'Last Name'}
             maxLength={50}
@@ -360,14 +362,14 @@ const Register = ({navigation}) => {
 
           <Input
             value={state.formData.enterPin.value}
-            onChangeText={(value) => handleChange(value,"enterPin")}
+            onChangeText={(value) => handleChange(value, "enterPin")}
             editable={true}
             returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
-            viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
+            viewstyle={[styles.viewStyle, { marginTop: actuatedNormalize(20) }]}
             multiline={false}
             textstyle={styles.textInput}
             errorMsg={state.formData.enterPin.errorMsg}
-            errorView={[styles.viewStyle,{marginTop:actuatedNormalize(10)}]}
+            errorView={[styles.viewStyle, { marginTop: actuatedNormalize(10) }]}
             validationRules={state.formData.enterPin.validationRules}
             placeholder={'Enter your 6-digit PIN'}
             maxLength={50}
@@ -376,15 +378,15 @@ const Register = ({navigation}) => {
           />
 
           <Input
-           value={state.formData.reEnterPin.value}
-           onChangeText={(value) => handleChange(value,"reEnterPin")}
-           editable={true}
+            value={state.formData.reEnterPin.value}
+            onChangeText={(value) => handleChange(value, "reEnterPin")}
+            editable={true}
             returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
-            viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
+            viewstyle={[styles.viewStyle, { marginTop: actuatedNormalize(20) }]}
             multiline={false}
             textstyle={styles.textInput}
             errorMsg={state.formData.reEnterPin.errorMsg}
-            errorView={[styles.viewStyle,{marginTop:actuatedNormalize(10)}]}
+            errorView={[styles.viewStyle, { marginTop: actuatedNormalize(10) }]}
             validationRules={state.formData.reEnterPin.validationRules}
             placeholder={'Re-enter your 6-digit pin'}
             maxLength={50}
@@ -392,28 +394,35 @@ const Register = ({navigation}) => {
             borderColor={Colors.lightGrey}
           />
 
-<CustomDropdown
-viewStyle={styles.dropdownView}
-              placeholder = {"Occupation"}
-              // data={state.formData.occupation.options}
-            />
+          {occupation ?
+          <CustomDropdown
+            viewStyle={styles.dropdownView}
+            placeholder={"Occupation"}
+            data={occupation}
+          />
+          :""}
+          
+          {purposeOfAccount ?
+          <CustomDropdown
+            viewStyle={styles.dropdownView}
+            placeholder={"Purpose of account"}
+            data={purposeOfAccount}
+          />
+          :""}
 
-<CustomDropdown
-viewStyle={styles.dropdownView}
-              placeholder = {"Purpose of account"}
-              // data={state.formData.purpose.options}
-            />
-
-<CustomDropdown
-viewStyle={styles.dropdownView}
-              placeholder = {"Destination Country"}
-              // data={state.formData.destinationCountry.options}
-            />
+          {countries ?
+          <CustomDropdown
+            viewStyle={styles.dropdownView}
+            placeholder={"Destination Country"}
+            data={countries}
+          />
+          :
+          ""}
 
           <View style={styles.buttonContainer}>
             <PrimaryButtonSmall
-              primaryButtonContainer={{width: '100%'}}
-              onPress={() =>submitHandler()}
+              primaryButtonContainer={{ width: '100%' }}
+              onPress={() => submitHandler()}
               label={'Continue'}
             />
           </View>
@@ -462,25 +471,25 @@ const styles = StyleSheet.create({
     color: Colors.black,
     fontSize: actuatedNormalize(20),
     marginTop: actuatedNormalize(19),
-    marginBottom:actuatedNormalize(21)
+    marginBottom: actuatedNormalize(21)
   },
   textInput: {
     fontSize: actuatedNormalize(14),
     paddingLeft: actuatedNormalize(13),
     color: Colors.tintGrey,
-    width:"100%",
-   
+    width: "100%",
+
   },
   viewStyle: {
     backgroundColor: Colors.white,
-    width:"100%",
-  
-   
+    width: "100%",
+
+
   },
   buttonContainer: {
     marginVertical: actuatedNormalize(20),
   },
-  dropdownView:{
-    marginTop:actuatedNormalize(20)
+  dropdownView: {
+    marginTop: actuatedNormalize(20)
   }
 });
