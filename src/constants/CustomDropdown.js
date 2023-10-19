@@ -12,22 +12,22 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 const CustomDropdown = (props) => {
     const [selectedOption, setSelectedOption] = useState(props.placeholder)
     const [currentSelection, setCurrentSelection] = useState("");
+    const setAsyncData = async(val) =>{
+       await AsyncStorage.setItem(selectedOption.toLowerCase().split(" ").join("_"), JSON.stringify(val))
+    }
     return (
         <View style={styles.container}>
-            {props.data.length > 0 ?
+            {props.data && props.data.length > 0 ?
                 <SelectDropdown
                     search={true}
                     searchPlaceHolder='Type Here to Search'
                     data={JSON.parse(props.data)}
                     onSelect={(selectedItem, index) => {
                         {
-                            selectedOption.toLowerCase() == "select title" || selectedOption.toLowerCase() == "purpose of account" || selectedOption.toLowerCase() == "destination country" || selectedOption.toLowerCase() == "country of residence" || selectedOption.toLowerCase() == "nationality" ?
-                            AsyncStorage.setItem(selectedOption.toLowerCase().split(" ").join("_"), selectedItem.name)
-                            :
-                            selectedOption.toLowerCase() == "occupation" ?
-                                AsyncStorage.setItem(selectedOption.toLowerCase().split(" ").join("_"), selectedItem.occupation)
-                                :
-                                ""
+                            if(selectedOption.toLowerCase() != "nationality")
+                            setAsyncData(selectedItem.id)
+                            else
+                            setAsyncData(selectedItem.name)
                         }
                         setCurrentSelection(selectedItem);
                     }}

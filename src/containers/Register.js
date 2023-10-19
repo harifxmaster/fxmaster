@@ -7,6 +7,7 @@ import {
   StatusBar,
   Pressable,
   Dimensions,
+  Alert,
 } from 'react-native';
 import React, { useState, useReducer, useEffect } from 'react';
 import Colors from '../constants/Colors';
@@ -22,7 +23,6 @@ import Input from '../components/Input';
 import TextComponent from '../components/TextComponent';
 import Fonts from '../constants/Fonts';
 import { PrimaryButtonSmall } from '../components/ButtonCollection';
-import DropDownPicker from 'react-native-dropdown-picker';
 import Validate from '../utils/Validate';
 import CommonHelper from '../constants/CommonHelper';
 import CustomDropdown from '../constants/CustomDropdown';
@@ -30,30 +30,30 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const Register = ({ navigation }) => {
+  const [title, setTitle] = useState([]);
+  const [occupation, setOccupation] = useState([]);
+  const [purposeOfAccount, setPurposeOfAccount] = useState([]);
+  const [countries, setCountries] = useState([]);
+
+  const [firstName, setFirstName] = useState("");
+  const [middleName, setMiddleName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [pin, setPin] = useState("");
+  const [confirmPin, setConfirmPin] = useState("");
+
   const initialState = {
     formData: {
       title: {
         value: '',
         valid: false,
         touched: false,
-        options: [
-          { label: 'Uk', value: 'Uk' },
-          { label: 'England', value: 'England' },
-          { label: 'Srilanka', value: 'Srilanka' },
-          { label: 'New Zealand', value: 'New Zealand' },
-          { label: 'India', value: 'India' },
-          { label: 'Uk', value: 'Uk' },
-          { label: 'England', value: 'England' },
-          { label: 'Srilanka', value: 'Srilanka' },
-          { label: 'New Zealand', value: 'New Zealand' },
-        ],
         errorMsg: "",
         validationRules: {
           isRequired: false
         }
       },
       firstName: {
-        value: "",
+        value: '',
         valid: false,
         touched: false,
         errorMsg: "",
@@ -63,9 +63,7 @@ const Register = ({ navigation }) => {
           MIN_LENGTH_ERR: "Please enter atleast 10 digits"
         },
         validationRules: {
-          isRequired: false,
-
-
+          isRequired: true,
         }
       },
       middleName: {
@@ -89,7 +87,7 @@ const Register = ({ navigation }) => {
           MANDATORY_ERR: "Please enter your last name",
         },
         validationRules: {
-          isRequired: false
+          isRequired: true
         }
       },
       enterPin: {
@@ -101,7 +99,7 @@ const Register = ({ navigation }) => {
           MANDATORY_ERR: "Please enter your pin",
         },
         validationRules: {
-          isRequired: false
+          isRequired: true
         }
       },
       reEnterPin: {
@@ -113,25 +111,13 @@ const Register = ({ navigation }) => {
           MANDATORY_ERR: "Please re-enter your pin",
         },
         validationRules: {
-          isRequired: false
+          isRequired: true
         }
       },
       occupation: {
         value: '',
         valid: false,
         touched: false,
-        options: [
-          { label: 'Welder', value: 'Welder' },
-          { label: 'Engineer', value: 'Engineer' },
-          { label: 'Pilot', value: 'Pilot' },
-          { label: 'Tailor', value: 'Tailor' },
-          { label: 'Scientist', value: 'Scientist' },
-          { label: 'Doctor', value: 'Doctor' },
-          { label: 'Army', value: 'Army' },
-          { label: 'Teacher', value: 'Teacher' },
-          { label: 'Data Scientist', value: 'Data Scientist' },
-          { label: 'Manager', value: 'Manager' },
-        ],
         errorMsg: "",
         validationRules: {
           isRequired: false
@@ -141,18 +127,6 @@ const Register = ({ navigation }) => {
         value: '',
         valid: false,
         touched: false,
-        options: [
-          { label: 'Uk', value: 'Uk' },
-          { label: 'England', value: 'England' },
-          { label: 'Srilanka', value: 'Srilanka' },
-          { label: 'New Zealand', value: 'New Zealand' },
-          { label: 'India', value: 'India' },
-          { label: 'Uk', value: 'Uk' },
-          { label: 'England', value: 'England' },
-          { label: 'Srilanka', value: 'Srilanka' },
-          { label: 'New Zealand', value: 'New Zealand' },
-          { label: 'India', value: 'India' },
-        ],
         errorMsg: "",
         validationRules: {
           isRequired: false
@@ -162,18 +136,6 @@ const Register = ({ navigation }) => {
         value: '',
         valid: false,
         touched: false,
-        options: [
-          { label: 'Uk', value: 'Uk' },
-          { label: 'England', value: 'England' },
-          { label: 'Srilanka', value: 'Srilanka' },
-          { label: 'New Zealand', value: 'New Zealand' },
-          { label: 'India', value: 'India' },
-          { label: 'Uk', value: 'Uk' },
-          { label: 'England', value: 'England' },
-          { label: 'Srilanka', value: 'Srilanka' },
-          { label: 'New Zealand', value: 'New Zealand' },
-          { label: 'India', value: 'India' },
-        ],
         errorMsg: "",
         validationRules: {
           isRequired: false
@@ -200,6 +162,7 @@ const Register = ({ navigation }) => {
   }
 
   const [state, dispatch] = useReducer(reducer, initialState);
+
 
 
   const handleChange = (value, name) => {
@@ -236,40 +199,30 @@ const Register = ({ navigation }) => {
     })
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     getData()
-  },[])
-  const getData = async() =>{
+  }, [])
+  const getData = async () => {
     setTitle([await AsyncStorage.getItem('salutation_title')]);
     setOccupation([await AsyncStorage.getItem('occupation')]);
     setPurposeOfAccount([await AsyncStorage.getItem('purpose_of_account')]);
     setCountries([await AsyncStorage.getItem('countries')]);
   }
-  const [openTitle, setOpenTitle] = useState(false);
-  const [value, setValue] = useState(null);
-  const [title, setTitle] = useState([]);
-  const [occupation, setOccupation] = useState([]);
-  const [purposeOfAccount, setPurposeOfAccount] = useState([]);
-  const [countries, setCountries] = useState([]);
 
 
-
-  const submitHandler = () => {
+  const submitHandler = async () => {
     let isFormValid = true;
     let formData = state.formData;
     for (let key in formData) {
-      console.log('for loop key', key);
       let input = formData[key]
       let fieldValidations = Validate(input.value, input.validationRules);
       input.valid = fieldValidations.valid
-      console.log('Handle submit fieldValidation', fieldValidations);
       input.touched = true;
       input.errorMsg = CommonHelper.CustomError(
         fieldValidations.errorMsg,
         input.customErrors
       );
       formData[key] = input;
-      console.log("INPUT>>>>", input);
       dispatch({
         type: "commonUpdate",
         payload: formData
@@ -277,12 +230,16 @@ const Register = ({ navigation }) => {
       if (!input.valid) {
         isFormValid = false
       }
-      console.log("isFormValid>>>>>>>", isFormValid)
-
     }
     if (isFormValid) {
-      console.log('inside', isFormValid)
+      await AsyncStorage.setItem('firstName',formData.firstName.value)
+      await AsyncStorage.setItem('middleName',formData.middleName.value)
+      await AsyncStorage.setItem('lastName',formData.lastName.value)
+      await AsyncStorage.setItem('enterPin',formData.enterPin.value)
       navigation.push("NationalityScreen")
+    }
+    else {
+      Alert.alert("Validation Error.", "Please fill all the mandatory fields.")
     }
   };
   return (
@@ -301,11 +258,11 @@ const Register = ({ navigation }) => {
         <ScrollView
           style={{ flex: 1, backgroundColor: Colors.white, width: '90%' }} contentContainerStyle={{ flexGrow: 1 }}>
           {title ?
-          <CustomDropdown
-            placeholder={"Select title"}
-            data={title}
-          />
-          :""}
+            <CustomDropdown
+              placeholder={"Select title"}
+              data={title}
+            />
+            : ""}
 
 
 
@@ -372,8 +329,9 @@ const Register = ({ navigation }) => {
             errorView={[styles.viewStyle, { marginTop: actuatedNormalize(10) }]}
             validationRules={state.formData.enterPin.validationRules}
             placeholder={'Enter your 6-digit PIN'}
-            maxLength={50}
+            maxLength={6}
             borderWidth={1}
+            keyboardType='numeric'
             borderColor={Colors.lightGrey}
           />
 
@@ -389,35 +347,36 @@ const Register = ({ navigation }) => {
             errorView={[styles.viewStyle, { marginTop: actuatedNormalize(10) }]}
             validationRules={state.formData.reEnterPin.validationRules}
             placeholder={'Re-enter your 6-digit pin'}
-            maxLength={50}
+            maxLength={6}
             borderWidth={1}
+            keyboardType='numeric'
             borderColor={Colors.lightGrey}
           />
 
           {occupation ?
-          <CustomDropdown
-            viewStyle={styles.dropdownView}
-            placeholder={"Occupation"}
-            data={occupation}
-          />
-          :""}
-          
+            <CustomDropdown
+              viewStyle={styles.dropdownView}
+              placeholder={"Occupation"}
+              data={occupation}
+            />
+            : ""}
+
           {purposeOfAccount ?
-          <CustomDropdown
-            viewStyle={styles.dropdownView}
-            placeholder={"Purpose of account"}
-            data={purposeOfAccount}
-          />
-          :""}
+            <CustomDropdown
+              viewStyle={styles.dropdownView}
+              placeholder={"Purpose of account"}
+              data={purposeOfAccount}
+            />
+            : ""}
 
           {countries ?
-          <CustomDropdown
-            viewStyle={styles.dropdownView}
-            placeholder={"Destination Country"}
-            data={countries}
-          />
-          :
-          ""}
+            <CustomDropdown
+              viewStyle={styles.dropdownView}
+              placeholder={"Destination Country"}
+              data={countries}
+            />
+            :
+            ""}
 
           <View style={styles.buttonContainer}>
             <PrimaryButtonSmall

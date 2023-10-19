@@ -1,4 +1,4 @@
-import { StyleSheet, View, Dimensions, Pressable, Image, ScrollView, Text } from 'react-native'
+import { StyleSheet, View, Dimensions, Pressable, Image, ScrollView, Text, Alert } from 'react-native'
 import React, { useState, useReducer, useEffect } from 'react'
 import TextComponent from '../components/TextComponent';
 import Colors from '../constants/Colors';
@@ -17,155 +17,88 @@ import CustomDropdown from '../constants/CustomDropdown';
 
 import Input from '../components/Input';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import axios from 'axios';
+import Constants from '../constants/Constants';
+import { StackActions } from '@react-navigation/native';
 
 
 const NationalityScreen = ({ navigation }) => {
-  const [email, setEmail] = useState('');
-  const initialState = {
-    formData: {
-      nationality: {
-        value: '',
-        valid: false,
-        touched: false,
-        open: false,
-        options: [
-          { label: 'Uk', value: 'Uk' },
-          { label: 'England', value: 'England' },
-          { label: 'Srilanka', value: 'Srilanka' },
-          { label: 'New Zealand', value: 'New Zealand' },
-          { label: 'India', value: 'India' },
-          { label: 'Uk', value: 'Uk' },
-          { label: 'England', value: 'England' },
-          { label: 'Srilanka', value: 'Srilanka' },
-          { label: 'New Zealand', value: 'New Zealand' },
-          { label: 'India', value: 'India' },
-        ],
-        errorMsg: "",
-        validationRules: {
-          isRequired: true
-        }
-      },
-      mailId: {
-        value: '',
-        valid: false,
-        touched: false,
-        errorMsg: "",
-        customErrors: {
-          MANDATORY_ERR: "Please enter your mail id",
-        },
-        validationRules: {
-          isRequired: false
-        }
-      },
-      phoneNumber: {
-        value: '',
-        valid: false,
-        touched: false,
-        errorMsg: "",
-        customErrors: {
-          MANDATORY_ERR: "Please enter your phone number",
-        },
-        validationRules: {
-          isRequired: false
-        }
-      }
-    }
+  const [nationality, setNationality] = useState([]);
+  const [email, setEmail] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [loading,setLoading] = useState(false);
 
+  const submitHandler = async () => {
+    setLoading(true)
+    if (email.trim() == "" || mobile.trim() == "") {
+      Alert.alert("Validation Error.", "Please fill all the mandatory fields.");
+      setLoading(false)
+    }
+    else {
+      const selectedTitle = await AsyncStorage.getItem('select_title');
+      const selectedOccupation = await AsyncStorage.getItem('occupation');
+      const selectedPurposeOfAccount = await AsyncStorage.getItem('purpose_of_account');
+      const destinationCountry = await AsyncStorage.getItem('destination_country');
+      const nationality = await AsyncStorage.getItem('nationality');
+      const firstName = await AsyncStorage.getItem('firstName')
+      const middleName = await AsyncStorage.getItem('middleName')
+      const lastName = await AsyncStorage.getItem('lastName')
+      const enterPin = await AsyncStorage.getItem('enterPin')
+
+      await axios.post(Constants.BASE_URL + "API-FX-105-CustomerSignup", {
+        "title_id": selectedTitle,
+        "first_name": firstName,
+        "middle_name": middleName,
+        "last_name": lastName,
+        "country_code": "44",
+        "nationality": nationality,
+        "password": enterPin,
+        "password_confirmation": enterPin,
+        "country_id": "231",
+        "phone": mobile,
+        "email": email,
+        "is_banking_user": 2,
+        "type": "standard",
+        "occupation": selectedOccupation,
+        "account": selectedPurposeOfAccount,
+        "destination_country": destinationCountry
+      }, {
+        headers: {
+          fx_key: Constants.SUBSCRIPTION_KEY
+        }
+      }).then(response => {
+        console.log(JSON.stringify(response.data.data));
+        setAsyncData('userid',response.data.data.id)
+        setAsyncData('user_full_name',response.data.data.full_name)
+        setAsyncData('user_email',response.data.data.email)
+        setAsyncData('user_phone',response.data.data.phone)
+        setAsyncData('user_first_name',response.data.data.first_name)
+        setAsyncData('user_middle_name',response.data.data.middle_name)
+        setAsyncData('user_last_name',response.data.data.last_name)
+        setAsyncData('user_country_code',response.data.data.country_code)
+        setAsyncData('user_country_id',response.data.data.country_id)
+        setAsyncData('user_country_name',response.data.data.country_name)
+        setAsyncData('user_registration_step',response.data.data.registration_step)
+        setAsyncData('registrationToken',response.data.token)
+        setAsyncData('user_workspaces',JSON.stringify(response.data.data.workspaces))
+        setLoading(false)
+        navigation.dispatch(StackActions.replace("VerifyPhone"));
+      }).catch(error => {
+        console.log(error.response.data);
+        Alert.alert('Validation Error.',error.response.data.message);
+        setLoading(false)
+       })
+    }
   }
-
-  const reducer = (state, action) => {
-    switch (action.type) {
-      case "commonUpdate":
-        return {
-          ...state,
-          ...action.payload
-        };
-      case "reset":
-        return initialState;
-      default:
-        return {
-          ...state
-        }
-    }
+  const setAsyncData = async(key,value) =>{
+    await AsyncStorage.setItem(key,value);
   }
-
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const [countries, setCountries] = useState([]);
-
-  const handleChange = (value, name) => {
-    console.log(value)
-    console.log(name)
-    let tempState = state;
-    let tempFormData = tempState['formData']
-
-    const updatedFormElement = {
-      ...tempFormData[name]
-    }
-
-    updatedFormElement.value = value;
-    updatedFormElement.touched = true
-
-    let ValidatonResult = Validate(
-      value,
-      updatedFormElement.validationRules,
-      null,
-      null
-    )
-
-    updatedFormElement.valid = ValidatonResult.valid;
-    if (!updatedFormElement.valid && updatedFormElement.touched) {
-      updatedFormElement.errorMsg = ValidatonResult.errorMsg;
-    } else {
-      updatedFormElement.errorMsg = ""
-    }
-
-    tempFormData[name] = updatedFormElement;
-    tempState["formData"] = tempFormData
-
-    dispatch({
-      type: "commonUpdate",
-      payload: tempState
-    })
-  }
-
-  const submitHandler = () => {
-    let isFormValid = true;
-    let formData = state.formData;
-    for (let key in formData) {
-      console.log('for loop key', key);
-      let input = formData[key]
-      let fieldValidations = Validate(input.value, input.validationRules);
-      input.valid = fieldValidations.valid
-      console.log('Handle submit fieldValidation', fieldValidations);
-      input.touched = true;
-      input.errorMsg = CommonHelper.CustomError(
-        fieldValidations.errorMsg,
-        input.customErrors
-      );
-      formData[key] = input;
-      console.log("INPUT>>>>", input);
-      dispatch({
-        type: "commonUpdate",
-        payload: formData
-      })
-      if (!input.valid) {
-        isFormValid = false
-      }
-      console.log("isFormValid>>>>>>>", isFormValid)
-
-    }
-    //   if(isFormValid){
-    //    console.log('inside', isFormValid)
-    //    navigation.push("NationalityScreen")
-    //  }
-  };
 
   useEffect(() => {
     getData()
   }, [])
   const getData = async () => {
-    setCountries([await AsyncStorage.getItem('countries')]);
+    setNationality([await AsyncStorage.getItem('nationality')]);
   }
 
 
@@ -188,45 +121,44 @@ const NationalityScreen = ({ navigation }) => {
           <CustomDropdown
             viewStyle={styles.dropdownView}
             placeholder={"Nationality"}
-            data={countries}
-          />
-          <CustomDropdown
-            viewStyle={styles.dropdownView}
-            placeholder={"Country of Residence"}
-            data={countries}
+            data={nationality}
           />
 
           <View style={{ flexDirection: "row", alignItems: "center", width: "100%", justifyContent: "space-between", marginTop: actuatedNormalize(20) }}>
 
-            <CustomDropdown
+            <TextComponent
               style={[styles.dropdownView, { flex: 1 }]}
               placeholder={"+44"}
+              value={"+44"}
+              editable={false}
             />
+
             <Input
-              value={email}
-              onChangeText={value => setEmail(value)}
+              value={mobile}
+              onChangeText={value => setMobile(value)}
               editable={true}
               returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
               viewstyle={[styles.viewStyle, { width: "75%", left: actuatedNormalize(50) }]}
               multiline={false}
               textstyle={styles.textInput}
-              placeholder={'Enter your phone number'}
+              placeholder={'Enter your phone number *'}
               maxLength={50}
               borderWidth={1}
+              keyboardType='numeric'
               borderColor={Colors.lightGrey}
             />
 
           </View>
 
           <Input
-            value={state.formData.phoneNumber.value}
-            onChangeText={(value) => handleChange(value, "phoneNumber")}
+            value={email}
+            onChangeText={(value) => setEmail(value)}
             editable={true}
             returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
             viewstyle={[styles.viewStyle, { marginTop: actuatedNormalize(20) }]}
             multiline={false}
             textstyle={styles.textInput}
-            placeholder={'Enter your email id'}
+            placeholder={'Enter your email id *'}
             maxLength={50}
             borderWidth={1}
             borderColor={Colors.lightGrey}
@@ -242,8 +174,9 @@ const NationalityScreen = ({ navigation }) => {
               fontSize: actuatedNormalize(14),
               color: Colors.white,
             }}
-            onPress={() => navigation.push("VerifyPhone")}
+            onPress={()=>{submitHandler()}}
             label={'Continue'}
+            loading={loading}
           />
         </View>
       </View>
