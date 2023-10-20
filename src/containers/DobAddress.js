@@ -90,7 +90,7 @@ const DobAddress = ({navigation}) => {
               fontSize: actuatedNormalize(14),
               color: Colors.white,
             }}
-            onPress={() => navigation.push('Login')}
+            onPress={() => address && !kyc ? navigation.push('VerifyIdentity') :  navigation.push("Login")}
             label={'Continue'}
           />
         </View>

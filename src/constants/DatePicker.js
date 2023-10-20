@@ -76,18 +76,17 @@ const DatePicker = () => {
               style={{
                 borderRadius: 5,
                 marginTop: actuatedNormalize(10),
-                selectedDayBackgroundColor: 'green',
               }}
+             
               onDayPress={date => {
                 console.log(date);
                 setSelectedDate(date);
               }}
               hideExtraDays={true}
-              theme={{
-                selectedDayTextColor: Colors.lightGreen,
-                selectedDayBackgroundColor: Colors.lightGreen,
-                backgroundColor: 'red',
-              }}
+                date={selectedDate}
+           
+
+
             />
              <PrimaryButton
               primaryButtonContainer={{
