@@ -6,7 +6,7 @@ import {
   Pressable,
   TextInput,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import TextComponent from '../components/TextComponent';
 import Colors from '../constants/Colors';
 import PngLocation from '../constants/PngLocation';
@@ -18,9 +18,18 @@ import Fonts from '../constants/Fonts';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {PrimaryButtonSmall} from '../components/ButtonCollection';
 import OtpScreen from './OtpScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { StackActions } from '@react-navigation/native';
 
 const VerifyPhone = ({navigation}) => {
   const [change, setChange] = useState(false);
+  const [email, setEmail] = useState("");
+  const getData = async () => {
+    setEmail(await AsyncStorage.getItem('user_email'))
+  }
+  useEffect(() => {
+    getData()
+  })
   return (
     <View style={{flex: 1}}>
       <View style={styles.topBg}>
@@ -51,7 +60,7 @@ const VerifyPhone = ({navigation}) => {
               marginTop: actuatedNormalize(23),
             }}>
             <TextComponent style={styles.phoneno}>
-              johndoe@gmail.com
+              {email}
             </TextComponent>
             <View
               style={{
@@ -97,7 +106,7 @@ const VerifyPhone = ({navigation}) => {
             </TextComponent>
           </View>
         )}
-        <OtpScreen onPress={() => navigation.push('EmailVerified')} />
+        <OtpScreen name={"email"} onPress={() => navigation.dispatch(StackActions.replace('EmailVerified'))} />
       </View>
       <View style={styles.bottomBg}></View>
     </View>

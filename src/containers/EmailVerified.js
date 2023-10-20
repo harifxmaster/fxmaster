@@ -10,6 +10,7 @@ import {
 import Fonts from '../constants/Fonts';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {PrimaryButtonSmall} from '../components/ButtonCollection';
+import { StackActions } from '@react-navigation/native';
 
 const PhoneNumberVerified = ({navigation}) => {
   return (
@@ -43,7 +44,7 @@ const PhoneNumberVerified = ({navigation}) => {
               fontSize: actuatedNormalize(14),
               color: Colors.white,
             }}
-            onPress={() => navigation.push('DobAddress')}
+            onPress={() => navigation.dispatch(StackActions.replace('DobAddress'))}
             label={'Continue'}
           />
         </View>

@@ -106,6 +106,7 @@ const VerifyPhone = ({ navigation }) => {
           </View>
         )}
         <OtpScreen
+          name={"mobile"}
           onPress={() => navigation.dispatch(StackActions.replace("PhoneNumberVerified"))}
         />
       </View>

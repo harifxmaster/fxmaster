@@ -42,13 +42,23 @@ const OtpScreen = (props) => {
     setLoading(true)
     let enteredOtp = f1 + f2 + f3 + f4 + f5 + f6;
     const token = await AsyncStorage.getItem('registrationToken');
-    axios.post(Constants.BASE_URL + 'API-FX-106-MobileVerification',{
+    var url= "";
+    if(props.name=="mobile")
+    {
+      url = Constants.BASE_URL + 'API-FX-106-MobileVerification'
+    }
+    else
+    if(props.name=="email")
+    {
+      url = Constants.BASE_URL + 'API-FX-109-EmailVerification'
+    }
+    axios.post(url,{
       "code": enteredOtp
     },{headers:{
       Authorization:"Bearer "+token,
       fx_key:Constants.SUBSCRIPTION_KEY
     }}).then(response=>{
-      if(response.data.message=='Phone OTP Verified')
+      if(response.data.message=='Phone OTP Verified' || response.data.message=='Email OTP Verified')
       {
         setLoading(false);
         props.onPress();
