@@ -6,7 +6,7 @@ import {
   Pressable,
   TextInput,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import TextComponent from '../components/TextComponent';
 import Colors from '../constants/Colors';
 import PngLocation from '../constants/PngLocation';
@@ -16,13 +16,24 @@ import {
 } from '../constants/PixelScaling';
 import Fonts from '../constants/Fonts';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {PrimaryButtonSmall} from '../components/ButtonCollection';
+import { PrimaryButtonSmall } from '../components/ButtonCollection';
 import OtpScreen from './OtpScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { StackActions } from '@react-navigation/native';
 
-const VerifyPhone = ({navigation}) => {
+const VerifyPhone = ({ navigation }) => {
   const [change, setChange] = useState(false);
+  const [countrycode, setCountrycode] = useState("44");
+  const [phone, setPhone] = useState("");
+  const getData = async () => {
+    setCountrycode(await AsyncStorage.getItem('user_country_code'))
+    setPhone(await AsyncStorage.getItem('user_phone'))
+  }
+  useEffect(() => {
+    getData()
+  })
   return (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       <View style={styles.topBg}>
         <Pressable
           style={{
@@ -49,7 +60,7 @@ const VerifyPhone = ({navigation}) => {
               alignItems: 'center',
               marginTop: actuatedNormalize(23),
             }}>
-            <TextComponent style={styles.phoneno}>+447789986935</TextComponent>
+            <TextComponent style={styles.phoneno}>+{countrycode}{phone}</TextComponent>
             <View
               style={{
                 flexDirection: 'row',
@@ -95,7 +106,7 @@ const VerifyPhone = ({navigation}) => {
           </View>
         )}
         <OtpScreen
-        onPress= {() =>  navigation.push("PhoneNumberVerified")}
+          onPress={() => navigation.dispatch(StackActions.replace("PhoneNumberVerified"))}
         />
       </View>
       <View style={styles.bottomBg}></View>

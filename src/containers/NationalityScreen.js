@@ -68,7 +68,7 @@ const NationalityScreen = ({ navigation }) => {
         }
       }).then(response => {
         console.log(JSON.stringify(response.data.data));
-        setAsyncData('userid',response.data.data.id)
+        setAsyncData('userid',JSON.stringify(response.data.data.id))
         setAsyncData('user_full_name',response.data.data.full_name)
         setAsyncData('user_email',response.data.data.email)
         setAsyncData('user_phone',response.data.data.phone)
@@ -124,21 +124,18 @@ const NationalityScreen = ({ navigation }) => {
             data={nationality}
           />
 
-          <View style={{ flexDirection: "row", alignItems: "center", width: "100%", justifyContent: "space-between", marginTop: actuatedNormalize(20) }}>
+          <View style={{ flexDirection: "row", width: "100%",  marginTop: actuatedNormalize(20),justifyContent:'space-between',alignItems:'center' }}>
 
-            <TextComponent
-              style={[styles.dropdownView, { flex: 1 }]}
-              placeholder={"+44"}
-              value={"+44"}
-              editable={false}
-            />
+           <View style={{borderColor:Colors.lightGrey,borderWidth:1,padding:13,width:'20%',justifyContent:'center',alignItems:'center',marginRight:5}}>
+            <Text>+44</Text>
+           </View>
 
             <Input
               value={mobile}
               onChangeText={value => setMobile(value)}
               editable={true}
               returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
-              viewstyle={[styles.viewStyle, { width: "75%", left: actuatedNormalize(50) }]}
+              viewstyle={[styles.viewStyle, { width: "88%",}]}
               multiline={false}
               textstyle={styles.textInput}
               placeholder={'Enter your phone number *'}

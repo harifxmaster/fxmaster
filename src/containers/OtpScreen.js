@@ -5,6 +5,9 @@ import Colors from '../constants/Colors';
 import Fonts from '../constants/Fonts';
 import {PrimaryButtonSmall} from '../components/ButtonCollection';
 import TextComponent from '../components/TextComponent';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from '../constants/Constants';
 
 const OtpScreen = (props) => {
   const et1 = useRef();
@@ -20,6 +23,7 @@ const OtpScreen = (props) => {
   const [f5, setF5] = useState('');
   const [f6, setF6] = useState('');
   const [count, setCount] = useState(60);
+  const [loading,setLoading] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -34,14 +38,26 @@ const OtpScreen = (props) => {
     };
   }, [count]);
 
-  const otpValidate = () => {
-    let otp = '123456';
+  const otpValidate = async () => {
+    setLoading(true)
     let enteredOtp = f1 + f2 + f3 + f4 + f5 + f6;
-    if (enteredOtp == otp) {
-      props.onPress();
-    } else {
-      Alert.alert('Entered OTP is incorrect');
-    }
+    const token = await AsyncStorage.getItem('registrationToken');
+    axios.post(Constants.BASE_URL + 'API-FX-106-MobileVerification',{
+      "code": enteredOtp
+    },{headers:{
+      Authorization:"Bearer "+token,
+      fx_key:Constants.SUBSCRIPTION_KEY
+    }}).then(response=>{
+      if(response.data.message=='Phone OTP Verified')
+      {
+        setLoading(false);
+        props.onPress();
+      }
+      
+    }).catch(error=>{
+      Alert.alert(error.response.data);
+      setLoading(false)
+    })
   };
   return (
     <View style={styles.container}>
@@ -156,6 +172,7 @@ const OtpScreen = (props) => {
           }}
           onPress={() => otpValidate()}
           label={'Verify OTP'}
+          loading={loading}
         />
       </View>
       <View
