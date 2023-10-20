@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
     marginTop: actuatedNormalize(28),
   },
   inputView: {
-    width: actuatedNormalize(39),
+    width: "13%",
     height: actuatedNormalize(39),
     borderWidth: 0.5,
     borderRadius: 7,
@@ -231,6 +231,7 @@ const styles = StyleSheet.create({
     color: Colors.lightGreen,
     fontSize: actuatedNormalize(16),
     fontFamily: Fonts.Rubik_Medium,
+    padding:5
   },
   buttonContainer: {
     marginTop: actuatedNormalize(30),

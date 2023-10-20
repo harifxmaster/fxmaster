@@ -126,7 +126,7 @@ const NationalityScreen = ({ navigation }) => {
 
           <View style={{ flexDirection: "row", width: "100%",  marginTop: actuatedNormalize(20),justifyContent:'space-between',alignItems:'center' }}>
 
-           <View style={{borderColor:Colors.lightGrey,borderWidth:1,padding:13,width:'20%',justifyContent:'center',alignItems:'center',marginRight:5}}>
+           <View style={{borderColor:Colors.lightGrey,borderWidth:1,padding:13,width:'20%',justifyContent:'center',alignItems:'center',marginRight:5,borderRadius:8}}>
             <Text>+44</Text>
            </View>
 
