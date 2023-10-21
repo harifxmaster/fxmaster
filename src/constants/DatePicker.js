@@ -12,6 +12,7 @@ import {actuatedNormalize} from './PixelScaling';
 import Fonts from './Fonts';
 import {Calendar} from 'react-native-calendars';
 import {PrimaryButton} from '../components/ButtonCollection';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const DatePicker = () => {
   const {height} = Dimensions.get('window');
@@ -31,7 +32,10 @@ const DatePicker = () => {
   //   console.warn('A date has been picked: ', date);
   //   hideDatePicker();
   // };
-
+ const setAsyncData = async(key,date) =>{
+  console.log(JSON.stringify(date));
+  await AsyncStorage.setItem(key,date);
+ }
   return (
     <View
       style={{
@@ -81,6 +85,7 @@ const DatePicker = () => {
               onDayPress={date => {
                 console.log(date);
                 setSelectedDate(date);
+                setAsyncData("user_dob",date.dateString);
               }}
               hideExtraDays={true}
               theme={{

@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Image,
   StyleSheet,
@@ -9,7 +9,8 @@ import {
   Modal,
   TextInput,
   ActivityIndicator,
-  ScrollView
+  ScrollView,
+  Alert
 } from 'react-native';
 import TextComponent from '../components/TextComponent';
 import Colors from '../constants/Colors';
@@ -25,36 +26,126 @@ import DatePicker from '../constants/DatePicker';
 import axios from 'axios';
 import Constants from '../constants/Constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { StackActions } from '@react-navigation/native';
 
 const DobAddress = ({ navigation }) => {
   const [visible, setVisible] = useState(false);
   const [address, setAddress] = useState("");
   const [kyc, setKyc] = useState(false)
-  const [loading,setLoading] = useState(false);
-  const [search,setSearch] = useState("");
-  const [data,setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState("");
+  const [data, setData] = useState([]);
+
+  const [postCode, setPostCode] = useState("");
+  const [houseNumber, setHouseNumber] = useState("");
+  const [street, setStreet] = useState("");
+  const [addressInfo, setAddressInfo] = useState("");
+  const [city, setCity] = useState("");
+  const [country, setCountry] = useState("");
+  const [buttonLoading,setButtonLoading] = useState("");
+
   const addressList = [];
-  const searchAddress = async() =>{
+  const searchAddress = async () => {
     setLoading(true);
     const token = await AsyncStorage.getItem('registrationToken');
-    axios.get(Constants.BASE_URL+'API-FX-112-SearchAddress?postcode='+search,{
+    axios.get(Constants.BASE_URL + 'API-FX-112-SearchAddress?postcode=' + search, {
       headers: {
         fx_key: Constants.SUBSCRIPTION_KEY,
-        Authorization:"Bearer "+token,
+        Authorization: "Bearer " + token,
       }
-    }).then(response=>{
+    }).then(response => {
 
-      for(var i =0;i<response.data.data.length;i++)
-      {
-        if(!addressList.includes(response.data.data[i]))
-        addressList.push(response.data.data[i]);
+      for (var i = 0; i < response.data.data.length; i++) {
+        if (!addressList.includes(response.data.data[i]))
+          addressList.push(response.data.data[i]);
       }
       setData(addressList);
       setLoading(false);
-    }).catch(error=>{
-      console.log(error);
+    }).catch(error => {
+      console.log(error.response.data);
       setLoading(false);
     })
+  }
+  const updateDetails = async () => {
+    setButtonLoading(true)
+    const token = await AsyncStorage.getItem('registrationToken');
+    const user_country_id = await AsyncStorage.getItem('user_country_id');
+    axios.post(Constants.BASE_URL + "API-FX-114-AddAddress", {
+      "postcode": postCode,
+      "house_no": houseNumber,
+      "street": street,
+      "address_info": addressInfo,
+      "city": city,
+      "county": country,
+      "country_id": user_country_id,
+      "type": "home"
+    }, {
+      headers: {
+        fx_key: Constants.SUBSCRIPTION_KEY,
+        Authorization: "Bearer " + token
+      }
+    }).then(response => {
+      if (response.data.message == "Address Added Successfully") {
+        updatedob()
+      }
+    }).catch(error => {
+
+      console.log(error.response.data);
+      setButtonLoading(false)
+      Alert.alert("Error", error.response.data)
+    })
+  }
+  function pad(number) {
+    return number.toString().padStart(2, '0');
+  }
+  const updatedob = async () => {
+    const token = await AsyncStorage.getItem('registrationToken');
+    const user_dob = await AsyncStorage.getItem('user_dob');
+
+    var originalDate = new Date(user_dob);
+    var year = originalDate.getFullYear();
+    var month = originalDate.getMonth() + 1;
+    var day = originalDate.getDate();
+
+    axios.put(Constants.BASE_URL + "API-FX-123-Update",
+      {
+        "date_of_birth": pad(day)+"-"+pad(month)+"-"+year
+      },
+      {
+        headers: {
+          "fx_key": Constants.SUBSCRIPTION_KEY,
+          "Authorization": 'Bearer ' + token
+        }
+      }
+    ).then(response => {
+      if (response.data.message == "Profile Update") {
+        kycVerification()
+      }
+    }).catch(error => {
+      setButtonLoading(false)
+      Alert.alert("Error", error.response.data)
+    })
+  }
+  const kycVerification = async () => {
+    const token = await AsyncStorage.getItem('registrationToken');
+    axios.get(Constants.BASE_URL + "API-FX-129-KYC", {
+      headers: {
+        fx_key: Constants.SUBSCRIPTION_KEY,
+        Authorization: 'Bearer ' + token
+      }
+    }).then(response => {
+      setAsyncData("yotisessionID", response.data.data.sessionID);
+      setAsyncData("yotisessionToken", response.data.data.sessionToken);
+      setAsyncData("yotiurl", response.data.data.url);
+      setButtonLoading(false)
+      navigation.dispatch(StackActions.replace('WebsiteView'));
+    }).catch(error => {
+      setButtonLoading(false)
+      Alert.alert("Error", error.response.data)
+    })
+  }
+  const setAsyncData = async (key, date) => {
+    await AsyncStorage.setItem(key, date);
   }
   return (
     <View style={{ flex: 1 }}>
@@ -111,8 +202,9 @@ const DobAddress = ({ navigation }) => {
               fontSize: actuatedNormalize(14),
               color: Colors.white,
             }}
-            onPress={() => navigation.push('Login')}
+            onPress={updateDetails}
             label={'Continue'}
+            loading={buttonLoading}
           />
         </View>
       </View>
@@ -146,7 +238,7 @@ const DobAddress = ({ navigation }) => {
               </Pressable>
               <TextComponent style={styles.add}>Search Address</TextComponent>
             </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'center',alignItems:'center', width: '100%', }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: '100%', }}>
               <TextInput
                 placeholder="Search"
                 placeholderTextColor={Colors.white}
@@ -156,13 +248,13 @@ const DobAddress = ({ navigation }) => {
                   borderRadius: 5,
                   marginTop: actuatedNormalize(20),
                   paddingLeft: actuatedNormalize(22),
-                  backgroundColor:"#000000",
-                  color:Colors.white
+                  backgroundColor: "#000000",
+                  color: Colors.white
                 }}
-                onChangeText={(val)=>{setSearch(val);}}
+                onChangeText={(val) => { setSearch(val); }}
               />
               <PrimaryButton
-                primaryButtonContainer={{ borderRadius: 25,width:"22%", marginTop: actuatedNormalize(20),marginLeft:10 }}
+                primaryButtonContainer={{ borderRadius: 25, width: "22%", marginTop: actuatedNormalize(20), marginLeft: 10 }}
                 primaryButtonText={{
                   fontFamily: Fonts.Rubik_Medium,
                   fontSize: actuatedNormalize(14),
@@ -183,38 +275,44 @@ const DobAddress = ({ navigation }) => {
               Search results
             </TextComponent>
             {loading ?
-            <View style={{justifyContent:'center',alignItems:'center',width:"100%"}}>
-              <ActivityIndicator size={'large'} color={Colors.lightGreen} />
-            </View>
-            :""}
+              <View style={{ justifyContent: 'center', alignItems: 'center', width: "100%" }}>
+                <ActivityIndicator size={'large'} color={Colors.lightGreen} />
+              </View>
+              : ""}
             <ScrollView>
-            {data.map(value => {
-              return (
-                <TouchableOpacity
-                  onPress={() => {
-                    setAddress(value.postcode+","+value.house_no+","+value.street+","+value.address_info+","+value.city+","+value.county)
-                    setVisible(false)
-                  }}
-                  style={{
-                    height: actuatedNormalize(50),
-                    borderBottomWidth: 0.8,
-                    borderBottomColor: Colors.lightGrey,
-                    width: '80%',
-                    alignSelf: 'center',
-                    justifyContent: 'center',
-                  }}
-                  >
-                  <TextComponent
+              {data.map(value => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      setAddress(value.postcode + "," + value.house_no + "," + value.street + "," + value.address_info + "," + value.city + "," + value.county)
+                      setVisible(false)
+                      setPostCode(value.postcode);
+                      setHouseNumber(value.house_no);
+                      setStreet(value.street);
+                      setAddressInfo(value.address_info);
+                      setCity(value.city);
+                      setCountry(value.county);
+                    }}
                     style={{
-                      fontFamily: Fonts.Rubik_Medium,
-                      fontSize: actuatedNormalize(13),
-                      color: Colors.black,
-                    }}>
-                    {value.postcode},{value.house_no},{value.postcode},{value.address_info},{value.city},{value.county}
-                  </TextComponent>
-                </TouchableOpacity>
-              );
-            })}
+                      height: actuatedNormalize(50),
+                      borderBottomWidth: 0.8,
+                      borderBottomColor: Colors.lightGrey,
+                      width: '80%',
+                      alignSelf: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <TextComponent
+                      style={{
+                        fontFamily: Fonts.Rubik_Medium,
+                        fontSize: actuatedNormalize(13),
+                        color: Colors.black,
+                      }}>
+                      {value.postcode},{value.house_no},{value.postcode},{value.address_info},{value.city},{value.county}
+                    </TextComponent>
+                  </TouchableOpacity>
+                );
+              })}
             </ScrollView>
             <View
               style={[
