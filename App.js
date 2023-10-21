@@ -17,39 +17,7 @@ const App = () => {
   const setAsyncData = async (key, value) => {
     await AsyncStorage.setItem(key, value);
   }
-  const controlsAccess = async (permission) => {
-    check(permission)
-      .then((result) => {
-        switch (result) {
-          case RESULTS.UNAVAILABLE:
-            //Alert.alert('Permissions','This feature is not available (on this device / in this context)');
-            break;
-          case RESULTS.DENIED:
-            //Alert.alert('Permissions','The permission has not been requested / is denied but requestable');
-            break;
-          case RESULTS.LIMITED:
-            //Alert.alert('Permissions','The permission is limited: some actions are possible');
-            break;
-          case RESULTS.GRANTED:
-            //Alert.alert('Permissions','The permission is granted');
-            break;
-          case RESULTS.BLOCKED:
-            //Alert.alert('Permissions','The permission is denied and not requestable anymore');
-            break;
-        }
-      })
-      .catch((error) => {
-       Alert.alert(error);
-      });
-
-
-  }
   useEffect(() => {
-    if (Platform.OS == 'android')
-      controlsAccess(PERMISSIONS.ANDROID.CAMERA);
-    else
-      if (Platform.OS == 'ios')
-        controlsAccess(PERMISSIONS.IOS.CAMERA);
     async function loadDefaultData() {
       await axios.get(Constants.BASE_URL + "API-FX-100-App", {
         headers: {
