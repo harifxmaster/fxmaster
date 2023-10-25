@@ -1,9 +1,10 @@
 import React from 'react'
 import { View } from 'react-native'
+import TextComponent from '../components/TextComponent'
 
 const Home = () => {
   return (
-    <View>Home</View>
+    <View><TextComponent>Home</TextComponent></View>
   )
 }
 
