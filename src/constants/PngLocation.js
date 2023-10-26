@@ -11,6 +11,8 @@ const PngLocation = {
     EditPen:require("../../assets/images/Prelogin/EditPen.png"),
     Verified:require("../../assets/images/Prelogin/Verified.png"),
     Close:require("../../assets/images/Prelogin/close.png"),
+
+    //postlogin
     Profile:require("../../assets/images/postlogin/profilepic.png"),
     Edit:require("../../assets/images/postlogin/edit.png"),
     User:require("../../assets/images/postlogin/user.png"),
@@ -25,6 +27,7 @@ const PngLocation = {
     Home:require("../../assets/images/postlogin/home.png"),
     Send:require("../../assets/images/postlogin/send.png"),
     Beneficiary:require("../../assets/images/postlogin/beneficiary.png"),
+    Flag:require("../../assets/images/postlogin/flag.png"),
 }
 
 export default PngLocation

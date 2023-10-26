@@ -5,6 +5,7 @@ import AccountPreview from '../containers/AccountPreview';
 import SendMoney from '../containers/SendMoney';
 import PostLoginDashboard from '../containers/PostLoginDashboard';
 import BottomTabs from './BottomTabs';
+import EditDetails from '../containers/EditDetails';
 const Stack = createNativeStackNavigator();
 const MainStack = () => {
   return (
@@ -14,6 +15,7 @@ const MainStack = () => {
         <Stack.Screen options={{headerShown:false}} name="SendMoney" component={SendMoney}/>
         {/* <Stack.Screen options={{headerShown:false}} name="PostLoginDashboard" component={PostLoginDashboard}/> */}
         <Stack.Screen options={{headerShown:false}} name="BottomTabs" component={BottomTabs} />
+        <Stack.Screen options={{headerShown:false}} name="EditDetails" component={EditDetails} />
     </Stack.Navigator>
   )
 }
