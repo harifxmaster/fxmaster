@@ -15,7 +15,7 @@ import {actuatedNormalize} from '../constants/PixelScaling';
 import Fonts from '../constants/Fonts';
 import {PrimaryButtonSmall} from '../components/ButtonCollection';
 
-const PostLoginDashboard = () => {
+const PostLoginDashboard = ({navigation}) => {
   let userList = [
     {
       date: 'Today',
@@ -108,7 +108,9 @@ const PostLoginDashboard = () => {
             paddingHorizontal: actuatedNormalize(15),
           }}>
           <View style={{flexDirection: 'row'}}>
-            <View>
+            <Pressable onPress={() => navigation.push("Profile",{
+              profile:PngLocation.Profile
+            }) }>
               <Image
                 source={PngLocation.Profile}
                 style={{
@@ -126,7 +128,7 @@ const PostLoginDashboard = () => {
                   top: actuatedNormalize(25),
                 }}
               />
-            </View>
+            </Pressable>
             <View style={{marginLeft: actuatedNormalize(13)}}>
               <TextComponent
                 style={{

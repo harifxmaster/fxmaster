@@ -26,8 +26,15 @@ const PngLocation = {
     User9:require("../../assets/images/postlogin/user9.png"),
     Home:require("../../assets/images/postlogin/home.png"),
     Send:require("../../assets/images/postlogin/send.png"),
-    Beneficiary:require("../../assets/images/postlogin/beneficiary.png"),
     Flag:require("../../assets/images/postlogin/flag.png"),
+    Beneficiary:require("../../assets/images/postlogin/beneficiary.png"),
+    EditProfile:require("../../assets/images/postlogin/editprofile.png"),
+    AccountDetails:require("../../assets/images/postlogin/accountdetails.png"),
+    Terms:require("../../assets/images/postlogin/terms.png"),
+    Privacy:require("../../assets/images/postlogin/privacy.png"),
+    Pin:require("../../assets/images/postlogin/pin.png"),
+    CloseAccount:require("../../assets/images/postlogin/closeaccount.png"),
+    Logout:require("../../assets/images/postlogin/logout.png"),
 }
 
 export default PngLocation

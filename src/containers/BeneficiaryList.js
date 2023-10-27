@@ -159,9 +159,15 @@ const BeneficiaryList = ({navigation}) => {
           sections={beneficiaryLists}
           renderItem={({item}) => {
             return (
-              <View
+              <Pressable
+              onPress={() => navigation.push("Confirmation",{
+                name:item.title,
+                profilePic:item.image,
+                ifsc:item.number
+              }) }
                 style={{
                   flexDirection: 'row',
+                  
                   justifyContent: 'space-between',
                   marginHorizontal: actuatedNormalize(15),
                   marginVertical: actuatedNormalize(15),
@@ -204,7 +210,7 @@ const BeneficiaryList = ({navigation}) => {
                     <EditPencil color={Colors.black} name="edit" size={18} />
                   </Pressable>
                   </View>
-              </View>
+              </Pressable>
             );
           }}
           renderSectionHeader={({section}) => (
