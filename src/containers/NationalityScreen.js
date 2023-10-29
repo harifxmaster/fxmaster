@@ -30,7 +30,7 @@ const NationalityScreen = ({ navigation }) => {
 
   const submitHandler = async () => {
     setLoading(true)
-    if (email.trim() == "" || mobile.trim() == "" || nationality.trim()=="" || nationality.trim()==null  || nationality.trim()=="undefineds") {
+    if (email.trim() == "" || mobile.trim() == "" || nationality.trim()=="" || nationality.trim()==null  || nationality.trim()=="undefined") {
       Alert.alert("Validation Error.", "Please fill all the mandatory fields.");
       setLoading(false)
     }
