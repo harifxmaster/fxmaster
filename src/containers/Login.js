@@ -217,7 +217,8 @@ const styles = StyleSheet.create({
   textInput: {
     fontSize: actuatedNormalize(16),
     paddingLeft: actuatedNormalize(13),
-    width:"100%"
+    width:"100%",
+    color:Colors.black
   },
   termText: {
     marginTop: actuatedNormalize(31),

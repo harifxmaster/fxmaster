@@ -1,9 +1,9 @@
-import {StyleSheet, Text, View, TextInput, Alert} from 'react-native';
-import React, {useRef, useState, useEffect} from 'react';
-import {actuatedNormalize} from '../constants/PixelScaling';
+import { StyleSheet, Text, View, TextInput, Alert } from 'react-native';
+import React, { useRef, useState, useEffect } from 'react';
+import { actuatedNormalize } from '../constants/PixelScaling';
 import Colors from '../constants/Colors';
 import Fonts from '../constants/Fonts';
-import {PrimaryButtonSmall} from '../components/ButtonCollection';
+import { PrimaryButtonSmall } from '../components/ButtonCollection';
 import TextComponent from '../components/TextComponent';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -23,7 +23,7 @@ const OtpScreen = (props) => {
   const [f5, setF5] = useState('');
   const [f6, setF6] = useState('');
   const [count, setCount] = useState(60);
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -42,32 +42,33 @@ const OtpScreen = (props) => {
     setLoading(true)
     let enteredOtp = f1 + f2 + f3 + f4 + f5 + f6;
     const token = await AsyncStorage.getItem('registrationToken');
-    var url= "";
-    if(props.name=="mobile")
-    {
+    var url = "";
+    if (props.name == "mobile") {
       url = Constants.BASE_URL + 'API-FX-106-MobileVerification'
     }
     else
-    if(props.name=="email")
-    {
-      url = Constants.BASE_URL + 'API-FX-109-EmailVerification'
-    }
-    axios.post(url,{
+      if (props.name == "email") {
+        url = Constants.BASE_URL + 'API-FX-109-EmailVerification'
+      }
+    await axios.post(url, {
       "code": enteredOtp
-    },{headers:{
-      Authorization:"Bearer "+token,
-      fx_key:Constants.SUBSCRIPTION_KEY
-    }}).then(response=>{
-      if(response.data.message=='Phone OTP Verified' || response.data.message=='Email OTP Verified')
-      {
-        setLoading(false);
+    }, {
+      headers: {
+        Authorization: "Bearer " + token,
+        fx_key: Constants.SUBSCRIPTION_KEY
+      }
+    }).then(resp => {
+      console.log(resp.data);
+      if (resp.data.message == 'Phone OTP Verified' || resp.data.message == 'Email OTP Verified') {
         props.onPress();
       }
-      
-    }).catch(error=>{
-      Alert.alert(error.response.data);
-      setLoading(false)
-    })
+      else {
+        Alert.alert('OTP Validation', 'Invalid OTP')
+      }
+      setLoading(false);
+    }).catch(err => { Alert.alert('OTP Validation', 'Invalid OTP'); setLoading(false); })
+
+    setLoading(false);
   };
   return (
     <View style={styles.container}>
@@ -77,6 +78,7 @@ const OtpScreen = (props) => {
           style={styles.inputView}
           keyboardType="number-pad"
           maxLength={1}
+          secureTextEntry={true}
           value={f1}
           onChangeText={txt => {
             setF1(txt);
@@ -90,6 +92,7 @@ const OtpScreen = (props) => {
           style={styles.inputView}
           keyboardType="number-pad"
           maxLength={1}
+          secureTextEntry={true}
           value={f2}
           onChangeText={txt => {
             setF2(txt);
@@ -105,6 +108,7 @@ const OtpScreen = (props) => {
           style={styles.inputView}
           keyboardType="number-pad"
           maxLength={1}
+          secureTextEntry={true}
           value={f3}
           onChangeText={txt => {
             setF3(txt);
@@ -120,6 +124,7 @@ const OtpScreen = (props) => {
           style={styles.inputView}
           keyboardType="number-pad"
           maxLength={1}
+          secureTextEntry={true}
           value={f4}
           onChangeText={txt => {
             setF4(txt);
@@ -135,6 +140,7 @@ const OtpScreen = (props) => {
           style={styles.inputView}
           keyboardType="number-pad"
           maxLength={1}
+          secureTextEntry={true}
           value={f5}
           onChangeText={txt => {
             setF5(txt);
@@ -150,6 +156,7 @@ const OtpScreen = (props) => {
           style={styles.inputView}
           keyboardType="number-pad"
           maxLength={1}
+          secureTextEntry={true}
           value={f6}
           onChangeText={txt => {
             setF6(txt);
@@ -166,15 +173,15 @@ const OtpScreen = (props) => {
         <PrimaryButtonSmall
           disabled={
             f1 !== '' &&
-            f2 !== '' &&
-            f3 !== '' &&
-            f4 !== '' &&
-            f5 !== '' &&
-            f6 !== ''
+              f2 !== '' &&
+              f3 !== '' &&
+              f4 !== '' &&
+              f5 !== '' &&
+              f6 !== ''
               ? false
               : true
           }
-          primaryButtonSmallContainer={{width: '50%', borderRadius: 8}}
+          primaryButtonSmallContainer={{ width: '50%', borderRadius: 8 }}
           primaryButtonSmallText={{
             fontFamily: Fonts.Rubik_Medium,
             fontSize: actuatedNormalize(14),
@@ -193,11 +200,11 @@ const OtpScreen = (props) => {
         }}>
         <TextComponent
           onPress={() => setCount(60)}
-          style={{color: Colors.lightGreen}}>
+          style={{ color: Colors.lightGreen }}>
           Resend OTP
         </TextComponent>
         {count !== 0 && (
-          <TextComponent style={{color: Colors.black}}>
+          <TextComponent style={{ color: Colors.black }}>
             {' '}
             {count + ' seconds'}
           </TextComponent>
@@ -231,7 +238,7 @@ const styles = StyleSheet.create({
     color: Colors.lightGreen,
     fontSize: actuatedNormalize(16),
     fontFamily: Fonts.Rubik_Medium,
-    padding:5
+    padding: 5
   },
   buttonContainer: {
     marginTop: actuatedNormalize(30),

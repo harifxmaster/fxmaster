@@ -30,7 +30,7 @@ const NationalityScreen = ({ navigation }) => {
 
   const submitHandler = async () => {
     setLoading(true)
-    if (email.trim() == "" || mobile.trim() == "") {
+    if (email.trim() == "" || mobile.trim() == "" || nationality.trim()=="" || nationality.trim()==null  || nationality.trim()=="undefineds") {
       Alert.alert("Validation Error.", "Please fill all the mandatory fields.");
       setLoading(false)
     }
@@ -120,7 +120,7 @@ const NationalityScreen = ({ navigation }) => {
         <ScrollView style={{ flex: 1, backgroundColor: Colors.white, width: "90%" }}>
           <CustomDropdown
             viewStyle={styles.dropdownView}
-            placeholder={"Nationality"}
+            placeholder={"Nationality*"}
             data={nationality}
           />
 

@@ -4,21 +4,36 @@ import {
   TouchableOpacity,
   Modal,
   Dimensions,
+  TouchableNativeFeedback,
+  ScrollView,
+  Text
 } from 'react-native';
 import TextComponent from '../components/TextComponent';
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import Colors from './Colors';
-import {actuatedNormalize} from './PixelScaling';
+import { actuatedNormalize } from './PixelScaling';
 import Fonts from './Fonts';
-import {Calendar} from 'react-native-calendars';
-import {PrimaryButton} from '../components/ButtonCollection';
+import { Calendar, LocaleConfig } from 'react-native-calendars';
+import { PrimaryButton } from '../components/ButtonCollection';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import dayjs from 'dayjs';
 
 const DatePicker = () => {
-  const {height} = Dimensions.get('window');
+  const { height } = Dimensions.get('window');
   const transparent = 'rgba(0,0,0,0.5)';
   const [calendarVisible, setCalendarVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState('');
+
+  const [arr, setArr] = useState([]);
+  const [customDate, setCustomDate] = useState(dayjs());
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  useEffect(() => {
+    for (let i = dayjs().year(); i > dayjs().year() - 50; i--) {
+      setArr((prev) => [...prev, i]);
+    }
+  }, []);
+
 
   const showCalendarHandler = () => {
     setCalendarVisible(true);
@@ -32,10 +47,10 @@ const DatePicker = () => {
   //   console.warn('A date has been picked: ', date);
   //   hideDatePicker();
   // };
- const setAsyncData = async(key,date) =>{
-  console.log(JSON.stringify(date));
-  await AsyncStorage.setItem(key,date);
- }
+  const setAsyncData = async (key, date) => {
+    console.log(JSON.stringify(date));
+    await AsyncStorage.setItem(key, date);
+  }
   return (
     <View
       style={{
@@ -43,7 +58,7 @@ const DatePicker = () => {
         // justifyContent: 'center',
         // alignItems: 'center',
         // backgroundColor:"red",
-       
+
         width: '90%',
       }}>
       <TouchableOpacity
@@ -55,16 +70,16 @@ const DatePicker = () => {
       </TouchableOpacity>
       <Modal visible={calendarVisible} animationType="fade" transparent={true}>
         <View
-          style={{flex: 1, justifyContent: 'center', backgroundColor: transparent,alignItems:"center",}}>
+          style={{ flex: 1, justifyContent: 'center', backgroundColor: transparent, alignItems: "center", }}>
           <View
             style={{
-             
+
               backgroundColor: 'white',
               width: '100%',
-              height:"80%",
+              height: "80%",
               borderTopRightRadius: 25,
               borderTopLeftRadius: 25,
-              marginTop:actuatedNormalize(150)
+              marginTop: actuatedNormalize(150)
             }}>
             <View
               style={{
@@ -85,7 +100,7 @@ const DatePicker = () => {
               onDayPress={date => {
                 console.log(date);
                 setSelectedDate(date);
-                setAsyncData("user_dob",date.dateString);
+                setAsyncData("user_dob", date.dateString);
               }}
               hideExtraDays={true}
               theme={{
@@ -93,8 +108,22 @@ const DatePicker = () => {
                 selectedDayBackgroundColor: Colors.lightGreen,
                 backgroundColor: 'red',
               }}
+              renderHeader={() => (
+                <TouchableNativeFeedback onPress={() => setIsModalVisible(true)}>
+                  <View>
+                    <Text>
+                      {customDate.month() + 1} - {customDate.year()}
+                    </Text>
+                  </View>
+                </TouchableNativeFeedback>
+              )}
+              onPressArrowLeft={() => setCustomDate((prev) => dayjs(prev.format('YYYY-MM-DD')).subtract(1, 'month'))}
+              onPressArrowRight={() => setCustomDate((prev) => dayjs(prev.format('YYYY-MM-DD')).add(1, 'month'))}
+              markingType='multi-dot'
+              initialDate={customDate.format('YYYY-MM-DD')}
+              current={customDate.format('YYYY-MM-DD').toString()} 
             />
-             <PrimaryButton
+            <PrimaryButton
               primaryButtonContainer={{
                 width: '80%',
                 borderRadius: 25,
@@ -109,9 +138,70 @@ const DatePicker = () => {
               onPress={() => setCalendarVisible(false)}
               label={'Apply'}
             />
-           
+
+            {isModalVisible && arr.length > 0 && (
+              <View
+                style={{
+                  zIndex: 10,
+                  position: 'absolute',
+                  width: '100%',
+                  height: '100%',
+                  backgroundColor: Colors.backgroundColor,
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    marginBottom: 10,
+                    width: '100%',
+                    justifyContent:'center'
+                  }}
+                >
+                  <View style={{ alignItems: 'center',justifyContent:'center', width: '100%', }}>
+                    <Text style={{ fontSize: 20 }}>Select Year</Text>
+                  </View>
+                  <TouchableNativeFeedback onPress={() => setIsModalVisible(false)}>
+                    <View
+                      style={{
+                        flex: 1,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    ></View>
+                  </TouchableNativeFeedback>
+                </View>
+                <ScrollView>
+                  <View
+                    style={{
+                      alignItems: 'center',
+                      zIndex: 25,
+                      width: '100%',
+                      height: '100%',
+                    }}
+                  >
+                    {arr.map((year) => (
+                      <TouchableOpacity
+                        key={year}
+                        onPress={() => {
+                          setCustomDate((prev) => dayjs().subtract(dayjs().year() - year, 'years'));
+                          setIsModalVisible(false);
+                        }}
+                        style={{justifyContent:'center',alignItems:'center'}}
+                      >
+                        <View style={{ padding: 8, width: '100%' }}>
+                          <Text style={{ fontSize: 13, fontWeight: 'bold' }}>{year}</Text>
+                        </View>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </ScrollView>
+              </View>
+            )}
+
           </View>
-         
+
         </View>
       </Modal>
     </View>

@@ -257,7 +257,7 @@ const Register = ({ navigation }) => {
         <TextComponent style={styles.create}>Create an Account</TextComponent>
         <ScrollView
           style={{ flex: 1, backgroundColor: Colors.white, width: '90%' }} contentContainerStyle={{ flexGrow: 1 }}>
-          {title ?
+          {title && title.length!=0 ?
             <CustomDropdown
               placeholder={"Select title"}
               data={title}
@@ -353,7 +353,7 @@ const Register = ({ navigation }) => {
             borderColor={Colors.lightGrey}
           />
 
-          {occupation ?
+          {occupation && occupation.length!=0 ?
             <CustomDropdown
               viewStyle={styles.dropdownView}
               placeholder={"Occupation"}
@@ -361,7 +361,7 @@ const Register = ({ navigation }) => {
             />
             : ""}
 
-          {purposeOfAccount ?
+          {purposeOfAccount && purposeOfAccount.length!=0 ?
             <CustomDropdown
               viewStyle={styles.dropdownView}
               placeholder={"Purpose of account"}
@@ -369,7 +369,7 @@ const Register = ({ navigation }) => {
             />
             : ""}
 
-          {countries ?
+          {countries && countries.length!=0 ?
             <CustomDropdown
               viewStyle={styles.dropdownView}
               placeholder={"Destination Country"}
