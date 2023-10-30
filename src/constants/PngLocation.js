@@ -10,6 +10,31 @@ const PngLocation = {
     Dropdown:require("../../assets/images/Prelogin/dropdown.png"),
     EditPen:require("../../assets/images/Prelogin/EditPen.png"),
     Verified:require("../../assets/images/Prelogin/Verified.png"),
+    Close:require("../../assets/images/Prelogin/close.png"),
+
+    //postlogin
+    Profile:require("../../assets/images/postlogin/profilepic.png"),
+    Edit:require("../../assets/images/postlogin/edit.png"),
+    User:require("../../assets/images/postlogin/user.png"),
+    User2:require("../../assets/images/postlogin/user2.png"),
+    User3:require("../../assets/images/postlogin/user3.png"),
+    User4:require("../../assets/images/postlogin/user4.png"),
+    User5:require("../../assets/images/postlogin/user5.png"),
+    User6:require("../../assets/images/postlogin/user6.png"),
+    User7:require("../../assets/images/postlogin/user7.png"),
+    User8:require("../../assets/images/postlogin/user8.png"),
+    User9:require("../../assets/images/postlogin/user9.png"),
+    Home:require("../../assets/images/postlogin/home.png"),
+    Send:require("../../assets/images/postlogin/send.png"),
+    Flag:require("../../assets/images/postlogin/flag.png"),
+    Beneficiary:require("../../assets/images/postlogin/beneficiary.png"),
+    EditProfile:require("../../assets/images/postlogin/editprofile.png"),
+    AccountDetails:require("../../assets/images/postlogin/accountdetails.png"),
+    Terms:require("../../assets/images/postlogin/terms.png"),
+    Privacy:require("../../assets/images/postlogin/privacy.png"),
+    Pin:require("../../assets/images/postlogin/pin.png"),
+    CloseAccount:require("../../assets/images/postlogin/closeaccount.png"),
+    Logout:require("../../assets/images/postlogin/logout.png"),
 }
 
 export default PngLocation

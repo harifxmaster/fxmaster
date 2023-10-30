@@ -95,7 +95,6 @@ const DatePicker = () => {
               style={{
                 borderRadius: 5,
                 marginTop: actuatedNormalize(10),
-                selectedDayBackgroundColor: 'green',
               }}
               onDayPress={date => {
                 console.log(date);

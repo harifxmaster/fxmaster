@@ -1,5 +1,5 @@
-import { StyleSheet, View, TouchableOpacity, Image, TextInput, Text, ScrollView } from 'react-native'
-import React, { useRef, useState } from 'react'
+import { StyleSheet, View, TouchableOpacity, Image, TextInput, Text, FlatList, ScrollView } from 'react-native'
+import React,{useRef, useState} from 'react'
 import { actuatedNormalize } from './PixelScaling'
 import Colors from './Colors'
 import PngLocation from './PngLocation'
@@ -78,12 +78,12 @@ const CustomDropdown = (props) => {
     )
 }
 
-export default CustomDropdown
+export default CustomDropdown;
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: Colors.white,
+    container:{
+        flex:1,
+        backgroundColor:Colors.white,
     },
     dropdown3BtnStyle: {
         width: '100%',
@@ -121,62 +121,62 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingHorizontal: 18,
     },
-    dropdownSelector: {
-        width: "100%",
-        height: actuatedNormalize(50),
-        borderRadius: 10,
-        borderWidth: 0.5,
-        borderColor: "#D1D1C8",
+    dropdownSelector:{
+        width:"100%",
+        height:actuatedNormalize(50),
+        borderRadius:10,
+        borderWidth:0.5,
+        borderColor:"#D1D1C8",
         // marginTop:actuatedNormalize(50),
-        alignSelf: "center",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        paddingLeft: actuatedNormalize(15),
-        paddingRight: actuatedNormalize(15),
+        alignSelf:"center",
+        flexDirection:"row",
+        justifyContent:"space-between",
+        alignItems:"center",
+        paddingLeft:actuatedNormalize(15),
+        paddingRight:actuatedNormalize(15),
     },
-    dropdownIcon: {
-        width: actuatedNormalize(12),
-        height: actuatedNormalize(12)
+    dropdownIcon:{
+        width:actuatedNormalize(12),
+        height:actuatedNormalize(12)
     },
-    dropdownArea: {
-        flex: 1,
-        width: "100%",
-        height: actuatedNormalize(312),
-        borderRadius: 10,
+    dropdownArea:{
+        flex:1,
+        width:"100%",
+        height:actuatedNormalize(312),
+        borderRadius:10,
         // marginTop:actuatedNormalize(5),
         // position:"absolute",
         // zIndex:-1,
-        backgroundColor: Colors.white,
-        alignSelf: "center",
+        backgroundColor:Colors.white,
+        alignSelf:"center",
+        
+    },
+    text:{
+        color:Colors.tintGrey
+    },
+    searchInput:{
+        width:"90%",
+        height:actuatedNormalize(35),
+        borderRadius:10,
+        borderWidth:0.5,
+        color:Colors.tintGrey,
+        borderColor:Colors.tintGrey,
+        alignSelf:"center",
+        paddingLeft:actuatedNormalize(15),
+        marginTop:actuatedNormalize(20),
+        marginBottom:actuatedNormalize(10)
 
     },
-    text: {
-        color: Colors.tintGrey
+    countryItem:{
+        width:"85%",
+        height:actuatedNormalize(35),
+        alignSelf:"center",
+        justifyContent:"center"
     },
-    searchInput: {
-        width: "90%",
-        height: actuatedNormalize(35),
-        borderRadius: 10,
-        borderWidth: 0.5,
-        color: Colors.tintGrey,
-        borderColor: Colors.tintGrey,
-        alignSelf: "center",
-        paddingLeft: actuatedNormalize(15),
-        marginTop: actuatedNormalize(20),
-        marginBottom: actuatedNormalize(10)
-
-    },
-    countryItem: {
-        width: "85%",
-        height: actuatedNormalize(35),
-        alignSelf: "center",
-        justifyContent: "center"
-    },
-    listItem: {
-        color: Colors.black,
-        fontSize: actuatedNormalize(14),
-        fontFamily: Fonts.Rubik_Regular
+    listItem:{
+        color:Colors.tintGrey,
+        fontSize:actuatedNormalize(14),
+        fontFamily:Fonts.Rubik_Regular
     }
 
 })
