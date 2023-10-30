@@ -209,6 +209,8 @@ const Register = ({ navigation }) => {
     setCountries([await AsyncStorage.getItem('countries')]);
   }
 
+ 
+
 
   const submitHandler = async () => {
     let isFormValid = true;
