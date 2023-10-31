@@ -13,6 +13,7 @@ import EditProfile from '../containers/EditProfile';
 import PrivacyPolicy from '../containers/Privacy&Policy';
 import ResetLoginPin from '../containers/ResetLoginPin';
 import TermsAndConditions from '../containers/TermsAndConditions';
+import TransactionDetails from '../containers/TransactionDetails';
 const Stack = createNativeStackNavigator();
 const MainStack = () => {
   return (
@@ -29,6 +30,7 @@ const MainStack = () => {
         <Stack.Screen options={{headerShown:false}} name="PrivacyPolicy" component={PrivacyPolicy} />
         <Stack.Screen options={{headerShown:false}} name="ResetLoginPin" component={ResetLoginPin} />
         <Stack.Screen options={{headerShown:false}} name="TermsAndConditions" component={TermsAndConditions} />
+        <Stack.Screen options={{headerShown:false}} name="TransactionDetails" component={TransactionDetails} />
     </Stack.Navigator>
   )
 }

@@ -282,8 +282,6 @@ const styles = StyleSheet.create({
     width:"80%",
     alignSelf:"center",
     height:actuatedNormalize(56),
-  
-  
   },
   buttonContainer: {
     marginTop: actuatedNormalize(36),

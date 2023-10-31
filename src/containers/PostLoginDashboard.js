@@ -213,7 +213,8 @@ const PostLoginDashboard = ({navigation}) => {
           sections={userList}
           renderItem={({item}) => {
             return (
-              <View
+              <Pressable
+              onPress={() => navigation.push('TransactionDetails')}
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
@@ -250,7 +251,7 @@ const PostLoginDashboard = ({navigation}) => {
                   }}>
                   £{item.amount}
                 </TextComponent>
-              </View>
+              </Pressable>
             );
           }}
           renderSectionHeader={({section}) => (

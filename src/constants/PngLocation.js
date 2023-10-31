@@ -35,6 +35,14 @@ const PngLocation = {
     Pin:require("../../assets/images/postlogin/pin.png"),
     CloseAccount:require("../../assets/images/postlogin/closeaccount.png"),
     Logout:require("../../assets/images/postlogin/logout.png"),
+    InputEdit:require("../../assets/images/postlogin/inputedit.png"),
+    Download:require("../../assets/images/postlogin/download.png"),
+    DownloadClicked:require("../../assets/images/postlogin/downloadclicked.png"),
+    Notes:require("../../assets/images/postlogin/notes.png"),
+    NotesClicked:require("../../assets/images/postlogin/notesclicked.png"),
+    ImageUpload:require("../../assets/images/postlogin/imageupload.png"),
+    ImageUploadClicked:require("../../assets/images/postlogin/imageuploadclicked.png"),
+
 }
 
 export default PngLocation

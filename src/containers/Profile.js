@@ -4,16 +4,20 @@ import {
   View,
   Pressable,
   TouchableOpacity,
+  Modal,
+  StatusBar,
 } from 'react-native';
 import TextComponent from '../components/TextComponent';
-import React from 'react';
+import React, {useState} from 'react';
 import Colors from '../constants/Colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {actuatedNormalize} from '../constants/PixelScaling';
 import Fonts from '../constants/Fonts';
 import PngLocation from '../constants/PngLocation';
-
+import {PrimaryButtonSmall} from '../components/ButtonCollection';
 const Profile = props => {
+  const [closeAccountModal, setCloseAccountModal] = useState(false);
+  const [logoutModal, setLogoutModal] = useState(false);
   const data = [
     {
       id: 1,
@@ -121,10 +125,18 @@ const Profile = props => {
             borderTopLeftRadius: actuatedNormalize(15),
           }}>
           {data.map((item, index) => {
-          const title = item.title.replace(/\s/g, '')
+            const title = item.title.replace(/\s/g, '');
             return (
               <TouchableOpacity
-              onPress={() => props.navigation.push(title)}
+                onPress={() => {
+                  if (title === 'Closeyouraccount') {
+                    setCloseAccountModal(true);
+                  } else if (title === 'Logout') {
+                    setLogoutModal(true);
+                  } else {
+                    props.navigation.push(title);
+                  }
+                }}
                 key={item.id}
                 style={{
                   width: '100%',
@@ -133,28 +145,28 @@ const Profile = props => {
                   flexDirection: 'row',
                   alignItems: 'center',
                   height: actuatedNormalize(60),
-                  justifyContent:"space-between",
-                  paddingHorizontal:actuatedNormalize(25)
+                  justifyContent: 'space-between',
+                  paddingHorizontal: actuatedNormalize(25),
                 }}>
-                  <View style={{flexDirection:"row",alignItems:"center"}}>
-                <Image
-                  source={item.icon}
-                  style={{
-                    width: actuatedNormalize(24),
-                    height: actuatedNormalize(24),
-                  }}
-                  resizeMode="contain"
-                />
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Image
+                    source={item.icon}
+                    style={{
+                      width: actuatedNormalize(24),
+                      height: actuatedNormalize(24),
+                    }}
+                    resizeMode="contain"
+                  />
 
-                <TextComponent
-                  style={{
-                    color: Colors.black,
-                    fontSize: actuatedNormalize(14),
-                    fontFamily: Fonts.Rubik_Regular,
-                    marginLeft: actuatedNormalize(16),
-                  }}>
-                  {item.title}
-                </TextComponent>
+                  <TextComponent
+                    style={{
+                      color: Colors.black,
+                      fontSize: actuatedNormalize(14),
+                      fontFamily: Fonts.Rubik_Regular,
+                      marginLeft: actuatedNormalize(16),
+                    }}>
+                    {item.title}
+                  </TextComponent>
                 </View>
                 <Ionicons
                   color={Colors.lightGrey}
@@ -166,6 +178,138 @@ const Profile = props => {
           })}
         </View>
       </View>
+
+      <Modal transparent={true} animationType="none" visible={logoutModal}>
+        <TouchableOpacity
+          onPress={() => setLogoutModal(false)}
+          style={{
+            justifyContent: 'center',
+            flex: 1,
+            backgroundColor: 'rgba(0,0,0,0.60)',
+          }}>
+          <View
+            style={{
+              width: actuatedNormalize(324),
+              backgroundColor: Colors.white,
+              height: actuatedNormalize(325),
+              borderRadius: 11,
+              alignSelf: 'center',
+            }}>
+            <TextComponent
+              style={{
+                color: Colors.black,
+                fontSize: actuatedNormalize(20),
+                fontFamily: Fonts.Rubik_Regular,
+                textAlign: 'center',
+                marginTop: actuatedNormalize(48),
+              }}>
+              Are you sure do you want {'\n'} to logout?
+            </TextComponent>
+            <View style={styles.buttonContainer}>
+              <PrimaryButtonSmall
+                primaryButtonSmallContainer={{
+                  width: '50%',
+                  borderRadius: 25,
+                  marginTop: actuatedNormalize(51),
+                }}
+                primaryButtonSmallText={{
+                  fontFamily: Fonts.Rubik_Medium,
+                  fontSize: actuatedNormalize(14),
+                  color: Colors.white,
+                }}
+                // onPress={() => props.navigation.goBack()}
+                label={'Yes'}
+              />
+
+              <PrimaryButtonSmall
+                primaryButtonSmallContainer={{
+                  width: '50%',
+                  borderRadius: 25,
+                  backgroundColor: Colors.white,
+                  borderWidth: 1,
+                  borderColor: Colors.lightGreen,
+                  marginTop: actuatedNormalize(20),
+                }}
+                primaryButtonSmallText={{
+                  fontFamily: Fonts.Rubik_Medium,
+                  fontSize: actuatedNormalize(14),
+                  color: Colors.lightGreen,
+                }}
+                onPress={() => setLogoutModal(false)}
+                label={'No'}
+              />
+            </View>
+          </View>
+        </TouchableOpacity>
+      </Modal>
+
+      <Modal
+        transparent={true}
+        animationType="none"
+        visible={closeAccountModal}>
+        <TouchableOpacity
+          onPress={() => setCloseAccountModal(false)}
+          style={{
+            justifyContent: 'center',
+            flex: 1,
+            backgroundColor: 'rgba(0,0,0,0.60)',
+          }}>
+          <View
+            style={{
+              width: actuatedNormalize(324),
+              backgroundColor: Colors.white,
+              height: actuatedNormalize(325),
+              borderRadius: 11,
+              alignSelf: 'center',
+            }}>
+            <TextComponent
+
+              style={{
+                color: Colors.black,
+                fontSize: actuatedNormalize(20),
+                fontFamily: Fonts.Rubik_Regular,
+                textAlign: 'center',
+                marginTop: actuatedNormalize(48),
+              }}>
+              Are you sure you want {'\n'} to close your account?
+            </TextComponent>
+            <View style={styles.buttonContainer}>
+              <PrimaryButtonSmall
+                primaryButtonSmallContainer={{
+                  width: '50%',
+                  borderRadius: 25,
+                  marginTop: actuatedNormalize(51),
+                }}
+                primaryButtonSmallText={{
+                  fontFamily: Fonts.Rubik_Medium,
+                  fontSize: actuatedNormalize(14),
+                  color: Colors.white,
+                }}
+                // onPress={() => props.navigation.goBack()}
+                label={'Yes'}
+              />
+
+              <PrimaryButtonSmall
+                primaryButtonSmallContainer={{
+                  width: '50%',
+                  borderRadius: 25,
+                  backgroundColor: Colors.white,
+                  borderWidth: 1,
+                  borderColor: Colors.lightGreen,
+                  marginTop: actuatedNormalize(20),
+                }}
+                primaryButtonSmallText={{
+                  fontFamily: Fonts.Rubik_Medium,
+                  fontSize: actuatedNormalize(14),
+                  color: Colors.lightGreen,
+                }}
+                onPress={() =>setCloseAccountModal(false)}
+                label={'No'}
+              />
+            </View>
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </View>
   );
 };
