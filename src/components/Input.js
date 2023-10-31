@@ -18,7 +18,7 @@ const Input = props => {
   console.log('errormsg',props.errorMsg)
   let viewstyle = [
     styles.viewstyle,
-    {backgroundColor: props.editable === false ? Colors.white : '#EEEEEE'},
+    {backgroundColor: props.editable === false ?  '#E4E4E4' : Colors.white },
     props.viewstyle,
   ];
 
@@ -40,7 +40,7 @@ const Input = props => {
             {
               ...styles.defaultTextStyle,
               width: props.editable === false ? '100%' : '80%',
-              backgroundColor: props.errorMsg ? "#FDE0E2": Colors.white,
+              backgroundColor: props.errorMsg ?  "#FDE0E2": !props.editable? "#E4E4E4" : Colors.white,
               ...props.textstyle,
             },
           ]}

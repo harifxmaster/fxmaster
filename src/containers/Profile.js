@@ -28,12 +28,12 @@ const Profile = props => {
     {
       id: 3,
       icon: PngLocation.Pin,
-      title: 'Reset Login PIN',
+      title: 'Reset Login Pin',
     },
     {
       id: 4,
       icon: PngLocation.Terms,
-      title: 'Terms and conditions',
+      title: 'Terms And Conditions',
     },
     {
       id: 5,
@@ -121,8 +121,10 @@ const Profile = props => {
             borderTopLeftRadius: actuatedNormalize(15),
           }}>
           {data.map((item, index) => {
+          const title = item.title.replace(/\s/g, '')
             return (
               <TouchableOpacity
+              onPress={() => props.navigation.push(title)}
                 key={item.id}
                 style={{
                   width: '100%',

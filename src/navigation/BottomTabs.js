@@ -6,7 +6,7 @@ import BeneficiaryList from '../containers/BeneficiaryList';
 import Colors from '../constants/Colors';
 import PngLocation from '../constants/PngLocation';
 import {actuatedNormalize} from '../constants/PixelScaling';
-import SendMoney from '../containers/SendMoney';
+// import SendMoney from '../containers/SendMoney';
 
 const Tab = createBottomTabNavigator();
 
@@ -42,7 +42,7 @@ const BottomTabs = () => {
           ),
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="SendMoney"
         component={SendMoney}
         options={{
@@ -58,7 +58,7 @@ const BottomTabs = () => {
             />
           ),
         }}
-      />
+      /> */}
       <Tab.Screen
         name="BeneficiaryList"
         component={BeneficiaryList}
