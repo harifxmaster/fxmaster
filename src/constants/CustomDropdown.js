@@ -28,7 +28,7 @@ const CustomDropdown = props => {
     );
   };
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, props.containerStyle]}>
       {props.image ? (
         <Image
           source={props.image}
@@ -46,7 +46,7 @@ const CustomDropdown = props => {
       {props.data && props.data.length > 0 ? (
         <SelectDropdown
           search={true}
-          searchPlaceHolder="Type Here to Search"
+          searchPlaceHolder={props.placeholder ?  props.placeholder : "Type Here to Search"}
           data={JSON.parse(props.data)}
           onSelect={(selectedItem, index) => {
             {
@@ -129,8 +129,8 @@ export default CustomDropdown;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
+    // flex: 1,
+    // justifyContent: 'center',
     // backgroundColor:Colors.white,
   },
   dropdown3BtnStyle: {

@@ -24,7 +24,7 @@ import Fonts from '../constants/Fonts';
 import TextComponent from '../components/TextComponent';
 import {PrimaryButton} from '../components/ButtonCollection';
 
-export default function SendMoney({navigation}) {
+export default function SendMoney(props) {
   const currencies = ['GBP', 'INR'];
 
   return (
@@ -279,7 +279,7 @@ export default function SendMoney({navigation}) {
               fontSize: actuatedNormalize(16),
               color: Colors.white,
             }}
-            onPress={() => navigation.push('SelectBeneficiary')}
+            onPress={() => props.navigation.push('SelectBeneficiary')}
             label={'Send'}
           />
         </View>

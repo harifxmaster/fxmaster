@@ -42,6 +42,13 @@ const PngLocation = {
     NotesClicked:require("../../assets/images/postlogin/notesclicked.png"),
     ImageUpload:require("../../assets/images/postlogin/imageupload.png"),
     ImageUploadClicked:require("../../assets/images/postlogin/imageuploadclicked.png"),
+    Clicked:require("../../assets/images/postlogin/clicked.png"),
+    UnClicked:require("../../assets/images/postlogin/unclicked.png"),
+    Card:require("../../assets/images/postlogin/card.png"),
+    Globe:require("../../assets/images/postlogin/globe.png"),
+    DownloadIcon:require("../../assets/images/postlogin/downloadicon.png"),
+    SuccessTick:require("../../assets/images/postlogin/successtick.png"),
+
 
 }
 

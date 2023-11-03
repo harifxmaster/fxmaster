@@ -15,6 +15,9 @@ import TermsAndConditions from '../containers/TermsAndConditions';
 import TransactionDetails from '../containers/TransactionDetails';
 import SelectBeneficiary from '../containers/SelectBeneficiary';
 import BeneficiaryConfirmation from '../containers/BeneficiaryConfirmation';
+import SelectPaymentType from '../containers/SelectPaymentType';
+import Preview from '../containers/Preview';
+import TransferDetails from '../containers/TransferDetails';
 
 const Stack = createNativeStackNavigator();
 
@@ -90,6 +93,21 @@ const MainStack = () => {
         options={{headerShown: false}}
         name="BeneficiaryConfirmation"
         component={BeneficiaryConfirmation}
+      />
+       <Stack.Screen
+        options={{headerShown: false}}
+        name="SelectPaymentType"
+        component={SelectPaymentType}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="Preview"
+        component={Preview}
+      />
+       <Stack.Screen
+        options={{headerShown: false}}
+        name="TransferDetails"
+        component={TransferDetails}
       />
     </Stack.Navigator>
   );

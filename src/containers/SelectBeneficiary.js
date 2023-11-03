@@ -176,7 +176,7 @@ const BeneficiaryList = ({navigation}) => {
             return (
               <Pressable
                 onPress={() =>
-                  navigation.push('Confirmation', {
+                  navigation.push('BeneficiaryConfirmation', {
                     name: item.title,
                     profilePic: item.image,
                     ifsc: item.number,
