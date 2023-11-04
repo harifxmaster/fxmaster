@@ -1,11 +1,10 @@
 import {
   StyleSheet,
-  Text,
+  Image,
   View,
   Pressable,
   TextInput,
   Platform,
-  
 } from 'react-native';
 import React from 'react';
 import Colors from '../constants/Colors';
@@ -15,23 +14,24 @@ import Fonts from '../constants/Fonts';
 import {actuatedNormalize} from '../constants/PixelScaling';
 
 const Input = props => {
-  console.log('errormsg',props.errorMsg)
   let viewstyle = [
     styles.viewstyle,
-    {backgroundColor: props.editable === false ?  '#E4E4E4' : Colors.white },
+    {backgroundColor: props.editable === false ? '#E4E4E4' : Colors.white},
     props.viewstyle,
   ];
 
   if (props.errorMsg || props.globalerror) {
-    viewstyle = [styles.errorview, props.errorview]
+    viewstyle = [styles.errorview, props.errorview];
   }
 
   return (
     <View style={[{flexDirection: 'coloumn'}]}>
+      
       <Pressable
+      
         style={viewstyle}
         removeClippedSubviews={props.removeClippedSubviews}>
-          {/* {
+        {/* {
            props.icon ? props.icon(): null
           } */}
         <TextInput
@@ -40,7 +40,11 @@ const Input = props => {
             {
               ...styles.defaultTextStyle,
               width: props.editable === false ? '100%' : '80%',
-              backgroundColor: props.errorMsg ?  "#FDE0E2": !props.editable? "#E4E4E4" : Colors.white,
+              backgroundColor: props.errorMsg
+                ? '#FDE0E2'
+                : !props.editable
+                ? '#E4E4E4'
+                : Colors.white,
               ...props.textstyle,
             },
           ]}
@@ -63,14 +67,44 @@ const Input = props => {
           textAlign={'left'}
           multiline={props.multiline}
           onBlur={props.onBlur}
-          
         />
-        {/* {props.icon ? props.icon() : null} */}
+        {props.image ? (
+        <Image
+          source={props.image}
+          style={{
+            height: actuatedNormalize(26),
+            width: actuatedNormalize(26),
+            position: 'absolute',
+           
+            marginLeft: actuatedNormalize(5),
+          }}
+        />
+      ) : null}
+        {props.icon ? (
+          <Image
+            source={props.icon}
+            style={{
+              height: actuatedNormalize(10),
+              width: actuatedNormalize(10),
+              position: 'absolute',
+              right: actuatedNormalize(1),
+              marginRight: actuatedNormalize(15),
+            }}
+          />
+        ) : null}
       </Pressable>
-      {props.errorMsg ?
-        <TextComponent style={[styles.errorstyle, Platform.OS === 'ios' ?  {marginTop: actuatedNormalize(2)}  :{  bottom: actuatedNormalize(0)} , props.errorstyle]}>{showErrorMessage(props)}</TextComponent>
-        : null
-      }
+      {props.errorMsg ? (
+        <TextComponent
+          style={[
+            styles.errorstyle,
+            Platform.OS === 'ios'
+              ? {marginTop: actuatedNormalize(2)}
+              : {bottom: actuatedNormalize(0)},
+            props.errorstyle,
+          ]}>
+          {showErrorMessage(props)}
+        </TextComponent>
+      ) : null}
     </View>
   );
 };
@@ -92,10 +126,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 8,
     height: actuatedNormalize(50),
-   
+
     borderWidth: 0.1,
     borderColor: '#D1D1C8',
- 
 
     // marginLeft:actuatedNormalize(13),
 
@@ -103,15 +136,15 @@ const styles = StyleSheet.create({
   },
   errorview: {
     width: '100%',
-    backgroundColor: "#FDE0E2",
+    backgroundColor: '#FDE0E2',
     flexDirection: 'row',
-    borderColor: "#D22630",
+    borderColor: '#D22630',
     elevation: 2,
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'space-between',
     borderBottomWidth: 1.5,
-    borderWidth:1.5,
+    borderWidth: 1.5,
     // shadowColor: "#000",
     // shadowOffset: {
     //   width: 0,
@@ -121,13 +154,12 @@ const styles = StyleSheet.create({
     // shadowRadius: 1.41,
     // paddingHorizontal:actuatedNormalize(15),
     height: actuatedNormalize(52),
-  
+
     //paddingVertical:10 //only ios
   },
   errorstyle: {
     color: Colors.primary,
     fontSize: actuatedNormalize(12),
     fontFamily: Fonts.Rubik_Regular,
-   
-  }
+  },
 });

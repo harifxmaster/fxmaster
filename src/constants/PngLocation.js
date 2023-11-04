@@ -35,6 +35,21 @@ const PngLocation = {
     Pin:require("../../assets/images/postlogin/pin.png"),
     CloseAccount:require("../../assets/images/postlogin/closeaccount.png"),
     Logout:require("../../assets/images/postlogin/logout.png"),
+    InputEdit:require("../../assets/images/postlogin/inputedit.png"),
+    Download:require("../../assets/images/postlogin/download.png"),
+    DownloadClicked:require("../../assets/images/postlogin/downloadclicked.png"),
+    Notes:require("../../assets/images/postlogin/notes.png"),
+    NotesClicked:require("../../assets/images/postlogin/notesclicked.png"),
+    ImageUpload:require("../../assets/images/postlogin/imageupload.png"),
+    ImageUploadClicked:require("../../assets/images/postlogin/imageuploadclicked.png"),
+    Clicked:require("../../assets/images/postlogin/clicked.png"),
+    UnClicked:require("../../assets/images/postlogin/unclicked.png"),
+    Card:require("../../assets/images/postlogin/card.png"),
+    Globe:require("../../assets/images/postlogin/globe.png"),
+    DownloadIcon:require("../../assets/images/postlogin/downloadicon.png"),
+    SuccessTick:require("../../assets/images/postlogin/successtick.png"),
+
+
 }
 
 export default PngLocation

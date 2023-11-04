@@ -1,11 +1,6 @@
-import {
-  StyleSheet,
-  View,
-  Pressable,
-  ScrollView
-} from 'react-native';
+import {StyleSheet, View, Pressable, ScrollView} from 'react-native';
 import TextComponent from '../components/TextComponent';
-import React, {useReducer} from 'react';
+import React, {useReducer, useState, useEffect} from 'react';
 import Colors from '../constants/Colors';
 import {actuatedNormalize} from '../constants/PixelScaling';
 import Fonts from '../constants/Fonts';
@@ -13,9 +8,20 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Input from '../components/Input';
 import Validate from '../utils/Validate';
 import CommonHelper from '../constants/CommonHelper';
-import { PrimaryButton } from '../components/ButtonCollection';
+import {PrimaryButton} from '../components/ButtonCollection';
+import PngLocation from '../constants/PngLocation';
+import CustomDropdown from '../constants/CustomDropdown';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const EditProfile = (props) => {
+const EditProfile = props => {
+  const [residence, setResidence] = useState([]);
+
+  useEffect(() => {
+    getData();
+  }, []);
+  const getData = async () => {
+    setResidence([await AsyncStorage.getItem('salutation_title')]);
+  };
   const initialState = {
     formData: {
       firstName: {
@@ -25,97 +31,89 @@ const EditProfile = (props) => {
         errorMsg: '',
         customErrors: {
           MANDATORY_ERR: 'Please enter your first name',
-       
         },
         validationRules: {
           isRequired: false,
         },
-    },
-    
-        middleName: {
-            value: '',
-            valid: false,
-            touched: false,
-            errorMsg: '',
-            customErrors: {
-              MANDATORY_ERR: 'Please enter middle name',
-          
-            },
-            validationRules: {
-              isRequired: false,
-            },
-          },
+      },
 
-          lastName: {
-            value: '',
-            valid: false,
-            touched: false,
-            errorMsg: '',
-            customErrors: {
-              MANDATORY_ERR: 'Please enter last name',
-           
-            },
-            validationRules: {
-              isRequired: false,
-            },
-          },
+      middleName: {
+        value: '',
+        valid: false,
+        touched: false,
+        errorMsg: '',
+        customErrors: {
+          MANDATORY_ERR: 'Please enter middle name',
+        },
+        validationRules: {
+          isRequired: false,
+        },
+      },
 
-          title: {
-            value: '',
-            valid: false,
-            touched: false,
-            errorMsg: '',
-            customErrors: {
-              MANDATORY_ERR: 'Please enter title',
-             
-            },
-            validationRules: {
-              isRequired: false,
-            },
-          },
+      lastName: {
+        value: '',
+        valid: false,
+        touched: false,
+        errorMsg: '',
+        customErrors: {
+          MANDATORY_ERR: 'Please enter last name',
+        },
+        validationRules: {
+          isRequired: false,
+        },
+      },
 
-          email: {
-            value: '',
-            valid: false,
-            touched: false,
-            errorMsg: '',
-            customErrors: {
-              MANDATORY_ERR: 'Please enter email',
-             
-            },
-            validationRules: {
-              isRequired: false,
-            },
-          },
-          phoneNumber:{
-            value: '',
-            valid: false,
-            touched: false,
-            errorMsg: '',
-            customErrors: {
-              MANDATORY_ERR: 'Please enter phone number',
-              NUMBER_ERR: 'Please enter a number',
-              MIN_LENGTH_ERR: 'Please enter atleast 10 digits',
-            },
-            validationRules: {
-              isRequired: false,
-            },
+      title: {
+        value: '',
+        valid: false,
+        touched: false,
+        errorMsg: '',
+        customErrors: {
+          MANDATORY_ERR: 'Please enter title',
+        },
+        validationRules: {
+          isRequired: false,
+        },
+      },
 
-          },
-          nationality: {
-            value: '',
-            valid: false,
-            touched: false,
-            errorMsg: '',
-            customErrors: {
-              MANDATORY_ERR: 'Please enter your notes',
-             
-            },
-            validationRules: {
-              isRequired: false,
-            },
-          },
-   
+      email: {
+        value: '',
+        valid: false,
+        touched: false,
+        errorMsg: '',
+        customErrors: {
+          MANDATORY_ERR: 'Please enter email',
+        },
+        validationRules: {
+          isRequired: false,
+        },
+      },
+      phoneNumber: {
+        value: '',
+        valid: false,
+        touched: false,
+        errorMsg: '',
+        customErrors: {
+          MANDATORY_ERR: 'Please enter phone number',
+          NUMBER_ERR: 'Please enter a number',
+          MIN_LENGTH_ERR: 'Please enter atleast 10 digits',
+        },
+        validationRules: {
+          isRequired: false,
+        },
+      },
+      nationality: {
+        value: '',
+        valid: false,
+        touched: false,
+        errorMsg: '',
+        customErrors: {
+          MANDATORY_ERR: 'Please enter your notes',
+        },
+        validationRules: {
+          isRequired: false,
+        },
+      },
     },
   };
 
@@ -222,154 +220,193 @@ const EditProfile = (props) => {
               // style={{paddingLeft: actuatedNormalize(5)}}
             />
           </Pressable>
-          <TextComponent style={styles.headerText}>
-            Edit Profile
-          </TextComponent>
+          <TextComponent style={styles.headerText}>Edit Profile</TextComponent>
         </View>
       </View>
 
       <View style={styles.bottomLayer}>
-       
-      <ScrollView>
-       
-
-<Input
-          value={state.formData.title.value}
-          editable={false}
-          returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
-          viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
-          multiline={false}
-          errorView={[styles.viewStyle, {marginTop: actuatedNormalize(10)}]}
-          textstyle={styles.textInput}
-          placeholder={'Title'}
-          maxLength={50}
-          errorMsg={state.formData.title.errorMsg}
-          validationRules={state.formData.title.validationRules}
-          borderWidth={1}
-          onChangeText={value => handleChange(value, 'title')}
-          borderColor={Colors.lightGrey}
-        />
-
-<Input
-          value={state.formData.firstName.value}
-          editable={false}
-          returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
-          viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
-          multiline={false}
-          errorView={[styles.viewStyle, {marginTop: actuatedNormalize(10)}]}
-          textstyle={styles.textInput}
-          placeholder={'First name'}
-          maxLength={50}
-          errorMsg={state.formData.firstName.errorMsg}
-          validationRules={state.formData.firstName.validationRules}
-          borderWidth={1}
-          onChangeText={value => handleChange(value, 'firstName')}
-          borderColor={Colors.lightGrey}
-        />
-
-<Input
-          value={state.formData.middleName.value}
-          editable={false}
-          returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
-          viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
-          multiline={false}
-          errorView={[styles.viewStyle, {marginTop: actuatedNormalize(10)}]}
-          textstyle={styles.textInput}
-          placeholder={'Middle name (optional)'}
-          maxLength={50}
-          errorMsg={state.formData.middleName.errorMsg}
-          validationRules={state.formData.middleName.validationRules}
-          borderWidth={1}
-          onChangeText={value => handleChange(value, 'middleName')}
-          borderColor={Colors.lightGrey}
-        />
-
-
-<Input
-          value={state.formData.lastName.value}
-          editable={false}
-          returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
-          viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
-          multiline={false}
-          errorView={[styles.viewStyle, {marginTop: actuatedNormalize(10)}]}
-          textstyle={styles.textInput}
-          placeholder={'Last name'}
-          maxLength={50}
-          errorMsg={state.formData.lastName.errorMsg}
-          validationRules={state.formData.lastName.validationRules}
-          borderWidth={1}
-          onChangeText={value => handleChange(value, 'lastName')}
-          borderColor={Colors.lightGrey}
-        />
-
-<Input
-          value={state.formData.email.value}
-          editable={true}
-          returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
-          viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
-          multiline={false}
-          errorView={[styles.viewStyle, {marginTop: actuatedNormalize(10)}]}
-          textstyle={styles.textInput}
-          placeholder={'Email'}
-          maxLength={50}
-          errorMsg={state.formData.email.errorMsg}
-          validationRules={state.formData.email.validationRules}
-          borderWidth={1}
-          onChangeText={value => handleChange(value, 'email')}
-          borderColor={Colors.lightGrey}
-        />
-
-
-
-
-
-<Input
-          value={state.formData.nationality.value}
-          editable={true}
-          returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
-          viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
-          multiline={true}
-          errorView={[styles.viewStyle, {marginTop: actuatedNormalize(10)}]}
-          textstyle={styles.textInput}
-          placeholder={'Nationality'}
-          maxLength={50}
-          errorMsg={state.formData.nationality.errorMsg}
-          validationRules={state.formData.nationality.validationRules}
-          borderWidth={1}
-          onChangeText={value => handleChange(value, 'nationality')}
-          borderColor={Colors.lightGrey}
-        />
-
-<Input
-          value={state.formData.phoneNumber.value}
-          editable={true}
-          returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
-          viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
-          multiline={true}
-          errorView={[styles.viewStyle, {marginTop: actuatedNormalize(10)}]}
-          textstyle={styles.textInput}
-          placeholder={'Phone Number'}
-          maxLength={50}
-          errorMsg={state.formData.phoneNumber.errorMsg}
-          validationRules={state.formData.phoneNumber.validationRules}
-          borderWidth={1}
-          onChangeText={value => handleChange(value, 'phoneNumber')}
-          borderColor={Colors.lightGrey}
-        />
-
-<View style={styles.buttonContainer}>
-          <PrimaryButton
-            primaryButtonContainer={{width: '100%', borderRadius: 25}}
-            primaryButtonText={{
-              fontFamily: Fonts.Rubik_Medium,
-              fontSize: actuatedNormalize(16),
-              color: Colors.white,
-            }}
-            onPress={() =>props.navigation.goBack()}
-            label={'Save Changes'}
+        <ScrollView>
+          <Input
+            value={state.formData.title.value}
+            editable={false}
+            returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
+            viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
+            multiline={false}
+            errorView={[styles.viewStyle, {marginTop: actuatedNormalize(10)}]}
+            textstyle={styles.textInput}
+            placeholder={' Select title'}
+            maxLength={50}
+            errorMsg={state.formData.title.errorMsg}
+            validationRules={state.formData.title.validationRules}
+            borderWidth={1}
+            onChangeText={value => handleChange(value, 'title')}
+            borderColor={Colors.lightGrey}
           />
-        </View>
 
+          <Input
+            value={state.formData.firstName.value}
+            editable={false}
+            returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
+            viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
+            multiline={false}
+            errorView={[styles.viewStyle, {marginTop: actuatedNormalize(10)}]}
+            textstyle={styles.textInput}
+            placeholder={'First name'}
+            maxLength={50}
+            errorMsg={state.formData.firstName.errorMsg}
+            validationRules={state.formData.firstName.validationRules}
+            borderWidth={1}
+            onChangeText={value => handleChange(value, 'firstName')}
+            borderColor={Colors.lightGrey}
+          />
+
+          <Input
+            value={state.formData.middleName.value}
+            editable={false}
+            returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
+            viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
+            multiline={false}
+            errorView={[styles.viewStyle, {marginTop: actuatedNormalize(10)}]}
+            textstyle={styles.textInput}
+            placeholder={'Middle name (optional)'}
+            maxLength={50}
+            errorMsg={state.formData.middleName.errorMsg}
+            validationRules={state.formData.middleName.validationRules}
+            borderWidth={1}
+            onChangeText={value => handleChange(value, 'middleName')}
+            borderColor={Colors.lightGrey}
+          />
+
+          <Input
+            value={state.formData.lastName.value}
+            editable={false}
+            returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
+            viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
+            multiline={false}
+            errorView={[styles.viewStyle, {marginTop: actuatedNormalize(10)}]}
+            textstyle={styles.textInput}
+            placeholder={'Last name'}
+            maxLength={50}
+            errorMsg={state.formData.lastName.errorMsg}
+            validationRules={state.formData.lastName.validationRules}
+            borderWidth={1}
+            onChangeText={value => handleChange(value, 'lastName')}
+            borderColor={Colors.lightGrey}
+          />
+
+          <Input
+            icon={PngLocation.InputEdit}
+            value={state.formData.email.value}
+            editable={true}
+            returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
+            viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
+            multiline={false}
+            errorView={[styles.viewStyle, {marginTop: actuatedNormalize(10)}]}
+            textstyle={styles.textInput}
+            placeholder={'Email address'}
+            maxLength={50}
+            errorMsg={state.formData.email.errorMsg}
+            validationRules={state.formData.email.validationRules}
+            borderWidth={1}
+            onChangeText={value => handleChange(value, 'email')}
+            borderColor={Colors.lightGrey}
+          />
+          <View style={{paddingHorizontal: actuatedNormalize(17)}}>
+            {residence && residence.length != 0 ? (
+              <CustomDropdown
+                image={PngLocation.Flag}
+                dropdownStyle={{height: actuatedNormalize(56)}}
+                placeholder={'Country of residence'}
+                data={residence}
+              />
+            ) : (
+              ''
+            )}
+          </View>
+
+          <Input
+            value={state.formData.nationality.value}
+            editable={true}
+            returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
+            viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
+            multiline={true}
+            errorView={[styles.viewStyle, {marginTop: actuatedNormalize(10)}]}
+            textstyle={styles.textInput}
+            placeholder={'Nationality'}
+            maxLength={50}
+            errorMsg={state.formData.nationality.errorMsg}
+            validationRules={state.formData.nationality.validationRules}
+            borderWidth={1}
+            onChangeText={value => handleChange(value, 'nationality')}
+            borderColor={Colors.lightGrey}
+          />
+          <View
+            style={{
+              flexDirection: 'row',
+              width: '100%',
+              justifyContent: 'center',
+            }}>
+            <Input
+              value={state.formData.phoneNumber.value}
+              editable={true}
+              returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
+              viewstyle={{
+                backgroundColor: Colors.white,
+                width: actuatedNormalize(65),
+                alignSelf: 'center',
+                height: actuatedNormalize(56),
+                marginTop: actuatedNormalize(20),
+              }}
+              multiline={true}
+              errorView={[styles.viewStyle, {marginTop: actuatedNormalize(10)}]}
+              textstyle={styles.textInput}
+              image={PngLocation.Flag}
+              maxLength={50}
+              errorMsg={state.formData.phoneNumber.errorMsg}
+              validationRules={state.formData.phoneNumber.validationRules}
+              borderWidth={1}
+              onChangeText={value => handleChange(value, 'phoneNumber')}
+              borderColor={Colors.lightGrey}
+            />
+
+            <Input
+              icon={PngLocation.InputEdit}
+              value={state.formData.phoneNumber.value}
+              editable={true}
+              returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
+              viewstyle={{
+                backgroundColor: Colors.white,
+                width: actuatedNormalize(220),
+                marginLeft: actuatedNormalize(10),
+                alignSelf: 'center',
+                height: actuatedNormalize(56),
+                marginTop: actuatedNormalize(20),
+              }}
+              multiline={true}
+              errorView={[styles.viewStyle, {marginTop: actuatedNormalize(10)}]}
+              textstyle={styles.textInput}
+              placeholder={'Phone Number'}
+              maxLength={50}
+              errorMsg={state.formData.phoneNumber.errorMsg}
+              validationRules={state.formData.phoneNumber.validationRules}
+              borderWidth={1}
+              onChangeText={value => handleChange(value, 'phoneNumber')}
+              borderColor={Colors.lightGrey}
+            />
+          </View>
+
+          <View style={styles.buttonContainer}>
+            <PrimaryButton
+              primaryButtonContainer={{width: '100%', borderRadius: 25}}
+              primaryButtonText={{
+                fontFamily: Fonts.Rubik_Medium,
+                fontSize: actuatedNormalize(16),
+                color: Colors.white,
+              }}
+              onPress={() => props.navigation.goBack()}
+              label={'Save Changes'}
+            />
+          </View>
         </ScrollView>
       </View>
     </View>
@@ -396,7 +433,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.smokeWhite,
     width: '100%',
-    paddingHorizontal:actuatedNormalize(25)
+    paddingHorizontal: actuatedNormalize(25),
   },
   headerText: {
     color: Colors.black,
@@ -423,21 +460,19 @@ const styles = StyleSheet.create({
     fontSize: actuatedNormalize(14),
     paddingLeft: actuatedNormalize(13),
     color: Colors.tintGrey,
-    width:"100%",
-    height:actuatedNormalize(56)
+    width: '100%',
+    height: actuatedNormalize(56),
   },
   viewStyle: {
     backgroundColor: Colors.white,
-    width:"90%",
-    alignSelf:"center",
-    height:actuatedNormalize(56),
-  
-  
+    width: '90%',
+    alignSelf: 'center',
+    height: actuatedNormalize(56),
   },
   buttonContainer: {
     marginTop: actuatedNormalize(36),
     width: '90%',
-    alignSelf:"center"
+    alignSelf: 'center',
+    marginBottom:actuatedNormalize(40)
   },
-
 });
