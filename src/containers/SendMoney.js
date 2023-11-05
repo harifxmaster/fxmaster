@@ -7,7 +7,7 @@ import {
   StatusBar,
   Pressable,
 } from 'react-native';
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Colors from '../constants/Colors';
 import {
   SCREEN_HEIGHT,
@@ -22,11 +22,51 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import Input from '../components/Input';
 import Fonts from '../constants/Fonts';
 import TextComponent from '../components/TextComponent';
-import {PrimaryButton} from '../components/ButtonCollection';
+import { PrimaryButton } from '../components/ButtonCollection';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import CustomDropdown from '../constants/CustomDropdown';
+import axios from 'axios';
+import Constants from '../constants/Constants';
 
 export default function SendMoney(props) {
   const currencies = ['GBP', 'INR'];
+  const [sendCurrency, setsendCurrency] = useState("");
+  const [sendAmount, setsendAmount] = useState("");
+  const [feeCharge, setfeeCharge] = useState("");
+  const [convertAmount, setConvertAmount] = useState("");
+  const [exchangeRate, setExchangeRate] = useState("");
+  const [receiveCurrency,setReceiveCurrency] = useState("");
+  const [receiveAmount,setReceiveAmount] = useState("");
+  const [loading, setLoading] = useState(false);
+  const childref = useRef();
+  useEffect(() => {
+    getData()
+  }, [])
+  const getData = async () => {
+    const exchangerates = await AsyncStorage.getItem('exchangeRates');
+    const data = JSON.parse(exchangerates)
+    setsendCurrency(data.sender_currency);
+    setsendAmount(JSON.stringify(data.amount))
+    setfeeCharge(data.fee_charge)
+    setConvertAmount(JSON.stringify(data.convert_amount))
+    setExchangeRate((data.recipient_amount/data.amount).toFixed(4))
+    setReceiveCurrency(data.receiver_currency)
+    setReceiveAmount(data.recipient_amount)
+  }
+  const getExchangeRates = async () => {
+    // const token = await AsyncStorage.getItem('login_token');
+    // axios.post(Constants.BASE_URL+"API-FX-141-ExchangeRate",{
 
+    // },{headers:{
+    //   fx_key:Constants.SUBSCRIPTION_KEY,
+    //   Authorization:"Bearer "+token
+    // }}).then(resp=>{
+    //   console.log(resp.data);
+    // }).catch(error=>{
+    //   console.log(error);
+    // })
+    console.log("hihi");
+  }
   return (
     <View style={styles.mainContainer}>
       <View style={styles.topLayer}>
@@ -34,24 +74,23 @@ export default function SendMoney(props) {
           style={{
             flexDirection: 'row',
             justifyContent: 'flex-start',
-            marginTop: actuatedNormalize(65),
-            marginHorizontal: actuatedNormalize(15),
+            marginTop: actuatedNormalize(110),
           }}>
           <Pressable onPress={() => props.navigation.goBack()}>
             <Ionicons
               color={Colors.black}
               name="arrow-back-outline"
               size={24}
-              style={{marginLeft: actuatedNormalize(25)}}
+              style={{ marginLeft: actuatedNormalize(25) }}
             />
           </Pressable>
-          <TextComponent style={styles.titleText}>Enter Amount</TextComponent>
+          <TextComponent style={styles.titleText}>Overview</TextComponent>
         </View>
       </View>
       <View style={styles.bottomLayer}>
-        <ScrollView style={styles.scrollView}>
-          <View style={{flexDirection: 'row'}}>
-            <View style={{width: '20%'}}>
+        <ScrollView style={styles.scrollviewBody}>
+          <View style={{ flexDirection: 'row' }}>
+            <View style={{ width: '20%' }}>
               <Ionicons
                 name="radio-button-on"
                 size={25}
@@ -212,68 +251,87 @@ export default function SendMoney(props) {
                 style={styles.flowDesign}
               />
             </View>
-            <View style={{width: '80%'}}>
+            <View style={{ width: '80%' }}>
               <Text>Send</Text>
-              <View style={{width: '100%', flexDirection: 'row'}}>
-                <Input
-                  placeholder={'GBP'}
-                  viewstyle={[styles.viewStyle, {width: 55}]}
-                  textstyle={styles.textstyle}
-                />
-                <Input
-                  placeholder={'Enter Amount to Send'}
-                  viewstyle={[styles.viewStyle, {width: 170}]}
-                  textstyle={styles.textstyle}
-                />
+              <View style={{ width: '100%', flexDirection: 'row' }}>
+                <View style={{ width: "25%", marginRight: 5 }}>
+                  <Input
+                    viewstyle={[styles.viewStyle, { width: "100%", marginTop: 10 }]}
+                    textstyle={styles.textstyle}
+                    editable={false}
+                    value={sendCurrency}
+                  />
+                </View>
+                <View style={{ width: "70%", }}>
+                  <Input
+                    editable={false}
+                    viewstyle={[styles.viewStyle, { width: "100%", marginTop: 10 }]}
+                    textstyle={styles.textstyle}
+                    value={sendAmount}
+                  />
+                </View>
               </View>
               <View style={styles.alignment}></View>
-              <Text>Transfer Fees</Text>
+              <Text style={{ marginBottom: 10 }}>Transfer Fees</Text>
 
               <Input
-                placeholder={'Low Cost Transfer Fee'}
-                viewstyle={[styles.viewStyle, {width: '100%'}]}
+                viewstyle={[styles.viewStyle, { width: '95%' }]}
                 textstyle={styles.textstyle}
+                editable={false}
+                value={feeCharge}
               />
 
               <View style={styles.alignment}></View>
-              <Text>Amount we convert</Text>
-              <View style={{width: '100%', flexDirection: 'row'}}>
-                <Input
-                  placeholder={'GBP'}
-                  viewstyle={[styles.viewStyle, {width: 55}]}
-                  textstyle={styles.textstyle}
-                />
-                <Input
-                  placeholder={'995.78'}
-                  viewstyle={[styles.viewStyle, {width: 170}]}
-                  textstyle={styles.textstyle}
-                />
+              <Text style={{ marginBottom: 10 }}>Amount we convert</Text>
+              <View style={{ width: '100%', flexDirection: 'row' }}>
+                <View style={{ width: "25%", marginRight: 5 }}>
+                  <Input
+                    value={sendCurrency}
+                    viewstyle={[styles.viewStyle, { width: "100%", }]}
+                    textstyle={styles.textstyle}
+                    editable={false}
+                  />
+                </View>
+                <View style={{ width: "70%" }}>
+                  <Input
+                    value={convertAmount}
+                    viewstyle={[styles.viewStyle, { width: "100%", }]}
+                    textstyle={styles.textstyle}
+                    editable={false}
+                  />
+                </View>
               </View>
 
               <View style={styles.alignment}></View>
-              <Text>1.18 Exchange Rate</Text>
+              <Text>{exchangeRate} Exchange Rate</Text>
 
               <View style={styles.alignment}></View>
-              <View style={styles.alignment}></View>
-              <Text>Receive</Text>
-              <View style={{width: '100%', flexDirection: 'row'}}>
-                <Input
-                  placeholder={'GBP'}
-                  viewstyle={[styles.viewStyle, {width: 55}]}
-                  textstyle={styles.textstyle}
-                />
-                <Input
-                  placeholder={'Enter Amount to Receive'}
-                  viewstyle={[styles.viewStyle, {width: 170}]}
-                  textstyle={styles.textstyle}
-                />
+              <View style={[styles.alignment, { marginBottom: 20 }]}></View>
+              <Text style={{ marginBottom: 10 }}>Receive</Text>
+              <View style={{ width: '100%', flexDirection: 'row' }}>
+                <View style={{ width: "25%", marginRight: 5 }}>
+                  <Input
+                    viewstyle={[styles.viewStyle, { width: "100%", marginTop: 10 }]}
+                    textstyle={styles.textstyle}
+                    editable={false}
+                    value={receiveCurrency}
+                  />
+                </View>
+                <View style={{ width: "70%" }}>
+                  <Input
+                    value={receiveAmount}
+                    viewstyle={[styles.viewStyle, { width: "100%", marginTop: 10 }]}
+                    textstyle={styles.textstyle}
+                    editable={false}
+                  />
+                </View>
               </View>
             </View>
           </View>
         </ScrollView>
         <View style={styles.buttonContainer}>
           <PrimaryButton
-            primaryButtonContainer={{width: '100%', borderRadius: 40}}
+            primaryButtonContainer={{ width: '100%', borderRadius: 40 }}
             primaryButtonText={{
               fontFamily: Fonts.Rubik_Medium,
               fontSize: actuatedNormalize(16),
@@ -281,6 +339,7 @@ export default function SendMoney(props) {
             }}
             onPress={() => props.navigation.push('SelectBeneficiary')}
             label={'Send'}
+            loading={loading}
           />
         </View>
       </View>
@@ -310,12 +369,8 @@ const styles = StyleSheet.create({
   },
   centerBg: {
     flex: 1,
-    height: actuatedNormalizeVertical(678),
-    width: actuatedNormalize(339),
-    elevation: 5,
     borderRadius: 22,
     backgroundColor: 'white',
-    top: actuatedNormalize(90),
     zIndex: 1,
     alignItems: 'center',
     alignSelf: 'center',
@@ -326,25 +381,25 @@ const styles = StyleSheet.create({
     width: '90%',
     alignSelf: 'center',
   },
-  layout: {flex: 1},
+  layout: { flex: 1 },
   body: {
     backgroundColor: Colors.bodyBackgroundColor,
     width: '90%',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
-    height: SCREEN_HEIGHT - 100,
+    height: SCREEN_HEIGHT,
   },
-  heading: {fontWeight: 'bold', fontSize: 17, marginBottom: 6},
-  normalText: {fontSize: 15, marginBottom: 10},
+  heading: { fontWeight: 'bold', fontSize: 17, marginBottom: 6 },
+  normalText: { fontSize: 15, marginBottom: 10 },
   scrollviewBody: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
     width: '100%',
     marginBottom: 10,
+    flex: 1,
+    height: "100%"
   },
-  label: {width: '50%'},
-  flowDesign: {marginBottom: 0, marginTop: -6},
+  label: { width: '50%' },
+  flowDesign: { marginBottom: 0, marginTop: -6 },
   circle: {
     width: 22,
     height: 22,
@@ -371,9 +426,10 @@ const styles = StyleSheet.create({
     padding: 5,
     fontSize: 13,
     width: '100%',
+    color:Colors.black
   },
   alignment: {
-    height: 48,
+    height: 39,
   },
   mainContainer: {
     alignSelf: 'center',
@@ -382,16 +438,17 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   topLayer: {
-    flex: 0.2,
     width: '100%',
+    height: "25%",
     backgroundColor: Colors.backgroundColor,
     borderBottomStartRadius: 25,
     borderBottomEndRadius: 25,
   },
   bottomLayer: {
-    flex: 1,
+    height: "75%",
     backgroundColor: Colors.smokeWhite,
     width: '100%',
+    height: "100%"
   },
   titleText: {
     color: Colors.black,

@@ -49,7 +49,7 @@ const BeneficiaryConfirmation = (props) => {
             paddingLeft: actuatedNormalize(25),
             alignItems:"center"
           }}>
-            <Image source={params.profilePic} style={{width:actuatedNormalize(40),height:actuatedNormalize(40)}}/>
+            <Image source={{uri:params.profilePic}} style={{width:actuatedNormalize(40),height:actuatedNormalize(40)}}/>
             <TextComponent style={{fontFamily:Fonts.Rubik_Regular, fontSize:actuatedNormalize(16), color:Colors.black,marginLeft:actuatedNormalize(20)}}>{params.name}</TextComponent>
           </View>
           <View style={{flexDirection:"row", justifyContent:"space-around",marginTop:actuatedNormalize(15)}}>
@@ -64,7 +64,7 @@ const BeneficiaryConfirmation = (props) => {
             IFSC Code / IBAN
             </TextComponent>
             <TextComponent style={styles.text}>
-            Country
+            Address
             </TextComponent>
             <TextComponent style={styles.text}>
             Type
@@ -72,13 +72,13 @@ const BeneficiaryConfirmation = (props) => {
           </View>
           <View>
           <TextComponent style={styles.text}>{params.name}</TextComponent>
-          <TextComponent style={styles.text}>085321357899</TextComponent>
+          <TextComponent style={styles.text}>{params.account}</TextComponent>
           <TextComponent style={styles.text}>{params.ifsc}</TextComponent>
-          <TextComponent style={styles.text}>India</TextComponent>
-          <TextComponent style={styles.text}>Personal</TextComponent>
+          <TextComponent style={styles.text}>{params.country}</TextComponent>
+          <TextComponent style={styles.text}>{params.type}</TextComponent>
           </View>
           </View>
-          <TextComponent style={{color:Colors.black, fontFamily:Fonts.Rubik_Regular,fontSize:actuatedNormalize(14),marginTop:actuatedNormalize(41), textAlign:"center"}}>Select another recipient</TextComponent>
+          {/* <TextComponent style={{color:Colors.black, fontFamily:Fonts.Rubik_Regular,fontSize:actuatedNormalize(14),marginTop:actuatedNormalize(41), textAlign:"center"}}>Select another recipient</TextComponent> */}
           <View style={styles.buttonContainer}>
           <PrimaryButtonSmall
             primaryButtonSmallContainer={{ width: '50%', borderRadius: 25,marginTop:actuatedNormalize(60) }}
@@ -127,7 +127,9 @@ const styles = StyleSheet.create({
     fontFamily:Fonts.Rubik_Regular,
     fontSize:actuatedNormalize(14),
     color:Colors.black,
-    marginTop:actuatedNormalize(10)
+    marginTop:actuatedNormalize(10),
+    flexWrap: 'wrap',
+    width:"100%"
   },
   buttonContainer: {
     bottom: actuatedNormalize(30),

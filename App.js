@@ -20,7 +20,7 @@ const App = () => {
 
 
   const loadDefaultData = async() => {
-    axios.get(Constants.BASE_URL + "API-FX-100-App", {
+   await axios.get(Constants.BASE_URL + "API-FX-100-App", {
       headers: {
         fx_key: Constants.SUBSCRIPTION_KEY
       }
@@ -45,7 +45,7 @@ const App = () => {
       console.log(error);
     })
 
-    axios.get(Constants.BASE_URL + "API-FX-101-Title", {
+    await axios.get(Constants.BASE_URL + "API-FX-101-Title", {
       headers: {
         fx_key: Constants.SUBSCRIPTION_KEY
       }
@@ -56,7 +56,7 @@ const App = () => {
       console.log(error);
     })
 
-    axios.get(Constants.BASE_URL + "API-FX-140-Occupation", {
+    await axios.get(Constants.BASE_URL + "API-FX-140-Occupation", {
       headers: {
         fx_key: Constants.SUBSCRIPTION_KEY
       }
@@ -66,7 +66,7 @@ const App = () => {
       console.log(error);
     })
 
-    axios.get(Constants.BASE_URL + "API-FX-102-Country", {
+    await axios.get(Constants.BASE_URL + "API-FX-102-Country", {
       headers: {
         fx_key: Constants.SUBSCRIPTION_KEY
       }
@@ -76,7 +76,7 @@ const App = () => {
       console.log(error);
     })
 
-    axios.get(Constants.BASE_URL + "API-FX-103-Nationality", {
+    await axios.get(Constants.BASE_URL + "API-FX-103-Nationality", {
       headers: {
         fx_key: Constants.SUBSCRIPTION_KEY
       }

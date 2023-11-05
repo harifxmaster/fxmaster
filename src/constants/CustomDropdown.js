@@ -8,8 +8,8 @@ import {
   FlatList,
   ScrollView,
 } from 'react-native';
-import React, {useRef, useState} from 'react';
-import {actuatedNormalize} from './PixelScaling';
+import React, { useRef, useState } from 'react';
+import { actuatedNormalize } from './PixelScaling';
 import Colors from './Colors';
 import PngLocation from './PngLocation';
 import TextComponent from '../components/TextComponent';
@@ -46,7 +46,7 @@ const CustomDropdown = props => {
       {props.data && props.data.length > 0 ? (
         <SelectDropdown
           search={true}
-          searchPlaceHolder={props.placeholder ?  props.placeholder : "Type Here to Search"}
+          searchPlaceHolder={props.placeholder ? props.placeholder : "Type Here to Search"}
           data={JSON.parse(props.data)}
           onSelect={(selectedItem, index) => {
             {
@@ -71,16 +71,20 @@ const CustomDropdown = props => {
                     : actuatedNormalize(0),
                 }}>
                 {selectedOption.toLowerCase() == 'select title' ||
-                selectedOption.toLowerCase() == 'purpose of account' ||
-                selectedOption.toLowerCase() == 'destination country' ||
-                selectedOption.toLowerCase() == 'country of residence' ||
-                selectedOption.toLowerCase() == 'nationality' ? (
+                  selectedOption.toLowerCase() == 'purpose of account' ||
+                  selectedOption.toLowerCase() == 'destination country' ||
+                  selectedOption.toLowerCase() == 'country of residence' ||
+                  selectedOption.toLowerCase() == 'nationality' ? (
                   <Text style={styles.dropdown3BtnTxt}>
                     {selectedItem ? selectedItem.name : selectedOption}
                   </Text>
                 ) : selectedOption.toLowerCase() == 'occupation' ? (
                   <Text style={styles.dropdown3BtnTxt}>
                     {selectedItem ? selectedItem.occupation : selectedOption}
+                  </Text>
+                ) : selectedOption.toLowerCase() == 'receive' || selectedOption.toLowerCase() == 'send' ? (
+                  <Text style={styles.dropdown3BtnTxt}>
+                    {selectedItem ? selectedItem.currency : selectedOption}
                   </Text>
                 ) : (
                   ''
@@ -100,10 +104,10 @@ const CustomDropdown = props => {
             return (
               <View style={styles.dropdown3RowChildStyle}>
                 {selectedOption.toLowerCase() == 'select title' ||
-                selectedOption.toLowerCase() == 'purpose of account' ||
-                selectedOption.toLowerCase() == 'destination country' ||
-                selectedOption.toLowerCase() == 'country of residence' ||
-                selectedOption.toLowerCase() == 'nationality' ? (
+                  selectedOption.toLowerCase() == 'purpose of account' ||
+                  selectedOption.toLowerCase() == 'destination country' ||
+                  selectedOption.toLowerCase() == 'country of residence' ||
+                  selectedOption.toLowerCase() == 'nationality' ? (
                   <TextComponent style={styles.listItem}>
                     {item.name}
                   </TextComponent>
@@ -111,6 +115,12 @@ const CustomDropdown = props => {
                   <TextComponent style={styles.listItem}>
                     {item.occupation}
                   </TextComponent>
+                ) : selectedOption.toLowerCase() == 'receive' || selectedOption.toLowerCase() == 'send' ? (
+
+                  <TextComponent style={[styles.listItem, { width: 100 }]}>
+                    {item.currency}
+                  </TextComponent>
+
                 ) : (
                   ''
                 )}
@@ -148,7 +158,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 13,
   },
-  dropdown3DropdownStyle: {backgroundColor: 'slategray'},
+  dropdown3DropdownStyle: { backgroundColor: 'slategray' },
   dropdown3RowStyle: {
     backgroundColor: 'slategray',
     borderBottomColor: Colors.lightGrey,

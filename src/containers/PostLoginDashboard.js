@@ -7,13 +7,17 @@ import {
   SectionList,
 } from 'react-native';
 import TextComponent from '../components/TextComponent';
-import React from 'react';
+import React,{useEffect,useState} from 'react';
 import Colors from '../constants/Colors';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import PngLocation from '../constants/PngLocation';
 import {actuatedNormalize} from '../constants/PixelScaling';
 import Fonts from '../constants/Fonts';
 import {PrimaryButtonSmall} from '../components/ButtonCollection';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { StackActions } from '@react-navigation/native';
+import axios from 'axios';
+import Constants from '../constants/Constants';
 
 const PostLoginDashboard = ({navigation}) => {
   let userList = [
@@ -95,6 +99,33 @@ const PostLoginDashboard = ({navigation}) => {
       ],
     },
   ];
+  const [fullName,setFullName] = useState("");
+  useEffect(() => {
+    getData();
+  }, [])
+  const getData = async() =>{
+    var login_registration_step = await AsyncStorage.getItem('login_registration_step');
+    var login_id = await AsyncStorage.getItem('login_id');
+    var login_token = await AsyncStorage.getItem('login_token');
+    var login_workspaces_id = await AsyncStorage.getItem('login_workspaces_id');
+    setFullName(await AsyncStorage.getItem('login_full_name'));
+    if (login_registration_step != 'account_preview' || login_id == "" || login_id == null || login_token == "" || login_token == null) {
+      navigation.dispatch(StackActions.replace('Login'))
+    }
+    else
+    {
+      console.log(Constants.BASE_URL+'API-FX-124-ListTransaction?filter[workspace_id]='+login_workspaces_id);
+      console.log(login_token);
+      axios.get(Constants.BASE_URL+'API-FX-124-ListTransaction?filter[workspace_id]='+login_workspaces_id,{headers:{
+        Authorization: "Bearer "+login_token,
+        fx_key: Constants.SUBSCRIPTION_KEY
+      }}).then(resp=>{
+        console.log(resp.data);
+      }).catch(err=>{
+        console.log(err);
+      })
+    }
+  }
 
   return (
     <View style={styles.mainContainer}>
@@ -136,7 +167,7 @@ const PostLoginDashboard = ({navigation}) => {
                   fontSize: actuatedNormalize(12),
                   fontFamily: Fonts.Rubik_Regular,
                 }}>
-                Hello Sharat
+                Hello {fullName}
               </TextComponent>
               <TextComponent
                 style={{
@@ -167,7 +198,7 @@ const PostLoginDashboard = ({navigation}) => {
             />
           </Pressable>
         </View>
-        <View style={styles.whiteContainer}>
+        {/* <View style={styles.whiteContainer}>
           <TextComponent
             style={{
               fontSize: actuatedNormalize(14),
@@ -191,7 +222,7 @@ const PostLoginDashboard = ({navigation}) => {
             // onPress={() => navigation.push('DobAddress')}
             label={'Submit KYC'}
           />
-        </View>
+        </View> */}
       </View>
       <View style={styles.bottomLayer}>
         <View
@@ -287,7 +318,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   topLayer: {
-    flex: 0.3,
+    flex: 0.25,
     width: '100%',
     backgroundColor: Colors.backgroundColor,
     borderBottomStartRadius: 16,

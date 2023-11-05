@@ -6,7 +6,7 @@ import BeneficiaryList from '../containers/BeneficiaryList';
 import Colors from '../constants/Colors';
 import PngLocation from '../constants/PngLocation';
 import {actuatedNormalize} from '../constants/PixelScaling';
-import SendMoney from '../containers/SendMoney';
+import Convert from '../containers/Convert';
 
 const Tab = createBottomTabNavigator();
 
@@ -43,8 +43,8 @@ const BottomTabs = () => {
         }}
       />
       <Tab.Screen
-        name="SendMoney"
-        component={SendMoney}
+        name="Convert"
+        component={Convert}
         options={{
           tabBarLabel: 'Send Money',
           tabBarIcon: ({focused}) => (

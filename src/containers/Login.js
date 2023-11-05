@@ -4,13 +4,12 @@ import {
   StyleSheet,
   Platform,
   Image,
-  Pressable,
-  KeyboardAvoidingView,
+  Alert,
   Modal,
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PngLocation from '../constants/PngLocation';
 import Colors from '../constants/Colors';
 import { SCREEN_HEIGHT, SCREEN_WIDTH, actuatedNormalize } from '../constants/PixelScaling';
@@ -18,38 +17,113 @@ import TextComponent from '../components/TextComponent';
 import Fonts from '../constants/Fonts';
 import Input from '../components/Input';
 import { LockIcon } from '../constants/SvgLocation';
+import { PrimaryButton } from '../components/ButtonCollection';
+import axios from 'axios';
+import Constants from '../constants/Constants';
+import { StackActions } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = ({ navigation }) => {
-  const loginHandler = () => { };
 
   const [emailPhone, setEmailPhone] = useState('');
   const [pin, setPin] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [terms, setTerms] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [emailError, setEmailError] = useState("");
+  const [pinError, setPinError] = useState("");
 
-  const registerHandler = val => {
+  const registerHandler = (val) => {
     setModalVisible(val);
   };
+  const getData = async () => {
+    var login_registration_step = await AsyncStorage.getItem('login_registration_step');
+    var login_id = await AsyncStorage.getItem('login_id');
+    var login_token = await AsyncStorage.getItem('login_token');
+    if (login_registration_step == 'account_preview' && login_id != "" && login_id != null && login_token != "" && login_token != null) {
+      
+      navigation.dispatch(StackActions.replace('PostLoginDashboard'))
+    }
+    else {
+      //navigate to registration flow
+    }
+  }
 
+  useEffect(() => {
+    getData();
+  })
+
+  const loginHandler = async () => {
+    setLoading(true);
+    if (emailPhone == "" || emailPhone == null) {
+      setEmailError("Please enter your email id");
+      setLoading(false);
+    }
+    else if (pin == "" || pin == null) {
+      setPinError("Please enter your PIN");
+      setLoading(false);
+    }
+    else {
+      setEmailError("");
+      setPinError("");
+      await axios.post(Constants.BASE_URL + "API-FX-120-Login", {
+        "email": emailPhone,
+        "password": pin
+      }, {
+        headers: {
+          fx_key: Constants.SUBSCRIPTION_KEY
+        }
+      }).then(resp => {
+        setAsyncData("login_id", JSON.stringify(resp.data.data.id))
+        setAsyncData("login_full_name", resp.data.data.full_name)
+        setAsyncData("login_email", resp.data.data.email)
+        setAsyncData("login_phone", resp.data.data.phone)
+        setAsyncData("login_date_of_birth", resp.data.data.date_of_birth)
+        setAsyncData("login_country_code", resp.data.data.country_code)
+        setAsyncData("login_country_id", JSON.stringify(resp.data.data.country_id))
+        setAsyncData("login_country_name", resp.data.data.country_name)
+        setAsyncData("login_nationality", resp.data.data.nationality)
+        setAsyncData("login_registration_step", resp.data.data.registration_step)
+        setAsyncData("login_is_banking_user", JSON.stringify(resp.data.data.is_banking_user))
+        setAsyncData("login_status", resp.data.data.status)
+        setAsyncData("login_yoti_status", resp.data.data.yoti_status)
+        setAsyncData("login_workspaces", JSON.stringify(resp.data.data.workspaces))
+        setAsyncData("login_workspaces_id", JSON.stringify(resp.data.data.workspaces[0].id))
+        setAsyncData("login_token", JSON.stringify(resp.data.token))
+        setLoading(false);
+        if (resp.data.data.registration_step == 'account_preview')
+          navigation.dispatch(StackActions.replace("PostLoginDashboard"));
+        else {
+          //navigate to registration flow
+        }
+      }).catch(err => {
+        Alert.alert("Invalid Login", err.response.data.message);
+        setLoading(false);
+      })
+    }
+  };
+  const setAsyncData = async (key, value) => {
+    await AsyncStorage.setItem(key, value);
+  }
   return (
     <View style={{ flex: 1 }}>
      
-      <ImageBackground source={PngLocation.Background} style={{ flex: 1}}>
+      <ImageBackground source={PngLocation.Background} style={{ flex: 1 }}>
         <View style={styles.mainContainer}>
-           <ScrollView style={{flex:1,width:"100%",paddingHorizontal:actuatedNormalize(30)}}>
-          <Image source={PngLocation.FXWordMarkLogo} style={styles.logoImage} />
-          <TextComponent style={styles.welcomeText}>Welcome</TextComponent>
-          <Input
-            value={emailPhone}
-            onChangeText={value => setEmailPhone(value)}
-            editable={true}
-            returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
-            viewstyle={[styles.viewStyle, { marginTop: actuatedNormalize(20) }]}
-            multiline={false}
-            textstyle={styles.textInput}
-            placeholder={'Email or Phone'}
-            maxLength={20}
-            iconRight={true}
+          <ScrollView style={{ flex: 1, width: "100%", paddingHorizontal: actuatedNormalize(30) }}>
+            <Image source={PngLocation.FXWordMarkLogo} style={styles.logoImage} />
+            <TextComponent style={styles.welcomeText}>Welcome</TextComponent>
+            <Input
+              value={emailPhone}
+              onChangeText={value => setEmailPhone(value)}
+              editable={true}
+              returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
+              viewstyle={[styles.viewStyle, { marginTop: actuatedNormalize(20) }]}
+              multiline={false}
+              textstyle={styles.textInput}
+              placeholder={'Email or Phone'}
+              maxLength={50}
+              iconRight={true}
             // icon={() => (
             //   <LockIcon
             //     width={actuatedNormalize(15)}
@@ -57,104 +131,115 @@ const Login = ({ navigation }) => {
             //     style={{ height: '100%' }}
             //   />
             // )}
-          />
+            />
+            <TextComponent style={{ color: Colors.primary, fontWeight: '500', fontSize: 15 }}>{emailError}</TextComponent>
 
-          <Input
-            value={pin}
-            onChangeText={value => setPin(value)}
-            editable={true}
-            returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
-            viewstyle={[styles.viewStyle, { marginTop: actuatedNormalize(20) }]}
-            multiline={false}
-            textstyle={styles.textInput}
-            placeholder={'Enter 6-digit pin'}
-            maxLength={6}
-          />
+            <Input
+              value={pin}
+              onChangeText={value => setPin(value)}
+              editable={true}
+              returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
+              viewstyle={[styles.viewStyle, { marginTop: actuatedNormalize(20) }]}
+              multiline={false}
+              textstyle={styles.textInput}
+              placeholder={'Enter 6-digit pin'}
+              maxLength={6}
+              secure={true}
+            />
+            <TextComponent style={{ color: Colors.primary, fontWeight: '500', fontSize: 15 }}>{pinError}</TextComponent>
 
-          <Pressable onPress={() => loginHandler()} style={styles.button}>
-            <TextComponent style={styles.buttonText}>LOGIN</TextComponent>
-          </Pressable>
-          <View style={{ flex: 1, width: '80%' }}>
-            <TextComponent onPress={() => navigation.push("ResetPin")} style={styles.forgotPinText}>
-              Forgot PIN?
-            </TextComponent>
-            <TextComponent
-            onPress={() => navigation.push("FingerPrintLogin")}
-              style={[styles.loginRedText, { marginTop: actuatedNormalize(15) }]}>
-              Login with Fingerprint
-            </TextComponent>
-            <TextComponent
-            onPress={() => navigation.push("FaceId")}
-              style={[styles.loginRedText, { marginTop: actuatedNormalize(15) }]}>
-              Login with Face ID
-            </TextComponent>
-
-            <TextComponent style={[styles.registerText, { color: Colors.white }]}>
-              Don't have an account?
-              <TextComponent
-                onPress={() => registerHandler(true)}
-                style={[
-                  styles.registerText,
-                  { color: Colors.primary, textDecorationLine: 'underline' },
-                ]}>
-                Register now
+            <PrimaryButton
+              primaryButtonContainer={styles.button}
+              primaryButtonText={{
+                fontFamily: Fonts.Rubik_Medium,
+                fontSize: actuatedNormalize(14),
+                color: Colors.white,
+              }}
+              label={'LOGIN'}
+              onPress={() => loginHandler()}
+              loading={loading}
+            />
+            <View style={{ flex: 1, width: '80%' }}>
+              <TextComponent onPress={() => navigation.push("ResetPin")} style={styles.forgotPinText}>
+                Forgot PIN?
               </TextComponent>
-            </TextComponent>
-          </View>
-          <Modal transparent={true} animationType="none" visible={modalVisible}>
-            <View
-              style={{ alignSelf: 'center', justifyContent: 'center', flex: 1 }}>
-              <View
-                style={{
-                  width: actuatedNormalize(324),
-                  backgroundColor: Colors.white,
-                  height: actuatedNormalize(172),
-                  borderRadius: 11,
-                  paddingHorizontal: actuatedNormalize(15),
-                }}>
-                <TextComponent style={styles.termText}>
-                  Terms and privacy policy
+              <TextComponent
+                onPress={() => navigation.push("FingerPrintLogin")}
+                style={[styles.loginRedText, { marginTop: actuatedNormalize(15) }]}>
+                Login with Fingerprint
+              </TextComponent>
+              <TextComponent
+                onPress={() => navigation.push("FaceId")}
+                style={[styles.loginRedText, { marginTop: actuatedNormalize(15) }]}>
+                Login with Face ID
+              </TextComponent>
+
+              <TextComponent style={[styles.registerText, { color: Colors.white }]}>
+                Don't have an account?
+                <TextComponent
+                  onPress={() => registerHandler(true)}
+                  style={[
+                    styles.registerText,
+                    { color: Colors.primary, textDecorationLine: 'underline' },
+                  ]}>
+                  Register now
                 </TextComponent>
+              </TextComponent>
+            </View>
+            <Modal transparent={true} animationType="none" visible={modalVisible}>
+              <View
+                style={{ alignSelf: 'center', justifyContent: 'center', flex: 1 }}>
                 <View
                   style={{
-                    flexDirection: 'row',
-                    marginTop: actuatedNormalize(16),
+                    width: actuatedNormalize(324),
+                    backgroundColor: Colors.white,
+                    height: actuatedNormalize(172),
+                    borderRadius: 11,
+                    paddingHorizontal: actuatedNormalize(15),
                   }}>
-                  <TouchableOpacity
-                    onPress={() => setTerms(prev => !prev)}
+                  <TextComponent style={styles.termText}>
+                    Terms and privacy policy
+                  </TextComponent>
+                  <View
                     style={{
-                      top: actuatedNormalize(6),
-                      height: actuatedNormalize(20),
-                      width: actuatedNormalize(20),
-                      borderRadius: 10,
-                      borderWidth: !terms ? 1 : 0,
-                      borderColor: Colors.tintGrey,
-                      backgroundColor: terms ? Colors.primary : Colors.white,
-                    }}></TouchableOpacity>
-                  <TextComponent style={styles.confirmationTitle}>
-                    By signing up, you are agree with our 
-                    <TextComponent style={styles.confirmationTitleRed}>
-                      Terms and Privacy Policy
+                      flexDirection: 'row',
+                      marginTop: actuatedNormalize(16),
+                    }}>
+                    <TouchableOpacity
+                      onPress={() => setTerms(prev => !prev)}
+                      style={{
+                        top: actuatedNormalize(6),
+                        height: actuatedNormalize(20),
+                        width: actuatedNormalize(20),
+                        borderRadius: 10,
+                        borderWidth: !terms ? 1 : 0,
+                        borderColor: Colors.tintGrey,
+                        backgroundColor: terms ? Colors.primary : Colors.white,
+                      }}></TouchableOpacity>
+                    <TextComponent style={styles.confirmationTitle}>
+                      By signing up, you are agree with our
+                      <TextComponent style={styles.confirmationTitleRed}>
+                        Terms and Privacy Policy
+                      </TextComponent>
                     </TextComponent>
-                  </TextComponent>
+                  </View>
+                  {terms ? (
+                    <TextComponent
+                      onPress={() => {
+                        navigation.navigate('Register');
+                        setModalVisible(false);
+                      }}
+                      style={styles.continueText}>
+                      Continue{'>>'}
+                    </TextComponent>
+                  ) : null}
                 </View>
-                {terms ? (
-                  <TextComponent
-                    onPress={() => {
-                      navigation.navigate('Register');
-                      setModalVisible(false);
-                    }}
-                    style={styles.continueText}>
-                    Continue{'>>'}
-                  </TextComponent>
-                ) : null}
               </View>
-            </View>
-          </Modal>
-            </ScrollView>
+            </Modal>
+          </ScrollView>
         </View>
       </ImageBackground>
-    
+
     </View>
   );
 };
@@ -170,7 +255,7 @@ const styles = StyleSheet.create({
     width: actuatedNormalize(156),
     height: actuatedNormalize(30),
     marginTop: actuatedNormalize(102),
-    alignSelf:"center"
+    alignSelf: "center"
   },
   button: {
     backgroundColor: Colors.primary,
@@ -185,7 +270,7 @@ const styles = StyleSheet.create({
     fontSize: actuatedNormalize(25),
     marginTop: actuatedNormalize(34),
     color: Colors.white,
-    textAlign:"center"
+    textAlign: "center"
   },
   forgotPinText: {
     fontSize: actuatedNormalize(14),
@@ -210,15 +295,15 @@ const styles = StyleSheet.create({
     marginTop: actuatedNormalize(40),
   },
   viewStyle: {
-   
+
     backgroundColor: Colors.white,
     width: '100%',
   },
   textInput: {
     fontSize: actuatedNormalize(16),
     paddingLeft: actuatedNormalize(13),
-    width:"100%",
-    color:Colors.black
+    width: "100%",
+    color: Colors.black
   },
   termText: {
     marginTop: actuatedNormalize(31),
