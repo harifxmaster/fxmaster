@@ -39,7 +39,7 @@ const BeneficiaryList = ({ navigation }) => {
     }).then(resp => {
       
         resp.data.data.forEach(element => {
-          beneficiaryLists.push({ "id": element.id, "display_name": element.display_name, "bank_account_number": element.meta.bank_account_number, "country_flag": element.country_flag, "avatar": element.avatar,"iban_number":element.meta.iban_number,"bank_code_type":element.meta.bank_code_type,"type":element.type,"country":element.meta.benficiary_address })
+          beneficiaryLists.push({ "id": element.id, "display_name": element.display_name, "bank_account_number": element.meta.bank_account_number, "country_flag": element.country_flag, "avatar": element.avatar,"iban_number":element.meta.iban_number,"bank_code_type":element.meta.bank_code_type,"type":element.type,"country":element.meta.benficiary_address,"bank_account_name":element.meta.bank_account_name })
         });
       
       setbeneficiaries(beneficiaryLists)
@@ -136,7 +136,9 @@ const BeneficiaryList = ({ navigation }) => {
                       ifsc: item.item.iban_number,
                       account: item.item.bank_account_number,
                       country: item.item.country,
-                      type:item.item.type
+                      type:item.item.type,
+                      id:item.item.id,
+                      bank_account_name:item.item.bank_account_name
                     })
                   }
                   style={{

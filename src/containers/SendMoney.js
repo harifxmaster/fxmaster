@@ -47,11 +47,21 @@ export default function SendMoney(props) {
     const data = JSON.parse(exchangerates)
     setsendCurrency(data.sender_currency);
     setsendAmount(JSON.stringify(data.amount))
-    setfeeCharge(data.fee_charge)
-    setConvertAmount(JSON.stringify(data.convert_amount))
-    setExchangeRate((data.recipient_amount/data.amount).toFixed(4))
+    if(data.fees.length>0)
+    {
+      setfeeCharge(JSON.stringify(data.fees[0].fee_charge))
+      setConvertAmount(JSON.stringify(data.fees[0].convert_amount))
+      setExchangeRate((data.fees[0].recipient_amount/data.amount).toFixed(4))
+      setReceiveAmount(JSON.stringify(data.fees[0].recipient_amount))
+    }
+    else
+    {
+      setfeeCharge(data.fee_charge)
+      setConvertAmount(JSON.stringify(data.convert_amount))
+      setExchangeRate((data.recipient_amount/data.amount).toFixed(4))
+      setReceiveAmount(data.recipient_amount)
+    }
     setReceiveCurrency(data.receiver_currency)
-    setReceiveAmount(data.recipient_amount)
   }
   const getExchangeRates = async () => {
     // const token = await AsyncStorage.getItem('login_token');

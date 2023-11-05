@@ -1,16 +1,20 @@
-import {StyleSheet, Image, View, Pressable} from 'react-native';
-import React, {useState} from 'react';
+import { StyleSheet, Image, View, Pressable } from 'react-native';
+import React, { useState } from 'react';
 import Colors from '../constants/Colors';
 import Fonts from '../constants/Fonts';
 import TextComponent from '../components/TextComponent';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import PngLocation from '../constants/PngLocation';
-import {actuatedNormalize} from '../constants/PixelScaling';
-import {PrimaryButton} from '../components/ButtonCollection';
+import { actuatedNormalize } from '../constants/PixelScaling';
+import { PrimaryButton } from '../components/ButtonCollection';
+import axios from 'axios';
+import Constants from '../constants/Constants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SelectPaymentType = props => {
   const [manual, setManual] = useState(true);
   const [card, setCard] = useState(false);
+  const [loading,setLoading] = useState(false);
 
   const toggleHandler = textNumber => {
     if (textNumber === 'manual') {
@@ -21,6 +25,33 @@ const SelectPaymentType = props => {
       setManual(false);
     }
   };
+
+  const initiateTransfer = async () => {
+    setLoading(true);
+    const exchangerates = await AsyncStorage.getItem('exchangeRates');
+    const token = await AsyncStorage.getItem('login_token');
+    const login_workspaces_id = await AsyncStorage.getItem('login_workspaces_id');
+    const data = JSON.parse(exchangerates)
+    axios.post(Constants.BASE_URL + "API-FX-134-MoneyTransferInitiate", {
+      "amount": data.amount,
+      "currency_code_from": data.currency_code_from,
+      "currency_code_to": data.currency_code_to,
+      "filter": {
+        "workspace_id": login_workspaces_id
+      }
+    }, {
+      headers: {
+        fx_key: Constants.SUBSCRIPTION_KEY,
+        Authorization: "Bearer " + JSON.parse(token)
+      }
+    }).then(resp=>{
+      setLoading(false)
+      props.navigation.push('Preview');
+    }).catch(err=>{
+      console.log(err.response.data);
+      setLoading(false)
+    })
+  }
   return (
     <View style={styles.mainContainer}>
       <View style={styles.topLayer}>
@@ -60,7 +91,7 @@ const SelectPaymentType = props => {
               height: actuatedNormalize(56),
             }}
           />
-          <View style={{flex: 1, marginLeft: actuatedNormalize(22)}}>
+          <View style={{ flex: 1, marginLeft: actuatedNormalize(22) }}>
             <TextComponent
               style={{
                 fontFamily: Fonts.Rubik_Medium,
@@ -86,7 +117,7 @@ const SelectPaymentType = props => {
             }}
           />
         </Pressable>
-        <Pressable
+        {/* <Pressable
           onPress={() => toggleHandler('card')}
           style={{
             flexDirection: 'row',
@@ -126,7 +157,7 @@ const SelectPaymentType = props => {
               height: actuatedNormalize(24),
             }}
           />
-        </Pressable>
+        </Pressable> */}
 
         <View style={styles.buttonContainer}>
           <PrimaryButton
@@ -140,10 +171,9 @@ const SelectPaymentType = props => {
               fontSize: actuatedNormalize(14),
               color: Colors.white,
             }}
-            onPress={() => {
-              props.navigation.push('Preview');
-            }}
+            onPress={initiateTransfer}
             label={'Continue'}
+            loading={loading}
           />
         </View>
       </View>

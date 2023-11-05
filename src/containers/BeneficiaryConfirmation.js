@@ -5,15 +5,23 @@ import {
   Pressable,
 } from 'react-native';
 import TextComponent from '../components/TextComponent';
-import React from 'react';
+import React,{useEffect} from 'react';
 import Colors from '../constants/Colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {actuatedNormalize} from '../constants/PixelScaling';
 import Fonts from '../constants/Fonts';
 import { PrimaryButtonSmall } from '../components/ButtonCollection';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const BeneficiaryConfirmation = (props) => {
     const {params} = props.route
+    useEffect(()=>{
+      setAsyncData()
+    })
+    const setAsyncData = async() =>{
+      await AsyncStorage.setItem('beneficiary_id',JSON.stringify(params.id))
+      await AsyncStorage.setItem('beneficiary_bank_account_name',params.bank_account_name)
+    }
   return (
     <View style={styles.mainContainer}>
       <View style={styles.topLayer}>

@@ -52,6 +52,9 @@ const CustomDropdown = props => {
             {
               if (selectedOption.toLowerCase() != 'nationality')
                 setAsyncData(selectedItem.id);
+              else
+              if(selectedOption.toLowerCase() == 'transfer reason')
+              setAsyncData(selectedItem.reason);
               else setAsyncData(selectedItem.name);
             }
             setCurrentSelection(selectedItem);
@@ -86,6 +89,10 @@ const CustomDropdown = props => {
                   <Text style={styles.dropdown3BtnTxt}>
                     {selectedItem ? selectedItem.currency : selectedOption}
                   </Text>
+                ) : selectedOption.toLowerCase() == 'transfer reason' ? (
+                  <Text style={styles.dropdown3BtnTxt}>
+                    {selectedItem ? selectedItem.reason : selectedOption}
+                  </Text>
                 ) : (
                   ''
                 )}
@@ -117,13 +124,18 @@ const CustomDropdown = props => {
                   </TextComponent>
                 ) : selectedOption.toLowerCase() == 'receive' || selectedOption.toLowerCase() == 'send' ? (
 
-                  <TextComponent style={[styles.listItem, { width: 100 }]}>
-                    {item.currency}
+                  <TextComponent style={[styles.listItem, { width: "100%" }]}>
+                    {item.name} ({item.currency})
                   </TextComponent>
 
-                ) : (
-                  ''
-                )}
+                ) : selectedOption.toLowerCase() == 'transfer reason' ?
+                  (
+                    <TextComponent style={[styles.listItem, { width: 100 }]}>
+                      {item.reason}
+                    </TextComponent>
+                  ) : (
+                    ''
+                  )}
               </View>
             );
           }}

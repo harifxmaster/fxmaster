@@ -29,25 +29,41 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Preview = props => {
   const [transfer, setTransfer] = useState([]);
-  // const [delivery, setDelivery] = useState([])
-  // const [source, setSource] = useState([])
-  // useEffect(() => {
-  //     getData();
-  //   }, []);
-  //   const getData = async () => {
-
-  //     // setDelivery([await AsyncStorage.getItem('salutation_title')])
-  //     // setSource([await AsyncStorage.getItem('salutation_title')])
-  //   };
-
-  const [residence, setResidence] = useState([]);
+  const [transferReason, setTransferReason] = useState([]);
+  const [sender,setSender] = useState("");
+  const [totalFee,settotalFee] = useState("");
+  const [convertFee,setConvertFee] = useState();
+  const [senderCurrency,setSenderCurrency] = useState("");
+  const [exchangeRate,setExchangeRate] = useState("");
+  const [receiveAmount,setReceiveAmount] = useState("");
 
   useEffect(() => {
     getData();
   }, []);
   const getData = async () => {
-    setResidence([await AsyncStorage.getItem('salutation_title')]);
+    setTransferReason([await AsyncStorage.getItem('transfer_reasons')]);
     setTransfer([await AsyncStorage.getItem('salutation_title')]);
+    const exchangerates = await AsyncStorage.getItem('exchangeRates');
+    const token = await AsyncStorage.getItem('login_token');
+    const login_workspaces_id = await AsyncStorage.getItem('login_workspaces_id');
+    const data = JSON.parse(exchangerates)
+    console.log(exchangerates);
+    setSender(data.amount + " " + data.sender_currency)
+    if(data.fees.length>0)
+    {
+      settotalFee(data.fees[0].fee_charge)
+      setReceiveAmount(data.fees[0].recipient_amount + " " + data.receiver_currency)
+      setExchangeRate((data.fees[0].recipient_amount/data.amount).toFixed(4))
+      setConvertFee(data.fees[0].convert_amount)
+    }
+    else
+    {
+      settotalFee(data.fee_charge)
+      setReceiveAmount(data.recipient_amount + " " + data.receiver_currency)
+      setExchangeRate((data.recipient_amount/data.amount).toFixed(4))
+      setConvertFee(data.convert_amount)
+    }
+    setSenderCurrency(data.sender_currency)
   };
   const initialState = {
     formData: {
@@ -195,7 +211,7 @@ const Preview = props => {
                 fontFamily: Fonts.Rubik_Medium,
                 color: Colors.black,
               }}>
-              1000 GBP
+              {sender}
             </TextComponent>
           </View>
         </View>
@@ -220,7 +236,7 @@ const Preview = props => {
                 fontFamily: Fonts.Rubik_Medium,
                 color: Colors.black,
               }}>
-              4.43 GBP
+              {totalFee}
             </TextComponent>
           </View>
         </View>
@@ -245,7 +261,7 @@ const Preview = props => {
                 fontFamily: Fonts.Rubik_Medium,
                 color: Colors.black,
               }}>
-              995.57 GBP
+              {convertFee} {senderCurrency}
             </TextComponent>
           </View>
         </View>
@@ -270,7 +286,7 @@ const Preview = props => {
                 fontFamily: Fonts.Rubik_Medium,
                 color: Colors.black,
               }}>
-              1.18
+              {exchangeRate}
             </TextComponent>
           </View>
         </View>
@@ -295,45 +311,22 @@ const Preview = props => {
                 fontFamily: Fonts.Rubik_Medium,
                 color: Colors.black,
               }}>
-              1174.77 EUR
+              {receiveAmount}
             </TextComponent>
           </View>
         </View>
-
-        {residence && residence.length != 0 ? (
+        {transferReason ? (
           <CustomDropdown
             dropdownStyle={{height: actuatedNormalize(56)}}
-            placeholder={'Country of residence'}
-            data={residence}
+            placeholder={'Transfer Reason'}
+            data={transferReason}
             containerStyle={{width: '90%'}}
           />
         ) : (
           ''
         )}
 
-        {/* {delivery && delivery.length != 0 ? (
-              <CustomDropdown
-                dropdownStyle={{height: actuatedNormalize(56)}}
-                placeholder={'Delivery method'}
-                data={delivery}
-                containerStyle={{width:"90%"}}
-              />
-            ) : (
-              ''
-            )}
-
-            {source && source.length != 0 ? (
-              <CustomDropdown
-                dropdownStyle={{height: actuatedNormalize(56)}}
-                placeholder={'Source of funds'}
-                data={source}
-                containerStyle={{width:"90%"}}
-              />
-            ) : (
-              ''
-            )} */}
-
-        <Input
+        {/* <Input
           value={state.formData.reference.value}
           editable={true}
           returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
@@ -348,7 +341,7 @@ const Preview = props => {
           borderWidth={1}
           onChangeText={value => handleChange(value, 'reference')}
           borderColor={Colors.lightGrey}
-        />
+        /> */}
 
         <View style={styles.buttonContainer}>
           <PrimaryButtonSmall
