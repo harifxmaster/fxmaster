@@ -8,6 +8,7 @@ import {
   Modal,
   TouchableOpacity,
   ScrollView,
+  DevSettings
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import PngLocation from '../constants/PngLocation';
@@ -40,13 +41,13 @@ const Login = ({ navigation }) => {
     var login_registration_step = await AsyncStorage.getItem('login_registration_step');
     var login_id = await AsyncStorage.getItem('login_id');
     var login_token = await AsyncStorage.getItem('login_token');
-    if (login_registration_step == 'account_preview' && login_id != "" && login_id != null && login_token != "" && login_token != null) {
+    // if (login_registration_step == 'account_preview' && login_id != "" && login_id != null && login_token != "" && login_token != null) {
       
-      navigation.dispatch(StackActions.replace('PostLoginDashboard'))
-    }
-    else {
-      //navigate to registration flow
-    }
+    //   navigation.dispatch(StackActions.replace('PostLoginDashboard'))
+    // }
+    // else {
+    //   //navigate to registration flow
+    // }
   }
 
   useEffect(() => {
@@ -92,7 +93,7 @@ const Login = ({ navigation }) => {
         setAsyncData("login_token", JSON.stringify(resp.data.token))
         setLoading(false);
         if (resp.data.data.registration_step == 'account_preview')
-          navigation.dispatch(StackActions.replace("PostLoginDashboard"));
+          DevSettings.reload()
         else {
           //navigate to registration flow
         }

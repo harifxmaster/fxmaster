@@ -5,6 +5,7 @@ import {
   Pressable,
   StatusBar,
   SectionList,
+  DevSettings
 } from 'react-native';
 import TextComponent from '../components/TextComponent';
 import React,{useEffect,useState} from 'react';
@@ -110,14 +111,15 @@ const PostLoginDashboard = ({navigation}) => {
     var login_workspaces_id = await AsyncStorage.getItem('login_workspaces_id');
     setFullName(await AsyncStorage.getItem('login_full_name'));
     if (login_registration_step != 'account_preview' || login_id == "" || login_id == null || login_token == "" || login_token == null) {
-      navigation.dispatch(StackActions.replace('Login'))
+      await AsyncStorage.clear();
+      DevSettings.reload()
     }
     else
     {
       console.log(Constants.BASE_URL+'API-FX-124-ListTransaction?filter[workspace_id]='+login_workspaces_id);
       console.log(login_token);
       axios.get(Constants.BASE_URL+'API-FX-124-ListTransaction?filter[workspace_id]='+login_workspaces_id,{headers:{
-        Authorization: "Bearer "+login_token,
+        Authorization: "Bearer "+ JSON.parse(login_token),
         fx_key: Constants.SUBSCRIPTION_KEY
       }}).then(resp=>{
         console.log(resp.data);
