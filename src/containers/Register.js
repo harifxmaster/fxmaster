@@ -238,7 +238,7 @@ const Register = ({ navigation }) => {
       await AsyncStorage.setItem('middleName',formData.middleName.value)
       await AsyncStorage.setItem('lastName',formData.lastName.value)
       await AsyncStorage.setItem('enterPin',formData.enterPin.value)
-      navigation.push("NationalityScreen")
+      navigation.push("SelectAccountType")
     }
     else {
       Alert.alert("Validation Error.", "Please fill all the mandatory fields.")
