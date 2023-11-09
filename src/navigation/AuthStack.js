@@ -21,6 +21,9 @@ import WebsiteView from '../containers/WebView';
 import SelectAccountType from '../containers/SelectAccountType';
 import BusinessDetails from '../containers/BusinessDetails';
 import SelectCompany from '../containers/SelectCompany';
+import IdentifyBusiness from '../containers/IdentifyBusiness';
+import TellAboutBusiness from '../containers/TellAboutBusiness';
+import AddAddress from '../containers/AddAddress';
 
 const Stack = createNativeStackNavigator();
 
@@ -139,6 +142,22 @@ const MainStack = () => {
         options={{headerShown: false}}
         name="SelectCompany"
         component={SelectCompany}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="IdentifyBusiness"
+        component={IdentifyBusiness}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="TellAboutBusiness"
+        component={TellAboutBusiness}
+      />
+
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="AddAddress"
+        component={AddAddress}
       />
     </Stack.Navigator>
   );

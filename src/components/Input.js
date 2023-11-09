@@ -48,6 +48,7 @@ const Input = props => {
               ...props.textstyle,
             },
           ]}
+          numberOfLines={props.numberOfLines}
           placeholder={props.placeholder}
           value={props.value}
           keyboardType={props.keyboardType}

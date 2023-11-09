@@ -48,6 +48,9 @@ const PngLocation = {
     Globe:require("../../assets/images/postlogin/globe.png"),
     DownloadIcon:require("../../assets/images/postlogin/downloadicon.png"),
     SuccessTick:require("../../assets/images/postlogin/successtick.png"),
+    Checked:require("../../assets/images/postlogin/checked.png"),
+    UnChecked:require("../../assets/images/postlogin/unchecked.png"),
+    Search:require("../../assets/images/postlogin/search.png"),
 
 
 }
