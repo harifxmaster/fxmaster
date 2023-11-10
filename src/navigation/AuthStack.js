@@ -24,6 +24,9 @@ import SelectCompany from '../containers/SelectCompany';
 import IdentifyBusiness from '../containers/IdentifyBusiness';
 import TellAboutBusiness from '../containers/TellAboutBusiness';
 import AddAddress from '../containers/AddAddress';
+import OfficerDetails from '../containers/OfficerDetails';
+import ShareHolderDetails from '../containers/ShareHolderDetails';
+import OfficerSelect from '../containers/OfficerSelect';
 
 const Stack = createNativeStackNavigator();
 
@@ -158,6 +161,23 @@ const MainStack = () => {
         options={{headerShown: false}}
         name="AddAddress"
         component={AddAddress}
+      />
+
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="OfficerDetails"
+        component={OfficerDetails}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="ShareHolderDetails"
+        component={ShareHolderDetails}
+      />
+
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="OfficerSelect"
+        component={OfficerSelect}
       />
     </Stack.Navigator>
   );
