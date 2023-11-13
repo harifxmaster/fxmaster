@@ -27,6 +27,7 @@ import AddAddress from '../containers/AddAddress';
 import OfficerDetails from '../containers/OfficerDetails';
 import ShareHolderDetails from '../containers/ShareHolderDetails';
 import OfficerSelect from '../containers/OfficerSelect';
+import VerifyBusiness from '../containers/VerifyBusiness';
 
 const Stack = createNativeStackNavigator();
 
@@ -178,6 +179,12 @@ const MainStack = () => {
         options={{headerShown: false}}
         name="OfficerSelect"
         component={OfficerSelect}
+      />
+
+<Stack.Screen
+        options={{headerShown: false}}
+        name="VerifyBusiness"
+        component={VerifyBusiness}
       />
     </Stack.Navigator>
   );
