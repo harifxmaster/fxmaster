@@ -87,7 +87,7 @@ const AddAddress = (props) => {
             style={{
               borderWidth: 1,
               borderColor: '#8592B2' ,
-              borderStyle: checkOne ? 'solid' : 'dotted',
+              borderStyle: checkOne ? 'solid' : "dashed",
               width: '90%',
               justifyContent: 'center',
               height:actuatedNormalize(56),
@@ -157,7 +157,7 @@ const AddAddress = (props) => {
             style={{
               borderWidth: 1,
               borderColor: '#8592B2' ,
-              borderStyle: checkTwo ? 'solid' : 'dotted',
+              borderStyle: checkTwo ? 'solid' : 'dashed',
               width: '90%',
               justifyContent: 'center',
               height:actuatedNormalize(56),
@@ -228,7 +228,7 @@ const AddAddress = (props) => {
             style={{
               borderWidth: 1,
               borderColor: '#8592B2' ,
-              borderStyle: checkThree ? 'solid' : 'dotted',
+              borderStyle: checkThree ? 'solid' : 'dashed',
               width: '90%',
               justifyContent: 'center',
               height:actuatedNormalize(56),
@@ -299,7 +299,7 @@ const AddAddress = (props) => {
             style={{
               borderWidth: 1,
               borderColor: '#8592B2' ,
-              borderStyle: checkFour ? 'solid' : 'dotted',
+              borderStyle: checkFour ? 'solid' : 'dashed',
               width: '90%',
               justifyContent: 'center',
               height:actuatedNormalize(56),

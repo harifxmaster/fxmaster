@@ -66,7 +66,7 @@ const MainStack = () => {
       />
       <Stack.Screen
         options={{headerShown: false}}
-        name="PrivacyPolicy"
+        name="Privacy&Policy"
         component={PrivacyPolicy}
       />
       <Stack.Screen

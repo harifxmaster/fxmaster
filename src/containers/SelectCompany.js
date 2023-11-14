@@ -69,7 +69,7 @@ const SelectCompany = props => {
             marginTop: actuatedNormalize(45),
             paddingLeft: actuatedNormalize(24),
           }}
-          onPress={() => navigation.goBack()}>
+          onPress={() => props.navigation.goBack()}>
           <Ionicons color={Colors.black} name="arrow-back-outline" size={24} />
         </Pressable>
       </View>

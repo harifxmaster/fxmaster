@@ -6,9 +6,10 @@ import {
   Image,
   Pressable,
   TouchableOpacity,
-  ScrollView
+  ScrollView,
+  TextInput,
 } from 'react-native';
-import React,{useState,useEffect,useReducer} from 'react';
+import React, {useState, useEffect, useReducer} from 'react';
 import {
   actuatedNormalize,
   actuatedNormalizeVertical,
@@ -25,298 +26,368 @@ import Input from '../components/Input';
 import Validate from '../utils/Validate';
 import CommonHelper from '../constants/CommonHelper';
 const BusinessDetails = ({navigation}) => {
-    const initialState = {
-        formData: {
-          companyName: {
-            value: '',
-            valid: false,
-            touched: false,
-            errorMsg: '',
-            customErrors: {
-              MANDATORY_ERR: 'Please enter your first name',
-            },
-            validationRules: {
-              isRequired: false,
-            },
-          },
-          companyActivity: {
-            value: '',
-            valid: false,
-            touched: false,
-            errorMsg: '',
-            customErrors: {
-              MANDATORY_ERR: 'Please enter your first name',
-            },
-            validationRules: {
-              isRequired: false,
-            },
-          },
-          expectedTurnOver:{
-            value: '',
-            valid: false,
-            touched: false,
-            errorMsg: '',
-            customErrors: {
-              MANDATORY_ERR: 'Please enter your first name',
-            },
-            validationRules: {
-              isRequired: false,
-            },
-          }
+  const initialState = {
+    formData: {
+      companyName: {
+        value: '',
+        valid: false,
+        touched: false,
+        errorMsg: '',
+        customErrors: {
+          MANDATORY_ERR: 'Please enter your first name',
+        },
+        validationRules: {
+          isRequired: false,
+        },
+      },
+      companyActivity: {
+        value: '',
+        valid: false,
+        touched: false,
+        errorMsg: '',
+        customErrors: {
+          MANDATORY_ERR: 'Please enter your first name',
+        },
+        validationRules: {
+          isRequired: false,
+        },
+      },
+      expectedTurnOver: {
+        value: '',
+        valid: false,
+        touched: false,
+        errorMsg: '',
+        customErrors: {
+          MANDATORY_ERR: 'Please enter your first name',
+        },
+        validationRules: {
+          isRequired: false,
+        },
+      },
+      companyTypeUnregistered: {
+        value: '',
+        valid: false,
+        touched: false,
+        errorMsg: '',
+        customErrors: {
+          MANDATORY_ERR: 'Please enter your first name',
+        },
+        validationRules: {
+          isRequired: false,
+        },
+      },
+      companyNameUnregistered: {
+        value: '',
+        valid: false,
+        touched: false,
+        errorMsg: '',
+        customErrors: {
+          MANDATORY_ERR: 'Please enter your first name',
+        },
+        validationRules: {
+          isRequired: false,
+        },
+      },
+      companyEmail: {
+        value: '',
+        valid: false,
+        touched: false,
+        errorMsg: '',
+        customErrors: {
+          MANDATORY_ERR: 'Please enter your first name',
+        },
+        validationRules: {
+          isRequired: false,
+        },
+      },
+      mobileNumber: {
+        value: '',
+        valid: false,
+        touched: false,
+        errorMsg: '',
+        customErrors: {
+          MANDATORY_ERR: 'Please enter your first name',
+        },
+        validationRules: {
+          isRequired: false,
+        },
+      },
+      companyUrl: {
+        value: '',
+        valid: false,
+        touched: false,
+        errorMsg: '',
+        customErrors: {
+          MANDATORY_ERR: 'Please enter your first name',
+        },
+        validationRules: {
+          isRequired: false,
+        },
+      },
+    },
+  };
+
+
+const [selected, setSelected] = useState(0);
+const [residence, setResidence] = useState([]);
+
+useEffect(() => {
+  getData();
+}, []);
+const getData = async () => {
+  setResidence([await AsyncStorage.getItem('salutation_title')]);
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'commonUpdate':
+      return {
+        ...state,
+        ...action.payload,
+      };
+    case 'reset':
+      return initialState;
+    default:
+      return {
+        ...state,
+      };
+  }
+};
+
+const [state, dispatch] = useReducer(reducer, initialState);
+
+const handleChange = (value, name) => {
+  console.log(value);
+  console.log(name);
+  let tempState = state;
+  let tempFormData = tempState['formData'];
+
+  const updatedFormElement = {
+    ...tempFormData[name],
+  };
+
+  updatedFormElement.value = value;
+  updatedFormElement.touched = true;
+
+  let ValidatonResult = Validate(
+    value,
+    updatedFormElement.validationRules,
+    null,
+    null,
+  );
+
+  updatedFormElement.valid = ValidatonResult.valid;
+  if (!updatedFormElement.valid && updatedFormElement.touched) {
+    updatedFormElement.errorMsg = ValidatonResult.errorMsg;
+  } else {
+    updatedFormElement.errorMsg = '';
+  }
+
+  tempFormData[name] = updatedFormElement;
+  tempState['formData'] = tempFormData;
+
+  dispatch({
+    type: 'commonUpdate',
+    payload: tempState,
+  });
+};
+const [inputValue, setInputValue] = useState('');
+
+const submitHandler = () => {
+  let isFormValid = true;
+  let formData = state.formData;
+  for (let key in formData) {
+    console.log('for loop key', key);
+    let input = formData[key];
+    let fieldValidations = Validate(input.value, input.validationRules);
+    input.valid = fieldValidations.valid;
+    console.log('Handle submit fieldValidation', fieldValidations);
+    input.touched = true;
+    input.errorMsg = CommonHelper.CustomError(
+      fieldValidations.errorMsg,
+      input.customErrors,
+    );
+    formData[key] = input;
+    console.log('INPUT>>>>', input);
+    dispatch({
+      type: 'commonUpdate',
+      payload: formData,
+    });
+    if (!input.valid) {
+      isFormValid = false;
+    }
+    console.log('isFormValid>>>>>>>', isFormValid);
+  }
+  if (isFormValid) {
+    console.log('inside', isFormValid);
+    navigation.push('NationalityScreen');
+  }
+};
+return (
+  <View style={{flex: 1}}>
+    <View style={styles.topBg}>
+      <Pressable
+        style={{
+          marginTop: actuatedNormalize(45),
+          paddingLeft: actuatedNormalize(24),
         }}
+        onPress={() => navigation.goBack()}>
+        <Ionicons color={Colors.black} name="arrow-back-outline" size={24} />
+      </Pressable>
+    </View>
 
-    const [selected,setSelected] = useState(0)
-    const [residence, setResidence] = useState([]);
+    <View style={styles.centerBg}>
+      <Image source={PngLocation.FXWordMarkLogo} style={styles.wordMarkLogo} />
+      <TextComponent
+        style={{
+          fontSize: actuatedNormalize(24),
+          fontFamily: Fonts.Rubik_Medium,
+          color: '#333333',
+          marginTop: actuatedNormalize(34),
+        }}>
+        Business details
+      </TextComponent>
+      <TextComponent
+        style={{
+          fontSize: actuatedNormalize(12),
+          fontFamily: Fonts.Rubik_Regular,
+          color: '#777777',
+          textAlign: 'center',
+          lineHeight: actuatedNormalize(20),
+          marginTop: actuatedNormalize(16),
+        }}>
+        As a part of banking compliance, you are {'\n'} required to identify
+        yourself and your business
+      </TextComponent>
 
-    useEffect(() => {
-      getData();
-    }, []);
-    const getData = async () => {
-      setResidence([await AsyncStorage.getItem('salutation_title')]);
-    };
-
-
-    const reducer = (state, action) => {
-        switch (action.type) {
-          case 'commonUpdate':
-            return {
-              ...state,
-              ...action.payload,
-            };
-          case 'reset':
-            return initialState;
-          default:
-            return {
-              ...state,
-            };
-        }
-      };
-    
-      const [state, dispatch] = useReducer(reducer, initialState);
-    
-      const handleChange = (value, name) => {
-        console.log(value);
-        console.log(name);
-        let tempState = state;
-        let tempFormData = tempState['formData'];
-    
-        const updatedFormElement = {
-          ...tempFormData[name],
-        };
-    
-        updatedFormElement.value = value;
-        updatedFormElement.touched = true;
-    
-        let ValidatonResult = Validate(
-          value,
-          updatedFormElement.validationRules,
-          null,
-          null,
-        );
-    
-        updatedFormElement.valid = ValidatonResult.valid;
-        if (!updatedFormElement.valid && updatedFormElement.touched) {
-          updatedFormElement.errorMsg = ValidatonResult.errorMsg;
-        } else {
-          updatedFormElement.errorMsg = '';
-        }
-    
-        tempFormData[name] = updatedFormElement;
-        tempState['formData'] = tempFormData;
-    
-        dispatch({
-          type: 'commonUpdate',
-          payload: tempState,
-        });
-      };
-    
-      const submitHandler = () => {
-        let isFormValid = true;
-        let formData = state.formData;
-        for (let key in formData) {
-          console.log('for loop key', key);
-          let input = formData[key];
-          let fieldValidations = Validate(input.value, input.validationRules);
-          input.valid = fieldValidations.valid;
-          console.log('Handle submit fieldValidation', fieldValidations);
-          input.touched = true;
-          input.errorMsg = CommonHelper.CustomError(
-            fieldValidations.errorMsg,
-            input.customErrors,
-          );
-          formData[key] = input;
-          console.log('INPUT>>>>', input);
-          dispatch({
-            type: 'commonUpdate',
-            payload: formData,
-          });
-          if (!input.valid) {
-            isFormValid = false;
-          }
-          console.log('isFormValid>>>>>>>', isFormValid);
-        }
-        if (isFormValid) {
-          console.log('inside', isFormValid);
-          navigation.push('NationalityScreen');
-        }
-      };
-  return (
-    <View style={{flex: 1}}>
-      <View style={styles.topBg}>
-        <Pressable
-          style={{
-            marginTop: actuatedNormalize(45),
-            paddingLeft: actuatedNormalize(24),
-          }}
-          onPress={() => navigation.goBack()}>
-          <Ionicons color={Colors.black} name="arrow-back-outline" size={24} />
-        </Pressable>
-      </View>
-     
-      <View style={styles.centerBg}>
-     
-        <Image
-          source={PngLocation.FXWordMarkLogo}
-          style={styles.wordMarkLogo}
-        />
-        <TextComponent
-          style={{
-            fontSize: actuatedNormalize(24),
-            fontFamily: Fonts.Rubik_Medium,
-            color: '#333333',
-            marginTop: actuatedNormalize(34),
-          }}>
-          Business details
-        </TextComponent>
-        <TextComponent
-          style={{
-            fontSize: actuatedNormalize(12),
-            fontFamily: Fonts.Rubik_Regular,
-            color: '#777777',
-            textAlign: 'center',
-            lineHeight: actuatedNormalize(20),
-            marginTop: actuatedNormalize(16),
-          }}>
-          As a part of banking compliance, you are {'\n'} required to identify
-          yourself and your business
-        </TextComponent>
-
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent:"space-between",
-            alignItems: 'center',
-            width:"70%",
-            marginTop:actuatedNormalize(41)
-            
-          }}>
-            <View style={{flexDirection:"row", alignItems:"center"}}>
-        <TouchableOpacity onPress={() => setSelected(0)}>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          width: '70%',
+          marginTop: actuatedNormalize(41),
+        }}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <TouchableOpacity onPress={() => setSelected(0)}>
             <Image
-            source={selected === 0 ? PngLocation.Clicked : PngLocation.UnClicked}
-            style={{
-              width: actuatedNormalize(24),
-              height: actuatedNormalize(24),
-            }}
-          />
+              source={
+                selected === 0 ? PngLocation.Clicked : PngLocation.UnClicked
+              }
+              style={{
+                width: actuatedNormalize(24),
+                height: actuatedNormalize(24),
+              }}
+            />
           </TouchableOpacity>
-           <TextComponent
-            style={{
-              fontSize: actuatedNormalize(12),
-              fontFamily: Fonts.Rubik_Medium,
-              color: Colors.black,
-              marginLeft:actuatedNormalize(12)
-            }}>
-            Registered
-          </TextComponent>
-            </View>
-            <View style={{flexDirection:"row", alignItems:"center"}}>
-            <TouchableOpacity onPress={() => setSelected(1)}>
-            <Image
-            source={selected === 1 ? PngLocation.Clicked : PngLocation.UnClicked}
-            style={{
-              width: actuatedNormalize(24),
-              height: actuatedNormalize(24),
-            }}/>
-            </TouchableOpacity>
           <TextComponent
             style={{
               fontSize: actuatedNormalize(12),
               fontFamily: Fonts.Rubik_Medium,
               color: Colors.black,
-              marginLeft:actuatedNormalize(12)
+              marginLeft: actuatedNormalize(12),
+            }}>
+            Registered
+          </TextComponent>
+        </View>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <TouchableOpacity onPress={() => setSelected(1)}>
+            <Image
+              source={
+                selected === 1 ? PngLocation.Clicked : PngLocation.UnClicked
+              }
+              style={{
+                width: actuatedNormalize(24),
+                height: actuatedNormalize(24),
+              }}
+            />
+          </TouchableOpacity>
+          <TextComponent
+            style={{
+              fontSize: actuatedNormalize(12),
+              fontFamily: Fonts.Rubik_Medium,
+              color: Colors.black,
+              marginLeft: actuatedNormalize(12),
             }}>
             Unregistered
           </TextComponent>
-          </View>
-          
         </View>
-        <ScrollView
-          style={{ flex: 1, width: '100%' }} contentContainerStyle={{ flexGrow: 1 }}>
+      </View>
 
+      {
+        selected === 0 ? 
+      
+
+      <ScrollView
+        style={{flex: 1, width: '100%'}}
+        contentContainerStyle={{flexGrow: 1}}>
         {residence && residence.length != 0 ? (
-              <CustomDropdown
-                
-                dropdownStyle={{height: actuatedNormalize(56),width:"90%",alignSelf:"center",marginTop:actuatedNormalize(45)}}
-                placeholder={'Country of residence'}
-                data={residence}
-              />
-            ) : (
-              ''
-            )}
-
-<Input
-            value={state.formData.companyName.value}
-            editable={false}
-            returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
-            viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
-            multiline={false}
-            errorView={[styles.viewStyle, {marginTop: actuatedNormalize(10)}]}
-            textstyle={styles.textInput}
-            placeholder={'Company Name'}
-            maxLength={50}
-            errorMsg={state.formData.companyName.errorMsg}
-            validationRules={state.formData.companyName.validationRules}
-            borderWidth={1}
-            onChangeText={value => handleChange(value, 'companyName')}
-            borderColor={Colors.lightGrey}
+          <CustomDropdown
+            dropdownStyle={{
+              height: actuatedNormalize(56),
+              width: '90%',
+              alignSelf: 'center',
+              marginTop: actuatedNormalize(45),
+            }}
+            placeholder={'Country of residence'}
+            data={residence}
           />
+        ) : (
+          ''
+        )}
 
-<Input
-            value={state.formData.companyActivity.value}
-            editable={false}
-            returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
-            viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
-            multiline={false}
-            errorView={[styles.viewStyle, {marginTop: actuatedNormalize(10)}]}
-            textstyle={styles.textInput}
-            placeholder={'Enter Your Company Activity'}
-            maxLength={50}
-            errorMsg={state.formData.companyActivity.errorMsg}
-            validationRules={state.formData.companyActivity.validationRules}
-            borderWidth={1}
-            onChangeText={value => handleChange(value, 'companyActivity')}
-            borderColor={Colors.lightGrey}
-          />
+        <Input
+          value={state.formData.companyName.value}
+          editable={false}
+          returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
+          viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
+          multiline={false}
+          errorView={[styles.viewStyle, {marginTop: actuatedNormalize(10)}]}
+          textstyle={styles.textInput}
+          placeholder={'Company Name'}
+          maxLength={50}
+          errorMsg={state.formData.companyName.errorMsg}
+          validationRules={state.formData.companyName.validationRules}
+          borderWidth={1}
+          onChangeText={value => handleChange(value, 'companyName')}
+          borderColor={Colors.lightGrey}
+        />
 
-<Input
-            value={state.formData.expectedTurnOver.value}
-            editable={false}
-            returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
-            viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
-            multiline={false}
-            errorView={[styles.viewStyle, {marginTop: actuatedNormalize(10)}]}
-            textstyle={styles.textInput}
-            placeholder={'Enter Your Expected Turnover Per Annum'}
-            maxLength={50}
-            errorMsg={state.formData.expectedTurnOver.errorMsg}
-            validationRules={state.formData.expectedTurnOver.validationRules}
-            borderWidth={1}
-            onChangeText={value => handleChange(value, 'expectedTurnOver')}
-            borderColor={Colors.lightGrey}
-          />
+        <Input
+          value={state.formData.companyActivity.value}
+          editable={false}
+          returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
+          viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
+          multiline={false}
+          errorView={[styles.viewStyle, {marginTop: actuatedNormalize(10)}]}
+          textstyle={styles.textInput}
+          placeholder={'Enter Your Company Activity'}
+          maxLength={50}
+          errorMsg={state.formData.companyActivity.errorMsg}
+          validationRules={state.formData.companyActivity.validationRules}
+          borderWidth={1}
+          onChangeText={value => handleChange(value, 'companyActivity')}
+          borderColor={Colors.lightGrey}
+        />
 
-<View style={styles.buttonContainer}>
+        <Input
+          value={state.formData.expectedTurnOver.value}
+          editable={false}
+          returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
+          viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
+          multiline={false}
+          errorView={[styles.viewStyle, {marginTop: actuatedNormalize(10)}]}
+          textstyle={styles.textInput}
+          placeholder={'Enter Your Expected Turnover Per Annum'}
+          maxLength={50}
+          errorMsg={state.formData.expectedTurnOver.errorMsg}
+          validationRules={state.formData.expectedTurnOver.validationRules}
+          borderWidth={1}
+          onChangeText={value => handleChange(value, 'expectedTurnOver')}
+          borderColor={Colors.lightGrey}
+        />
+
+        <View style={styles.buttonContainer}>
           <PrimaryButton
             primaryButtonContainer={{
               width: '85%',
@@ -328,20 +399,150 @@ const BusinessDetails = ({navigation}) => {
               color: Colors.white,
             }}
             onPress={() => {
-                navigation.push('SelectCompany')
+              navigation.push('SelectCompany');
             }}
             label={'Search'}
           />
         </View>
-          </ScrollView>
-         
-      </View>
-      
+      </ScrollView>
+:
+      <ScrollView
+        style={{flex: 1, width: '100%'}}
+        contentContainerStyle={{flexGrow: 1}}>
+        <Input
+          value={state.formData.companyTypeUnregistered.value}
+          editable={false}
+          returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
+          viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
+          multiline={false}
+          errorView={[styles.viewStyle, {marginTop: actuatedNormalize(10)}]}
+          textstyle={styles.textInput}
+          placeholder={'Company Type'}
+          maxLength={50}
+          errorMsg={state.formData.companyTypeUnregistered.errorMsg}
+          validationRules={
+            state.formData.companyTypeUnregistered.validationRules
+          }
+          borderWidth={1}
+          onChangeText={value => handleChange(value, 'companyTypeUnregistered')}
+          borderColor={Colors.lightGrey}
+        />
 
-      <View style={styles.bottomBg}></View>
+        <Input
+          value={state.formData.companyNameUnregistered.value}
+          editable={false}
+          returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
+          viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
+          multiline={false}
+          errorView={[styles.viewStyle, {marginTop: actuatedNormalize(10)}]}
+          textstyle={styles.textInput}
+          placeholder={'Company name'}
+          maxLength={50}
+          errorMsg={state.formData.companyNameUnregistered.errorMsg}
+          validationRules={
+            state.formData.companyNameUnregistered.validationRules
+          }
+          borderWidth={1}
+          onChangeText={value => handleChange(value, 'companyNameUnregistered')}
+          borderColor={Colors.lightGrey}
+        />
+
+        <Input
+          value={state.formData.companyEmail.value}
+          editable={false}
+          returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
+          viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
+          multiline={false}
+          errorView={[styles.viewStyle, {marginTop: actuatedNormalize(10)}]}
+          textstyle={styles.textInput}
+          placeholder={'Company email'}
+          maxLength={50}
+          errorMsg={state.formData.companyEmail.errorMsg}
+          validationRules={state.formData.companyEmail.validationRules}
+          borderWidth={1}
+          onChangeText={value => handleChange(value, 'companyEmail')}
+          borderColor={Colors.lightGrey}
+        />
+
+        <Input
+          value={state.formData.mobileNumber.value}
+          editable={false}
+          returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
+          viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
+          multiline={false}
+          errorView={[styles.viewStyle, {marginTop: actuatedNormalize(10)}]}
+          textstyle={styles.textInput}
+          placeholder={'Mobile number'}
+          maxLength={50}
+          errorMsg={state.formData.mobileNumber.errorMsg}
+          validationRules={state.formData.mobileNumber.validationRules}
+          borderWidth={1}
+          onChangeText={value => handleChange(value, 'mobileNumber')}
+          borderColor={Colors.lightGrey}
+        />
+
+        <Input
+          value={state.formData.companyUrl.value}
+          editable={false}
+          returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
+          viewstyle={[styles.viewStyle, {marginTop: actuatedNormalize(20)}]}
+          multiline={false}
+          errorView={[styles.viewStyle, {marginTop: actuatedNormalize(10)}]}
+          textstyle={styles.textInput}
+          placeholder={'Company URL'}
+          maxLength={50}
+          errorMsg={state.formData.companyUrl.errorMsg}
+          validationRules={state.formData.companyUrl.validationRules}
+          borderWidth={1}
+          onChangeText={value => handleChange(value, 'companyUrl')}
+          borderColor={Colors.lightGrey}
+        />
+
+        <TextInput
+          style={{
+            height: 150,
+            borderWidth: 1,
+            borderColor: Colors.lightGrey,
+            padding: 15,
+            fontSize: 14,
+            width: '90%',
+            alignSelf: 'center',
+            marginTop: actuatedNormalize(20),
+            borderRadius: 10,
+          }}
+          multiline
+          numberOfLines={4}
+          placeholder="About Business"
+          value={inputValue}
+          // onChangeText={text => setInputValue(text)}
+          placeholderTextColor={Colors.tintGrey}
+          textAlignVertical="top"
+        />
+
+        <View style={styles.buttonContainer}>
+          <PrimaryButton
+            primaryButtonContainer={{
+              width: '85%',
+              borderRadius: 25,
+            }}
+            primaryButtonText={{
+              fontFamily: Fonts.Rubik_Medium,
+              fontSize: actuatedNormalize(14),
+              color: Colors.white,
+            }}
+            onPress={() => {
+              navigation.push('AddAddress');
+            }}
+            label={'Continue'}
+          />
+        </View>
+      </ScrollView>
+}
     </View>
-  );
-};
+
+    <View style={styles.bottomBg}></View>
+  </View>
+) }
 
 export default BusinessDetails;
 
@@ -389,7 +590,7 @@ const styles = StyleSheet.create({
     color: Colors.tintGrey,
     width: '100%',
     height: actuatedNormalize(56),
-    backgroundColor:Colors.white
+    backgroundColor: Colors.white,
   },
   viewStyle: {
     backgroundColor: Colors.white,

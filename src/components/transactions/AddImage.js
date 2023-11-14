@@ -51,7 +51,6 @@ const AddImage = () => {
     setPickedDocuments(updatedDocuments);
   };
 
-  console.log('pickedDocuments', pickedDocuments);
   return (
     <View
       style={{

@@ -25,7 +25,7 @@ import Validate from '../utils/Validate';
 import CommonHelper from '../constants/CommonHelper';
 import CustomDropdown from '../constants/CustomDropdown';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-4;
+
 
 const Preview = props => {
   const [transfer, setTransfer] = useState([]);

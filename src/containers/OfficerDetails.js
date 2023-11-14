@@ -421,7 +421,7 @@ const OfficerDetails = (props) => {
                   fontSize: actuatedNormalize(14),
                   color: Colors.lightGreen,
                 }}
-                onPress={() => setLogoutModal(false)}
+                onPress={() => props.navigation.push("VerifyBusiness")}
                 label={'No'}
               />
             </View>

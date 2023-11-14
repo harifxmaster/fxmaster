@@ -33,7 +33,7 @@ const Stack = createNativeStackNavigator();
 
 const MainStack = () => {
   return (
-    <Stack.Navigator initialRouteName="PreLoginDashBoard">
+    <Stack.Navigator initialRouteName="BusinessDetails">
       <Stack.Screen
         options={{headerShown: false}}
         name="PreLoginDashBoard"
