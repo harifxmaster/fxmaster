@@ -110,7 +110,7 @@ const DatePicker = () => {
               renderHeader={() => (
                 <TouchableNativeFeedback onPress={() => setIsModalVisible(true)}>
                   <View>
-                    <Text>
+                    <Text style={{color:Colors.black}}>
                       {customDate.month() + 1} - {customDate.year()}
                     </Text>
                   </View>
@@ -121,6 +121,7 @@ const DatePicker = () => {
               markingType='multi-dot'
               initialDate={customDate.format('YYYY-MM-DD')}
               current={customDate.format('YYYY-MM-DD').toString()} 
+              maxDate={new Date()}
             />
             <PrimaryButton
               primaryButtonContainer={{

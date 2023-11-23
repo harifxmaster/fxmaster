@@ -19,6 +19,10 @@ import SelectPaymentType from '../containers/SelectPaymentType';
 import Preview from '../containers/Preview';
 import TransferDetails from '../containers/TransferDetails';
 import SendMoney from '../containers/SendMoney';
+import AddBeneficiary from '../containers/AddBeneficiary';
+import SelfAccount from '../containers/SelfAccount';
+import CompanyAccount from '../containers/CompanyAccount';
+import BeneficiaryOtpScreen from '../containers/BeneficiaryOtp';
 
 const Stack = createNativeStackNavigator();
 
@@ -94,6 +98,26 @@ const MainStack = () => {
         options={{ headerShown: false }}
         name="SelectBeneficiary"
         component={SelectBeneficiary}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="AddBeneficiary"
+        component={AddBeneficiary}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="SelfAccount"
+        component={SelfAccount}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="CompanyAccount"
+        component={CompanyAccount}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="BeneficiaryOtpScreen"
+        component={BeneficiaryOtpScreen}
       />
       <Stack.Screen
         options={{ headerShown: false }}

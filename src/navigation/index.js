@@ -20,21 +20,14 @@ const Navigator = () => {
     loadData()
   })
   return (
-    <>
-      {login ?
-        <NavigationContainer>
-          <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="main" component={MainStack}></Stack.Screen>
-          </Stack.Navigator>
-        </NavigationContainer>
-        :
+    
         <NavigationContainer>
           <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="auth" component={AuthStack}></Stack.Screen>
+            <Stack.Screen name="main" component={MainStack}></Stack.Screen>
           </Stack.Navigator>
         </NavigationContainer>
-      }
-    </>
+      
   )
 }
 

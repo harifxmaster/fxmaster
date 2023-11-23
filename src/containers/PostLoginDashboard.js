@@ -5,22 +5,25 @@ import {
   Pressable,
   StatusBar,
   SectionList,
-  DevSettings
+  DevSettings,
+  FlatList,
+  ActivityIndicator,
+  TouchableOpacity
 } from 'react-native';
 import TextComponent from '../components/TextComponent';
-import React,{useEffect,useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Colors from '../constants/Colors';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import PngLocation from '../constants/PngLocation';
-import {actuatedNormalize} from '../constants/PixelScaling';
+import { actuatedNormalize } from '../constants/PixelScaling';
 import Fonts from '../constants/Fonts';
-import {PrimaryButtonSmall} from '../components/ButtonCollection';
+import { PrimaryButtonSmall } from '../components/ButtonCollection';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackActions } from '@react-navigation/native';
 import axios from 'axios';
 import Constants from '../constants/Constants';
 
-const PostLoginDashboard = ({navigation}) => {
+const PostLoginDashboard = ({ navigation }) => {
   let userList = [
     {
       date: 'Today',
@@ -100,35 +103,63 @@ const PostLoginDashboard = ({navigation}) => {
       ],
     },
   ];
-  const [fullName,setFullName] = useState("");
+  const [transactions, setTransactions] = useState([]);
+  const [fullName, setFullName] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const dataref = useRef();
   useEffect(() => {
-    getData();
+    if (dataref.current) return true;
+    dataref.current = true;
+    getData(page);
   }, [])
-  const getData = async() =>{
+  const nextPage = async () => {
+    setPage(page + 1);
+    getData(page + 1)
+  }
+  const prevPage = async () => {
+    if (page - 1 <= 1)
+      var pagenum = 1
+    else
+      var pagenum = page - 1
+    setPage(pagenum);
+    getData(pagenum)
+    console.log(pagenum);
+  }
+  const getData = async (pageNumber) => {
+    setLoading(true)
     var login_registration_step = await AsyncStorage.getItem('login_registration_step');
     var login_id = await AsyncStorage.getItem('login_id');
     var login_token = await AsyncStorage.getItem('login_token');
     var login_workspaces_id = await AsyncStorage.getItem('login_workspaces_id');
     setFullName(await AsyncStorage.getItem('login_full_name'));
-    if (login_registration_step != 'account_preview' || login_id == "" || login_id == null || login_token == "" || login_token == null) {
+    if (login_id == "" || login_id == null || login_token == "" || login_token == null) {
       await AsyncStorage.clear();
-      DevSettings.reload()
+      navigation.dispatch(StackActions.replace('auth'))
     }
-    else
-    {
-      console.log(Constants.BASE_URL+'API-FX-124-ListTransaction?filter[workspace_id]='+login_workspaces_id);
-      console.log(login_token);
-      axios.get(Constants.BASE_URL+'API-FX-124-ListTransaction?filter[workspace_id]='+login_workspaces_id,{headers:{
-        Authorization: "Bearer "+ JSON.parse(login_token),
-        fx_key: Constants.SUBSCRIPTION_KEY
-      }}).then(resp=>{
-        console.log(resp.data);
-      }).catch(err=>{
+    else {
+      console.log(Constants.BASE_URL + 'API-FX-124-ListTransaction?filter[workspace_id]=' + login_workspaces_id + '&page=' + pageNumber);
+      console.log("Authorization:"+ "Bearer " + JSON.parse(login_token));
+      console.log("fx_key:"+ Constants.SUBSCRIPTION_KEY);
+      axios.get(Constants.BASE_URL + 'API-FX-124-ListTransaction?filter[workspace_id]=' + login_workspaces_id + '&page=' + pageNumber, {
+        headers: {
+          Authorization: "Bearer " + JSON.parse(login_token),
+          fx_key: Constants.SUBSCRIPTION_KEY
+        }
+      }).then(resp => {
+        setTransactions(resp.data.data)
+        setLoading(false)
+      }).catch(err => {
         console.log(err);
+        setLoading(false)
       })
     }
   }
-
+  const logout = async () => {
+    await AsyncStorage.removeItem('login_id')
+    await AsyncStorage.removeItem('login_token')
+    navigation.dispatch(StackActions.replace('auth'))
+  }
   return (
     <View style={styles.mainContainer}>
       <View style={styles.topLayer}>
@@ -140,18 +171,18 @@ const PostLoginDashboard = ({navigation}) => {
             justifyContent: 'space-between',
             paddingHorizontal: actuatedNormalize(15),
           }}>
-          <View style={{flexDirection: 'row'}}>
-            <Pressable onPress={() => navigation.push("Profile",{
-              profile:PngLocation.Profile
-            }) }>
-              <Image
-                source={PngLocation.Profile}
-                style={{
-                  width: actuatedNormalize(40),
-                  height: actuatedNormalize(40),
-                }}
-              />
-              <Image
+          <View style={{ flexDirection: 'row' }}>
+            {/* <Pressable onPress={() => navigation.push("Profile", {
+              profile: PngLocation.Profile
+            })}> */}
+            <Image
+              source={PngLocation.Profile}
+              style={{
+                width: actuatedNormalize(40),
+                height: actuatedNormalize(40),
+              }}
+            />
+            {/* <Image
                 source={PngLocation.Edit}
                 style={{
                   width: actuatedNormalize(16),
@@ -160,9 +191,9 @@ const PostLoginDashboard = ({navigation}) => {
                   position: 'absolute',
                   top: actuatedNormalize(25),
                 }}
-              />
-            </Pressable>
-            <View style={{marginLeft: actuatedNormalize(13)}}>
+              /> */}
+            {/* </Pressable> */}
+            <View style={{ marginLeft: actuatedNormalize(13) }}>
               <TextComponent
                 style={{
                   color: Colors.black,
@@ -181,24 +212,13 @@ const PostLoginDashboard = ({navigation}) => {
               </TextComponent>
             </View>
           </View>
-          <Pressable>
-            <View
-              style={{
-                height: actuatedNormalize(5),
-                width: actuatedNormalize(5),
-                borderRadius: 2.5,
-                backgroundColor: '#5CD169',
-                position: 'absolute',
-                left: actuatedNormalize(14),
-                top: actuatedNormalize(5),
-                zIndex: 1,
-              }}></View>
+          <TouchableOpacity onPress={logout}>
             <MaterialIcons
               color={Colors.black}
-              name="notifications-none"
+              name="logout"
               size={25}
             />
-          </Pressable>
+          </TouchableOpacity>
         </View>
         {/* <View style={styles.whiteContainer}>
           <TextComponent
@@ -235,14 +255,95 @@ const PostLoginDashboard = ({navigation}) => {
             marginHorizontal: actuatedNormalize(15),
             marginBottom: actuatedNormalize(31),
           }}>
-          <TextComponent style={{color: '#6B6E67'}}>
-            Recent activity
+          <TextComponent style={{ color: '#6B6E67' }}>
+            Recent Transactions (Page No: {page})
           </TextComponent>
-          <TextComponent style={{color: Colors.lightGreen}}>
+          {/* <TextComponent style={{color: Colors.lightGreen}}>
             View All
-          </TextComponent>
+          </TextComponent> */}
         </View>
-        <SectionList
+        {!loading ?
+          <View style={{ justifyContent: 'space-between', alignItems: 'center', width: "100%", flexDirection: 'row', paddingLeft: 25, paddingRight: 20 }}>
+            <Pressable onPress={prevPage}>
+              <TextComponent style={{ color: Colors.lightGreen }}>Prev</TextComponent>
+            </Pressable>
+            <Pressable onPress={nextPage}>
+              <TextComponent style={{ color: Colors.lightGreen }}>Next</TextComponent>
+            </Pressable>
+          </View>
+          : ""}
+
+        {loading ?
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <ActivityIndicator size={'large'} color={Colors.lightGreen} />
+          </View> :
+          transactions.length > 0 ?
+            <FlatList
+              data={transactions}
+              renderItem={({ item }) => {
+
+
+                return (
+                  <View style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    marginHorizontal: actuatedNormalize(15),
+                    marginVertical: actuatedNormalize(15),
+                    alignItems: 'center',
+                  }}>
+                    {/* <Pressable
+                     onPress={() => navigation.push('TransactionDetails')}
+                     style={{
+                       flexDirection: 'row',
+                       justifyContent: 'space-between',
+                       marginHorizontal: actuatedNormalize(15),
+                       marginVertical: actuatedNormalize(15),
+                       alignItems: 'center',
+                     }}> */}
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      {/* <Image
+                    source={item.image}
+                    style={{
+                      height: actuatedNormalize(42),
+                      width: actuatedNormalize(42),
+                    }}
+                  /> */}
+                      <View style={{ paddingLeft: actuatedNormalize(18) }}>
+                        <TextComponent style={{ color: Colors.black }}>
+                          {item.meta.second_beneficiary_name}
+                        </TextComponent>
+                        <TextComponent
+                          style={{
+                            color: '#545F7A',
+                            marginTop: actuatedNormalize(5),
+                          }}>
+                          {item.urn} ({new Date(item.created_at).getDate() + "-" + new Date(item.created_at).getMonth() + "-" + new Date(item.created_at).getFullYear()})
+                        </TextComponent>
+                      </View>
+                    </View>
+                    <TextComponent
+                      style={{
+                        color: '#ED2330',
+                        fontFamily: Fonts.Rubik_Medium,
+                        fontSize: actuatedNormalize(14),
+                      }}>
+                      {item.meta.base_currency} {item.amount}
+                    </TextComponent>
+                    {/* </Pressable> */}
+                  </View>
+                );
+
+
+
+              }}
+            />
+            :
+            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+              <TextComponent>No Data Available</TextComponent>
+            </View>
+        }
+
+        {/* <SectionList
           sections={userList}
           renderItem={({item}) => {
             return (
@@ -287,18 +388,18 @@ const PostLoginDashboard = ({navigation}) => {
               </Pressable>
             );
           }}
-          renderSectionHeader={({section}) => (
-            <TextComponent
-              style={{
-                color: Colors.tintGrey,
-                marginVertical: actuatedNormalize(5),
-                marginLeft: actuatedNormalize(15),
-                fontFamily: Fonts.Rubik_Regular,
-              }}>
-              {section.date}
-            </TextComponent>
-          )}
-        />
+          // renderSectionHeader={({section}) => (
+          //   <TextComponent
+          //     style={{
+          //       color: Colors.tintGrey,
+          //       marginVertical: actuatedNormalize(5),
+          //       marginLeft: actuatedNormalize(15),
+          //       fontFamily: Fonts.Rubik_Regular,
+          //     }}>
+          //     {section.date}
+          //   </TextComponent>
+          // )}
+        /> */}
       </View>
       <StatusBar
         animated

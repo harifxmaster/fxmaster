@@ -41,13 +41,13 @@ const Login = ({ navigation }) => {
     var login_registration_step = await AsyncStorage.getItem('login_registration_step');
     var login_id = await AsyncStorage.getItem('login_id');
     var login_token = await AsyncStorage.getItem('login_token');
-    // if (login_registration_step == 'account_preview' && login_id != "" && login_id != null && login_token != "" && login_token != null) {
+    if ( login_id != "" && login_id != null && login_token != "" && login_token != null) {
       
-    //   navigation.dispatch(StackActions.replace('PostLoginDashboard'))
-    // }
-    // else {
-    //   //navigate to registration flow
-    // }
+      navigation.dispatch(StackActions.replace('main'))
+    }
+    else {
+      //navigate to registration flow
+    }
   }
 
   useEffect(() => {
@@ -91,12 +91,15 @@ const Login = ({ navigation }) => {
         setAsyncData("login_workspaces", JSON.stringify(resp.data.data.workspaces))
         setAsyncData("login_workspaces_id", JSON.stringify(resp.data.data.workspaces[0].id))
         setAsyncData("login_token", JSON.stringify(resp.data.token))
+        console.log(resp.data.data.id);
+        console.log(resp.data.token);
         setLoading(false);
-        if (resp.data.data.registration_step == 'account_preview')
-          DevSettings.reload()
-        else {
+        //console.log(resp.data.data.registration_step);
+        //if (resp.data.data.registration_step == 'account_preview')
+          navigation.dispatch(StackActions.replace('main'))
+        //else {
           //navigate to registration flow
-        }
+        //}
       }).catch(err => {
         Alert.alert("Invalid Login", err.response.data.message);
         setLoading(false);
@@ -146,6 +149,7 @@ const Login = ({ navigation }) => {
               placeholder={'Enter 6-digit pin'}
               maxLength={6}
               secure={true}
+              keyboardType={'numeric'}
             />
             <TextComponent style={{ color: Colors.primary, fontWeight: '500', fontSize: 15 }}>{pinError}</TextComponent>
 
@@ -164,7 +168,7 @@ const Login = ({ navigation }) => {
               <TextComponent onPress={() => navigation.push("ResetPin")} style={styles.forgotPinText}>
                 Forgot PIN?
               </TextComponent>
-              <TextComponent
+              {/* <TextComponent
                 onPress={() => navigation.push("FingerPrintLogin")}
                 style={[styles.loginRedText, { marginTop: actuatedNormalize(15) }]}>
                 Login with Fingerprint
@@ -173,7 +177,7 @@ const Login = ({ navigation }) => {
                 onPress={() => navigation.push("FaceId")}
                 style={[styles.loginRedText, { marginTop: actuatedNormalize(15) }]}>
                 Login with Face ID
-              </TextComponent>
+              </TextComponent> */}
 
               <TextComponent style={[styles.registerText, { color: Colors.white }]}>
                 Don't have an account?
@@ -219,9 +223,11 @@ const Login = ({ navigation }) => {
                       }}></TouchableOpacity>
                     <TextComponent style={styles.confirmationTitle}>
                       By signing up, you are agree with our
+                      <TouchableOpacity style={{alignItems:'center',}} onPress={()=>{setModalVisible(false);navigation.navigate('NormalWebsiteView',{url:"https://fxmaster.co.uk/terms_conditions"})}}>
                       <TextComponent style={styles.confirmationTitleRed}>
-                        Terms and Privacy Policy
+                        {' '} Terms and Privacy Policy
                       </TextComponent>
+                      </TouchableOpacity>
                     </TextComponent>
                   </View>
                   {terms ? (

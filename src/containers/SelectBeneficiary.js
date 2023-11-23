@@ -5,11 +5,11 @@ import {
   Pressable,
   StatusBar,
   FlatList,
-  TextInput,
+  TouchableOpacity,
   ActivityIndicator
 } from 'react-native';
 import TextComponent from '../components/TextComponent';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Colors from '../constants/Colors';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -22,11 +22,14 @@ import EditPencil from 'react-native-vector-icons/FontAwesome5';
 import axios from 'axios';
 import Constants from '../constants/Constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 
-const BeneficiaryList = ({ navigation }) => {
+var transferflow = "";
+const BeneficiaryList = ({ navigation,route }) => {
   const [beneficiaries, setbeneficiaries] = useState([]);
   const [loading,setLoading] = useState(false);
   const beneficiaryLists = [];
+  { route.params ? transferflow = route.params.flow : transferflow = '' }
   const getData = async () => {
     setLoading(true)
     const token = await AsyncStorage.getItem('login_token');
@@ -39,7 +42,7 @@ const BeneficiaryList = ({ navigation }) => {
     }).then(resp => {
       
         resp.data.data.forEach(element => {
-          beneficiaryLists.push({ "id": element.id, "display_name": element.display_name, "bank_account_number": element.meta.bank_account_number, "country_flag": element.country_flag, "avatar": element.avatar,"iban_number":element.meta.iban_number,"bank_code_type":element.meta.bank_code_type,"type":element.type,"country":element.meta.benficiary_address,"bank_account_name":element.meta.bank_account_name })
+          beneficiaryLists.push({ "id": element.id, "display_name": element.display_name, "bank_account_number": element.meta.bank_account_number, "country_flag": element.country_flag, "avatar": element.avatar,"code": element.meta.iban_number ? element.meta.iban_number : element.meta.bank_code,"bank_code_type":element.meta.bank_code_type,"type":element.type,"country":element.meta.benficiary_address,"bank_account_name":element.meta.bank_account_name })
         });
       
       setbeneficiaries(beneficiaryLists)
@@ -79,11 +82,11 @@ const BeneficiaryList = ({ navigation }) => {
             }}>
             Beneficiary
           </TextComponent>
-          <Pressable>
+          <TouchableOpacity onPress={()=>navigation.navigate('AddBeneficiary',{flow:transferflow})}>
             <EntypoIcons color={Colors.black} name="plus" size={24} />
-          </Pressable>
+          </TouchableOpacity>
         </View>
-        <View
+        {/* <View
           style={{
             flexDirection: 'row',
             justifyContent: 'center',
@@ -120,7 +123,7 @@ const BeneficiaryList = ({ navigation }) => {
               paddingLeft: actuatedNormalize(22),
             }}
           />
-        </View>
+        </View> */}
       </View>
       <View style={styles.bottomLayer}>
         {beneficiaries && !loading?
@@ -133,12 +136,13 @@ const BeneficiaryList = ({ navigation }) => {
                     navigation.push('BeneficiaryConfirmation', {
                       name: item.item.display_name,
                       profilePic: item.item.avatar,
-                      ifsc: item.item.iban_number,
+                      ifsc: item.item.code,
                       account: item.item.bank_account_number,
                       country: item.item.country,
                       type:item.item.type,
                       id:item.item.id,
-                      bank_account_name:item.item.bank_account_name
+                      bank_account_name:item.item.bank_account_name,
+                      hideButton:false
                     })
                   }
                   style={{
@@ -183,7 +187,7 @@ const BeneficiaryList = ({ navigation }) => {
                           fontFamily: Fonts.Rubik_Regular,
                           fontSize: actuatedNormalize(12),
                         }}>
-                        {item.item.iban_number}
+                        {item.item.code}
                       </TextComponent>
                     </View>
                   </View>
@@ -226,7 +230,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   topLayer: {
-    flex: 0.35,
+    flex: 0.20,
     width: '100%',
     backgroundColor: Colors.backgroundColor,
     borderBottomStartRadius: 16,
@@ -236,5 +240,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.smokeWhite,
     width: '100%',
+    marginBottom:50
   },
 });

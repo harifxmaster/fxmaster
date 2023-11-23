@@ -234,11 +234,18 @@ const Register = ({ navigation }) => {
       }
     }
     if (isFormValid) {
+      if(formData.reEnterPin.value===formData.enterPin.value)
+      {
       await AsyncStorage.setItem('firstName',formData.firstName.value)
       await AsyncStorage.setItem('middleName',formData.middleName.value)
       await AsyncStorage.setItem('lastName',formData.lastName.value)
       await AsyncStorage.setItem('enterPin',formData.enterPin.value)
       navigation.push("NationalityScreen")
+    }
+    else
+    {
+      Alert.alert('Validation Error','PIN Mismatch')
+    }
     }
     else {
       Alert.alert("Validation Error.", "Please fill all the mandatory fields.")
@@ -335,6 +342,7 @@ const Register = ({ navigation }) => {
             borderWidth={1}
             keyboardType='numeric'
             borderColor={Colors.lightGrey}
+            secure={true}
           />
 
           <Input
@@ -353,6 +361,7 @@ const Register = ({ navigation }) => {
             borderWidth={1}
             keyboardType='numeric'
             borderColor={Colors.lightGrey}
+            secure={true}
           />
 
           {occupation && occupation.length!=0 ?

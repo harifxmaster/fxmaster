@@ -261,7 +261,7 @@ const DobAddress = ({ navigation }) => {
                   color: Colors.white,
                 }}
                 onPress={() => searchAddress()}
-                label={'Continue'}
+                label={'Search'}
               />
             </View>
           </View>
@@ -279,6 +279,11 @@ const DobAddress = ({ navigation }) => {
                 <ActivityIndicator size={'large'} color={Colors.lightGreen} />
               </View>
               : ""}
+              {!loading && data.length==0 && (
+                <View style={{justifyContent:'center',alignItems:'center'}}>
+                  <TextComponent>No Data</TextComponent>
+                </View>
+              )}
             <ScrollView>
               {data.map(value => {
                 return (

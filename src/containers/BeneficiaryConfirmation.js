@@ -87,6 +87,7 @@ const BeneficiaryConfirmation = (props) => {
           </View>
           </View>
           {/* <TextComponent style={{color:Colors.black, fontFamily:Fonts.Rubik_Regular,fontSize:actuatedNormalize(14),marginTop:actuatedNormalize(41), textAlign:"center"}}>Select another recipient</TextComponent> */}
+          {!params.hideButton &&(
           <View style={styles.buttonContainer}>
           <PrimaryButtonSmall
             primaryButtonSmallContainer={{ width: '50%', borderRadius: 25,marginTop:actuatedNormalize(60) }}
@@ -98,7 +99,7 @@ const BeneficiaryConfirmation = (props) => {
             onPress={()=>{props.navigation.push("SelectPaymentType")}}
             label={'Continue'}
           />
-        </View>
+        </View>)}
       </View>
     </View>
   );

@@ -5,8 +5,9 @@ import {
   Dimensions,
   Pressable,
   TextInput,
+  Alert
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useState,useRef } from 'react';
 import TextComponent from '../components/TextComponent';
 import Colors from '../constants/Colors';
 import PngLocation from '../constants/PngLocation';
@@ -20,6 +21,9 @@ import { PrimaryButtonSmall } from '../components/ButtonCollection';
 import OtpScreen from './OtpScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackActions } from '@react-navigation/native';
+import Constants from '../constants/Constants';
+import axios from 'axios';
+import { useFocusEffect } from '@react-navigation/native';
 
 const VerifyPhone = ({ navigation }) => {
   const [change, setChange] = useState(false);
@@ -29,9 +33,35 @@ const VerifyPhone = ({ navigation }) => {
     setCountrycode(await AsyncStorage.getItem('user_country_code'))
     setPhone(await AsyncStorage.getItem('user_phone'))
   }
-  useEffect(() => {
-    getData()
-  })
+
+  useFocusEffect(
+    useCallback(() => {
+      getData()
+    }, [])
+);
+
+  const setAsyncData = async(key,value) =>{
+    await AsyncStorage.setItem(key,value)
+  }
+  const updateMobile = async() =>{
+    const token = await AsyncStorage.getItem('registrationToken');
+    console.log(phone);
+    await axios.post(Constants.BASE_URL + 'API-FX-108-ModifyMobile', {
+      "phone": phone
+    }, {
+      headers: {
+        Authorization: "Bearer " + token,
+        fx_key: Constants.SUBSCRIPTION_KEY
+      }
+    }).then(resp => {
+      console.log(resp.data);
+      setAsyncData('user_phone',phone)
+      Alert.alert('Success',resp.data.message)
+    }).catch(err => { console.log();Alert.alert('Technical Error', err.response.data.message);})
+
+
+    setChange(false)
+  }
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.topBg}>
@@ -91,10 +121,14 @@ const VerifyPhone = ({ navigation }) => {
               placeholder="Enter your mobile number"
               placeholderTextColor="#8D8D8D"
               style={styles.textInput}
+              keyboardType='phone-pad'
+              onChangeText={txt => {
+                setPhone(txt);
+              }}
             />
 
             <TextComponent
-              onPress={() => setChange(false)}
+              onPress={updateMobile}
               style={{
                 color: Colors.lightGreen,
                 left: actuatedNormalize(5),

@@ -1,4 +1,4 @@
-import { StyleSheet, Image, View, Pressable, ScrollView, Modal, ActivityIndicator } from 'react-native';
+import { StyleSheet, Image, View, Pressable, ScrollView, Modal, ActivityIndicator,Alert } from 'react-native';
 import TextComponent from '../components/TextComponent';
 import React, { useState, useEffect, useRef } from 'react';
 import Colors from '../constants/Colors';
@@ -89,7 +89,8 @@ const TransferDetails = props => {
       settransactionId(resp.data.data.transaction_id)
       setLoading(false)
     }).catch(err => {
-      console.log(err.response.data);
+      Alert.alert("Error",err.response.data.message);
+      navigation.goBack();
       setLoading(false)
     })
   }
@@ -127,18 +128,18 @@ const TransferDetails = props => {
       "payment_method": "manual_transfer",
       "beneficiary_id": beneficiary_id,
       "delivery_method": "manual",
-      "transaction_id":transactionId
+      "transaction_id": transactionId
 
     }, {
       headers: {
         fx_key: Constants.SUBSCRIPTION_KEY,
         Authorization: "Bearer " + JSON.parse(token)
       }
-    }).then(resp=>{
+    }).then(resp => {
       console.log(resp.data);
       setVisible(true);
       setButtonLoading(false);
-    }).catch(err=>{
+    }).catch(err => {
       console.log(err.response.data);
       setButtonLoading(false);
     })
@@ -169,7 +170,7 @@ const TransferDetails = props => {
           </Pressable>
           <TextComponent style={styles.title}>Preview</TextComponent>
         </View>
-        <View
+        {/* <View
           style={{
             flexDirection: 'row',
             justifyContent: 'flex-end',
@@ -188,7 +189,7 @@ const TransferDetails = props => {
               marginLeft: actuatedNormalize(10),
             }}
           />
-        </View>
+        </View> */}
       </View>
 
       <View style={styles.bottomLayer}>
@@ -572,6 +573,7 @@ const TransferDetails = props => {
             </View>
 
             <View style={styles.buttonContainer}>
+              {subAccountNumber!="" && subAccountNumber!=null ?
               <PrimaryButtonSmall
                 primaryButtonSmallContainer={{
                   width: '50%',
@@ -587,6 +589,22 @@ const TransferDetails = props => {
                 label={'Continue'}
                 loading={buttonLoading}
               />
+              :
+              <PrimaryButtonSmall
+                primaryButtonSmallContainer={{
+                  width: '100%',
+                  borderRadius: 25,
+                  marginTop: actuatedNormalize(60),
+                  backgroundColor: Colors.primary
+                }}
+                primaryButtonSmallText={{
+                  fontFamily: Fonts.Rubik_Medium,
+                  fontSize: actuatedNormalize(14),
+                  color: Colors.white,
+                }}
+                label={'Please Contact Administrator. To proceed further.'}
+              />
+              }
             </View>
 
           </ScrollView>
@@ -614,6 +632,18 @@ const TransferDetails = props => {
             marginTop: actuatedNormalize(19),
             fontFamily: Fonts.Rubik_Regular,
           }}>Processing the payment</TextComponent>
+
+
+          <PrimaryButtonSmall
+            primaryButtonSmallContainer={{ width: 150, borderRadius: 8 }}
+            primaryButtonSmallText={{
+              fontFamily: Fonts.Rubik_Medium,
+              fontSize: actuatedNormalize(14),
+              color: Colors.white,
+            }}
+            onPress={() => props.navigation.push('BottomTabs')}
+            label={'Go to Home'}
+          />
         </View>
       </Modal>
     </View>

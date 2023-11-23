@@ -37,7 +37,36 @@ const OtpScreen = (props) => {
       clearInterval(interval);
     };
   }, [count]);
+  const resendOtp = async () => {
+    setLoading(true)
+    setF1("");
+    setF2("");
+    setF3("");
+    setF4("");
+    setF5("");
+    setF6("");
+    var url = "";
+    if (props.name == "mobile") {
+      url = Constants.BASE_URL + 'API-FX-107-ResendMobileOTP'
+    }
+    else
+      if (props.name == "email") {
+        url = Constants.BASE_URL + 'API-FX-110-ResendEmailOTP'
+      }
+    const token = await AsyncStorage.getItem('registrationToken');
 
+    await axios.post(url, {}, {
+      headers: {
+        Authorization: "Bearer " + token,
+        fx_key: Constants.SUBSCRIPTION_KEY
+      }
+    }).then(resp => {
+      console.log(resp.data);
+      setCount(60)
+      Alert.alert('Success',resp.data.message)
+      setLoading(false)
+    }).catch(err => { console.log(err);Alert.alert('Technical Error', 'Please try after sometime.'); setLoading(false); })
+  }
   const otpValidate = async () => {
     setLoading(true)
     let enteredOtp = f1 + f2 + f3 + f4 + f5 + f6;
@@ -198,11 +227,11 @@ const OtpScreen = (props) => {
           alignSelf: 'center',
           marginVertical: actuatedNormalize(30),
         }}>
-        <TextComponent
-          onPress={() => setCount(60)}
+        {count == 0 && (<TextComponent
+          onPress={resendOtp}
           style={{ color: Colors.lightGreen }}>
           Resend OTP
-        </TextComponent>
+        </TextComponent>)}
         {count !== 0 && (
           <TextComponent style={{ color: Colors.black }}>
             {' '}

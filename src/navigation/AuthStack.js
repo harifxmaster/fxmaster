@@ -18,6 +18,7 @@ import DobAddress from '../containers/DobAddress';
 import VerifyIdentity from '../containers/VerifyIdentity';
 import DocumentSelect from '../containers/DocumentSelect';
 import WebsiteView from '../containers/WebView';
+import NormalWebsiteView from '../containers/NormalWebViews';
 
 const Stack = createNativeStackNavigator();
 
@@ -105,13 +106,13 @@ const MainStack = () => {
         component={DobAddress}
       />
       <Stack.Screen
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
         name="VerifyIdentity"
         component={VerifyIdentity}
       />
 
       <Stack.Screen
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
         name="DocumentSelect"
         component={DocumentSelect}
       />
@@ -120,6 +121,12 @@ const MainStack = () => {
         options={{ headerShown: false }}
         name="WebsiteView"
         component={WebsiteView}
+      />
+
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="NormalWebsiteView"
+        component={NormalWebsiteView}
       />
     </Stack.Navigator>
   );

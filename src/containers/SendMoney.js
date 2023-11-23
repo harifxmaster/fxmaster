@@ -347,7 +347,7 @@ export default function SendMoney(props) {
               fontSize: actuatedNormalize(16),
               color: Colors.white,
             }}
-            onPress={() => props.navigation.push('SelectBeneficiary')}
+            onPress={() => props.navigation.push('SelectBeneficiary',{flow:'money_transfer'})}
             label={'Send'}
             loading={loading}
           />
@@ -387,7 +387,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   buttonContainer: {
-    marginBottom: actuatedNormalize(80),
+    marginBottom: actuatedNormalize(120),
     width: '90%',
     alignSelf: 'center',
   },
@@ -404,7 +404,7 @@ const styles = StyleSheet.create({
   normalText: { fontSize: 15, marginBottom: 10 },
   scrollviewBody: {
     width: '100%',
-    marginBottom: 10,
+    marginBottom: 20,
     flex: 1,
     height: "100%"
   },
@@ -453,6 +453,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.backgroundColor,
     borderBottomStartRadius: 25,
     borderBottomEndRadius: 25,
+    justifyContent:'center',
+    alignItems:'flex-start'
   },
   bottomLayer: {
     height: "75%",

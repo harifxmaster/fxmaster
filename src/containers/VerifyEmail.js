@@ -5,8 +5,9 @@ import {
   Dimensions,
   Pressable,
   TextInput,
+  Alert
 } from 'react-native';
-import React, {useState,useEffect} from 'react';
+import React, {useState,useCallback} from 'react';
 import TextComponent from '../components/TextComponent';
 import Colors from '../constants/Colors';
 import PngLocation from '../constants/PngLocation';
@@ -20,6 +21,9 @@ import {PrimaryButtonSmall} from '../components/ButtonCollection';
 import OtpScreen from './OtpScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackActions } from '@react-navigation/native';
+import Constants from '../constants/Constants';
+import axios from 'axios';
+import { useFocusEffect } from '@react-navigation/native';
 
 const VerifyPhone = ({navigation}) => {
   const [change, setChange] = useState(false);
@@ -27,9 +31,36 @@ const VerifyPhone = ({navigation}) => {
   const getData = async () => {
     setEmail(await AsyncStorage.getItem('user_email'))
   }
-  useEffect(() => {
-    getData()
-  })
+  useFocusEffect(
+    useCallback(() => {
+      getData()
+    }, [])
+);
+
+const setAsyncData = async(key,value) =>{
+  await AsyncStorage.setItem(key,value)
+}
+const updateEmail = async() =>{
+  const token = await AsyncStorage.getItem('registrationToken');
+  console.log(email);
+  await axios.post(Constants.BASE_URL + 'API-FX-111-ModifyEmail', {
+    "email": email
+  }, {
+    headers: {
+      Authorization: "Bearer " + token,
+      fx_key: Constants.SUBSCRIPTION_KEY
+    }
+  }).then(resp => {
+    console.log(resp.data);
+    setAsyncData('user_email',email)
+    Alert.alert('Success',resp.data.message)
+  }).catch(err => { console.log();Alert.alert('Technical Error', err.response.data.message);})
+
+
+  setChange(false)
+}
+
+
   return (
     <View style={{flex: 1}}>
       <View style={styles.topBg}>
@@ -92,10 +123,13 @@ const VerifyPhone = ({navigation}) => {
               placeholder="Enter your Email"
               placeholderTextColor="#8D8D8D"
               style={styles.textInput}
+              onChangeText={txt => {
+                setEmail(txt);
+              }}
             />
 
             <TextComponent
-              onPress={() => setChange(false)}
+              onPress={updateEmail}
               style={{
                 color: Colors.lightGreen,
                 left: actuatedNormalize(5),

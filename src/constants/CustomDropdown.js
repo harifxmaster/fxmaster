@@ -77,7 +77,8 @@ const CustomDropdown = props => {
                   selectedOption.toLowerCase() == 'purpose of account' ||
                   selectedOption.toLowerCase() == 'destination country' ||
                   selectedOption.toLowerCase() == 'country of residence' ||
-                  selectedOption.toLowerCase() == 'nationality' ? (
+                  selectedOption.toLowerCase() == 'nationality' ||
+                  selectedOption.toLowerCase() == 'country' ? (
                   <Text style={styles.dropdown3BtnTxt}>
                     {selectedItem ? selectedItem.name : selectedOption}
                   </Text>
@@ -114,7 +115,8 @@ const CustomDropdown = props => {
                   selectedOption.toLowerCase() == 'purpose of account' ||
                   selectedOption.toLowerCase() == 'destination country' ||
                   selectedOption.toLowerCase() == 'country of residence' ||
-                  selectedOption.toLowerCase() == 'nationality' ? (
+                  selectedOption.toLowerCase() == 'nationality'||
+                  selectedOption.toLowerCase() == 'country' ? (
                   <TextComponent style={styles.listItem}>
                     {item.name}
                   </TextComponent>

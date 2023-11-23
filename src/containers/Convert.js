@@ -132,6 +132,7 @@ export default function Convert(props) {
                   viewstyle={[styles.viewStyle, { width: "100%", }]}
                   textstyle={styles.textstyle}
                   onChangeText={value => setAmount(value)}
+                  keyboardType={'numeric'}
                 />
               </View>
 
