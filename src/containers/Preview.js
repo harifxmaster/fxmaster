@@ -9,7 +9,7 @@ import {
   Dimensions,
   Alert,
 } from 'react-native';
-import React, {useState, useReducer, useEffect} from 'react';
+import React, {useState, useReducer, useEffect, useRef} from 'react';
 import Colors from '../constants/Colors';
 import {
   actuatedNormalize,
@@ -36,11 +36,14 @@ const Preview = props => {
   const [senderCurrency,setSenderCurrency] = useState("");
   const [exchangeRate,setExchangeRate] = useState("");
   const [receiveAmount,setReceiveAmount] = useState("");
-
+  const dataref = useRef()
   useEffect(() => {
+    if(dataref.current) return true;
+    dataref.current=true;
     getData();
   }, []);
   const getData = async () => {
+    await AsyncStorage.removeItem('transfer_reason');
     setTransferReason([await AsyncStorage.getItem('transfer_reasons')]);
     setTransfer([await AsyncStorage.getItem('salutation_title')]);
     const exchangerates = await AsyncStorage.getItem('exchangeRates');
@@ -166,6 +169,14 @@ const Preview = props => {
       navigation.push('NationalityScreen');
     }
   };
+
+  const validateDetails = async() =>{
+    const transfer_reason = await AsyncStorage.getItem('transfer_reason');
+    if(transfer_reason!=null && transfer_reason!="")
+      props.navigation.push('TransferDetails');
+    else
+      Alert.alert('Validation Error','Please select transfer reason');
+  }
   return (
     <View style={{flex: 1}}>
       <View style={styles.topBg}>
@@ -355,9 +366,7 @@ const Preview = props => {
               fontSize: actuatedNormalize(14),
               color: Colors.white,
             }}
-            onPress={() => {
-              props.navigation.push('TransferDetails');
-            }}
+            onPress={validateDetails}
             label={'Continue'}
           />
         </View>
