@@ -8,7 +8,8 @@ import {
   Modal,
   TouchableOpacity,
   ScrollView,
-  DevSettings
+  DevSettings,
+  ActivityIndicator
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import PngLocation from '../constants/PngLocation';
@@ -33,6 +34,7 @@ const Login = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [emailError, setEmailError] = useState("");
   const [pinError, setPinError] = useState("");
+  const [dataFetch,setDataFetch] = useState(false);
 
   const registerHandler = (val) => {
     setModalVisible(val);
@@ -41,6 +43,12 @@ const Login = ({ navigation }) => {
     var login_registration_step = await AsyncStorage.getItem('login_registration_step');
     var login_id = await AsyncStorage.getItem('login_id');
     var login_token = await AsyncStorage.getItem('login_token');
+    var salutation_title = await AsyncStorage.getItem('salutation_title');
+    if(salutation_title=="" || salutation_title==null)
+    {
+      loadDefaultData()
+      setDataFetch(false)
+    }
     if ( login_id != "" && login_id != null && login_token != "" && login_token != null) {
       
       navigation.dispatch(StackActions.replace('main'))
@@ -50,6 +58,80 @@ const Login = ({ navigation }) => {
     }
   }
 
+
+
+  const loadDefaultData = async() => {
+    setDataFetch(true)
+    await axios.get(Constants.BASE_URL + "API-FX-100-App", {
+       headers: {
+         fx_key: Constants.SUBSCRIPTION_KEY
+       }
+     }).then(response => {
+       setAsyncData('appName', response.data.data.name);
+       setAsyncData('company_name', response.data.data.company_name);
+       setAsyncData('company_email', response.data.data.company_email);
+       setAsyncData('company_phone', response.data.data.company_phone);
+       setAsyncData('date_format', response.data.data.date_format);
+       setAsyncData('time_format', response.data.data.time_format);
+       setAsyncData('default_country', JSON.stringify(response.data.data.default_country));
+       setAsyncData('wallet_default_country', JSON.stringify(response.data.data.wallet_default_country));
+       setAsyncData('wordpress_pages', JSON.stringify(response.data.data.wordpress_pages));
+       setAsyncData('transfer_reasons', JSON.stringify(response.data.data.transfer_reasons));
+       setAsyncData('payment_methods', JSON.stringify(response.data.data.payment_methods));
+       setAsyncData('purpose_of_account', JSON.stringify(response.data.data.purpose_of_account));
+       setAsyncData('delivery_method', JSON.stringify(response.data.data.delivery_method));
+       setAsyncData('source_of_fund', JSON.stringify(response.data.data.source_of_fund));
+       setAsyncData('sending_countries', JSON.stringify(response.data.data.sending_countries));
+       setAsyncData('receiving_countries', JSON.stringify(response.data.data.receiving_countries));
+     }).catch(error => {
+       console.log(error);
+     })
+ 
+     await axios.get(Constants.BASE_URL + "API-FX-101-Title", {
+       headers: {
+         fx_key: Constants.SUBSCRIPTION_KEY
+       }
+     }).then(response => {
+       console.log(response);
+       setAsyncData('salutation_title', JSON.stringify(response.data.data));
+     }).catch(error => {
+       console.log(error);
+     })
+ 
+     await axios.get(Constants.BASE_URL + "API-FX-140-Occupation", {
+       headers: {
+         fx_key: Constants.SUBSCRIPTION_KEY
+       }
+     }).then(response => {
+       setAsyncData('occupation', JSON.stringify(response.data.data));
+     }).catch(error => {
+       console.log(error);
+     })
+ 
+     await axios.get(Constants.BASE_URL + "API-FX-102-Country", {
+       headers: {
+         fx_key: Constants.SUBSCRIPTION_KEY
+       }
+     }).then(response => {
+       setAsyncData('countries', JSON.stringify(response.data.data));
+     }).catch(error => {
+       console.log(error);
+     })
+ 
+     await axios.get(Constants.BASE_URL + "API-FX-103-Nationality", {
+       headers: {
+         fx_key: Constants.SUBSCRIPTION_KEY
+       }
+     }).then(response => {
+       setAsyncData('nationality', JSON.stringify(response.data.data));
+     }).catch(error => {
+       console.log(error);
+     })
+
+     setDataFetch(false);
+   }
+
+   
   useEffect(() => {
     getData();
   })
@@ -111,7 +193,7 @@ const Login = ({ navigation }) => {
   }
   return (
     <View style={{ flex: 1 }}>
-     
+      {!dataFetch ?
       <ImageBackground source={PngLocation.Background} style={{ flex: 1 }}>
         <View style={styles.mainContainer}>
           <ScrollView style={{ flex: 1, width: "100%", paddingHorizontal: actuatedNormalize(30) }}>
@@ -246,6 +328,11 @@ const Login = ({ navigation }) => {
           </ScrollView>
         </View>
       </ImageBackground>
+      :
+      <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+        <ActivityIndicator size={'large'} color={Colors.lightGreen}/>
+      </View>
+      }
 
     </View>
   );

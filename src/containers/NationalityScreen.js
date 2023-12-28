@@ -31,7 +31,7 @@ const NationalityScreen = ({ navigation }) => {
   const submitHandler = async () => {
     setLoading(true)
     let nationalityselected = await AsyncStorage.getItem('nationality');
-    if (email.trim() == "" || mobile.trim() == "" || nationalityselected=="" || nationalityselected.trim()==null  || nationalityselected.trim()=="undefined" || nationalityselected.length>100) {
+    if (email.trim() == "" || mobile.trim() == "") {
       Alert.alert("Validation Error.", "Please fill all the mandatory fields.");
       setLoading(false)
     }

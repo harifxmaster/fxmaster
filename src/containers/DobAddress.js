@@ -43,7 +43,7 @@ const DobAddress = ({ navigation }) => {
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
   const [buttonLoading,setButtonLoading] = useState("");
-
+  const [searchFocussed,setSearchFocussed] = useState(false);
   const addressList = [];
   const searchAddress = async () => {
     setLoading(true);
@@ -217,7 +217,7 @@ const DobAddress = ({ navigation }) => {
             flex: 1,
             width: '100%',
           }}>
-          <View style={styles.modalTopBg}>
+          <View style={[styles.modalTopBg,{flex: searchFocussed ? 0.5 : 0.3 }]}>
             <View
               style={{ flexDirection: 'row', marginTop: actuatedNormalize(25) }}>
               <Pressable
@@ -241,17 +241,18 @@ const DobAddress = ({ navigation }) => {
             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: '100%', }}>
               <TextInput
                 placeholder="Search"
-                placeholderTextColor={Colors.white}
+                placeholderTextColor={Colors.black}
                 style={{
                   width: '70%',
-                  opacity: 0.1,
                   borderRadius: 5,
                   marginTop: actuatedNormalize(20),
                   paddingLeft: actuatedNormalize(22),
-                  backgroundColor: "#000000",
-                  color: Colors.white
+                  backgroundColor: Colors.smokeWhite,
+                  color: Colors.black
                 }}
                 onChangeText={(val) => { setSearch(val); }}
+                onFocus={()=>setSearchFocussed(true)}
+                onBlur={()=>setSearchFocussed(false)}
               />
               <PrimaryButton
                 primaryButtonContainer={{ borderRadius: 25, width: "22%", marginTop: actuatedNormalize(20), marginLeft: 10 }}
@@ -313,7 +314,7 @@ const DobAddress = ({ navigation }) => {
                         fontSize: actuatedNormalize(13),
                         color: Colors.black,
                       }}>
-                      {value.postcode},{value.house_no},{value.postcode},{value.address_info},{value.city},{value.county}
+                      {value.postcode},{value.house_no},{value.street},{value.address_info},{value.city},{value.county}
                     </TextComponent>
                   </TouchableOpacity>
                 );
@@ -406,7 +407,6 @@ const styles = StyleSheet.create({
     color: Colors.tintGrey,
   },
   modalTopBg: {
-    flex: 0.3,
     width: '100%',
     backgroundColor: Colors.backgroundColor,
     borderBottomStartRadius: 16,

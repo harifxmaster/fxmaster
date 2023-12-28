@@ -208,11 +208,11 @@ const styles = StyleSheet.create({
   },
   textInput: {
     backgroundColor: '#F5F5F5',
-    height: actuatedNormalize(30),
+    height: actuatedNormalize(40),
     width: actuatedNormalize(152),
     alignItems: 'center',
     fontSize: actuatedNormalize(10),
-    paddingLeft: actuatedNormalize(20),
+    padding: actuatedNormalize(10),
     borderRadius: 10,
     elevation: 10,
   },

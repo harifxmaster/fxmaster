@@ -22,6 +22,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackActions } from '@react-navigation/native';
 import axios from 'axios';
 import Constants from '../constants/Constants';
+import DateTimePicker from 'react-native-modal-datetime-picker';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const PostLoginDashboard = ({ navigation }) => {
   let userList = [
@@ -107,6 +109,10 @@ const PostLoginDashboard = ({ navigation }) => {
   const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [fromdate, setFromDate] = useState(new Date().getDate() + "-" + (+new Date().getMonth() + 1) + "-" + new Date().getFullYear());
+  const [todate, setToDate] = useState(new Date().getDate() + "-" + (+new Date().getMonth() + 1) + "-" + new Date().getFullYear());
+  const [key, setKey] = useState("");
   const dataref = useRef();
   useEffect(() => {
     if (dataref.current) return true;
@@ -124,8 +130,26 @@ const PostLoginDashboard = ({ navigation }) => {
       var pagenum = page - 1
     setPage(pagenum);
     getData(pagenum)
-    console.log(pagenum);
   }
+  const showDatePicker = (key) => {
+    setKey(key)
+    setDatePickerVisibility(true);
+  };
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date) => {
+    const selectedDate = new Date(date).getDate() + "-" + (+new Date(date).getMonth() + 1) + "-" + new Date(date).getFullYear()
+    if (key == 'from')
+      setFromDate(selectedDate)
+    else
+      if (key == 'to')
+        setToDate(selectedDate)
+
+    hideDatePicker();
+  };
+
   const getData = async (pageNumber) => {
     setLoading(true)
     var login_registration_step = await AsyncStorage.getItem('login_registration_step');
@@ -138,10 +162,11 @@ const PostLoginDashboard = ({ navigation }) => {
       navigation.dispatch(StackActions.replace('auth'))
     }
     else {
-      console.log(Constants.BASE_URL + 'API-FX-124-ListTransaction?filter[workspace_id]=' + login_workspaces_id + '&page=' + pageNumber);
-      console.log("Authorization:"+ "Bearer " + JSON.parse(login_token));
-      console.log("fx_key:"+ Constants.SUBSCRIPTION_KEY);
-      axios.get(Constants.BASE_URL + 'API-FX-124-ListTransaction?filter[workspace_id]=' + login_workspaces_id + '&page=' + pageNumber, {
+      let from = fromdate.split("-")[2]+"-"+fromdate.split("-")[1]+"-"+fromdate.split("-")[0];
+      let to = todate.split("-")[2]+"-"+todate.split("-")[1]+"-"+todate.split("-")[0];
+      console.log(Constants.BASE_URL + 'API-FX-124-ListTransaction?filter[workspace_id]=' + login_workspaces_id + '&page=' + pageNumber+'&from='+from+'&to='+to);
+      console.log("Bearer " + JSON.parse(login_token));
+      axios.get(Constants.BASE_URL + 'API-FX-124-ListTransaction?filter[workspace_id]=' + login_workspaces_id + '&page=' + pageNumber+'&from='+from+'&to='+to, {
         headers: {
           Authorization: "Bearer " + JSON.parse(login_token),
           fx_key: Constants.SUBSCRIPTION_KEY
@@ -256,12 +281,39 @@ const PostLoginDashboard = ({ navigation }) => {
             marginBottom: actuatedNormalize(31),
           }}>
           <TextComponent style={{ color: '#6B6E67' }}>
-            Recent Transactions (Page No: {page})
+            Transactions (Page No: {page})
           </TextComponent>
           {/* <TextComponent style={{color: Colors.lightGreen}}>
             View All
           </TextComponent> */}
         </View>
+
+        <View style={{ width: "100%", flexDirection: 'row', justifyContent: 'space-evenly', marginBottom: 10,alignItems:'center' }}>
+          <View style={{justifyContent:'center',alignItems:'center',width: "40%", }}>
+            <TextComponent>From Date</TextComponent>
+            <TouchableOpacity style={styles.datePicker} onPress={() => showDatePicker('from')}>
+              <TextComponent>{fromdate != "" && fromdate != null ? fromdate : "Select From Date"}</TextComponent>
+            </TouchableOpacity>
+          </View>
+          <View style={{justifyContent:'center',alignItems:'center',width: "40%", }}>
+            <TextComponent>To Date</TextComponent>
+            <TouchableOpacity style={styles.datePicker} onPress={() => showDatePicker('to')}>
+              <TextComponent>{todate != "" && todate != null ? todate : "Select To Date"}</TextComponent>
+            </TouchableOpacity>
+          </View>
+
+          <TouchableOpacity style={{justifyContent:'center',alignItems:'center',width: "10%",marginTop:20 }} onPress={()=>getData(0)}>
+              <Ionicons name={'search-circle'} size={35} color={Colors.lightGreen}/>
+          </TouchableOpacity>
+        </View>
+        <DateTimePicker
+          isVisible={isDatePickerVisible}
+          mode="date"
+          onConfirm={handleConfirm}
+          onCancel={hideDatePicker}
+        />
+
+
         {!loading ?
           <View style={{ justifyContent: 'space-between', alignItems: 'center', width: "100%", flexDirection: 'row', paddingLeft: 25, paddingRight: 20 }}>
             <Pressable onPress={prevPage}>
@@ -414,6 +466,7 @@ const PostLoginDashboard = ({ navigation }) => {
 export default PostLoginDashboard;
 
 const styles = StyleSheet.create({
+  datePicker: { width:"100%",justifyContent: 'center', alignItems: 'center', borderColor: Colors.lightGrey, borderWidth: 1, padding: 8, borderRadius: 5 },
   mainContainer: {
     alignSelf: 'center',
     justifyContent: 'center',
