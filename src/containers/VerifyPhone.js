@@ -32,6 +32,12 @@ const VerifyPhone = ({ navigation }) => {
   const getData = async () => {
     setCountrycode(await AsyncStorage.getItem('user_country_code'))
     setPhone(await AsyncStorage.getItem('user_phone'))
+    const pin = await AsyncStorage.getItem('enterPin')
+    const email = await AsyncStorage.getItem('user_email')
+    console.log(JSON.stringify({
+      "email": email,
+      "password": pin
+    }));
   }
 
   useFocusEffect(

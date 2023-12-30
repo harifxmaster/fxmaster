@@ -19,6 +19,7 @@ import VerifyIdentity from '../containers/VerifyIdentity';
 import DocumentSelect from '../containers/DocumentSelect';
 import WebsiteView from '../containers/WebView';
 import NormalWebsiteView from '../containers/NormalWebViews';
+import ApplicationPreview from '../containers/ApplicationPreview';
 
 const Stack = createNativeStackNavigator();
 
@@ -44,6 +45,11 @@ const MainStack = () => {
         options={{ headerShown: false }}
         name="Login"
         component={Login}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="ApplicationPreview"
+        component={ApplicationPreview}
       />
       <Stack.Screen
         options={{ headerShown: false }}

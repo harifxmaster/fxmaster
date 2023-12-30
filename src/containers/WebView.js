@@ -24,8 +24,8 @@ export default function WebsiteView({ navigation }) {
                     javaScriptEnabled={true}
                     originWhitelist={["*"]} source={{ uri: url }} style={{ flex: 1, width: SCREEN_WIDTH, height: SCREEN_HEIGHT }} onNavigationStateChange={(resp) => {
                         if (resp.url.includes("login")) {
-                            Alert.alert('Success', 'Registration Completed.')
-                            navigation.dispatch(StackActions.replace('Login'))
+                            //Alert.alert('Success', 'Registration Completed.')
+                            navigation.dispatch(StackActions.replace('ApplicationPreview'))
                         }
                     }} />
                 :
