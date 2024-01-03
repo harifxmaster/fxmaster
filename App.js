@@ -42,9 +42,8 @@ const App = () => {
       setAsyncData('sending_countries', JSON.stringify(response.data.data.sending_countries));
       setAsyncData('receiving_countries', JSON.stringify(response.data.data.receiving_countries));
     }).catch(error => {
-      console.log(error);
+      console.log("app"+error.response.data);
     })
-
     await axios.get(Constants.BASE_URL + "API-FX-101-Title", {
       headers: {
         fx_key: Constants.SUBSCRIPTION_KEY
@@ -53,7 +52,7 @@ const App = () => {
       console.log(response);
       setAsyncData('salutation_title', JSON.stringify(response.data.data));
     }).catch(error => {
-      console.log(error);
+      console.log("title"+error.response.data);
     })
 
     await axios.get(Constants.BASE_URL + "API-FX-140-Occupation", {
@@ -63,7 +62,7 @@ const App = () => {
     }).then(response => {
       setAsyncData('occupation', JSON.stringify(response.data.data));
     }).catch(error => {
-      console.log(error);
+      console.log("occu"+error.response.data);
     })
 
     await axios.get(Constants.BASE_URL + "API-FX-102-Country", {
@@ -73,7 +72,18 @@ const App = () => {
     }).then(response => {
       setAsyncData('countries', JSON.stringify(response.data.data));
     }).catch(error => {
-      console.log(error);
+      console.log("countr"+error.response.data);
+    })
+
+
+    await axios.get(Constants.BASE_URL + "API-FX-156-SENDING-RECEIVING-CURRENCIES", {
+      headers: {
+        fx_key: Constants.SUBSCRIPTION_KEY
+      }
+    }).then(response => {
+      setAsyncData('currencies', JSON.stringify(response.data));
+    }).catch(error => {
+      console.log("curr"+error.response.data);
     })
 
     await axios.get(Constants.BASE_URL + "API-FX-103-Nationality", {
@@ -83,7 +93,7 @@ const App = () => {
     }).then(response => {
       setAsyncData('nationality', JSON.stringify(response.data.data));
     }).catch(error => {
-      console.log(error);
+      console.log("nation"+error.response.data);
     })
   }
 

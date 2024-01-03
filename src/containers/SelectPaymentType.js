@@ -1,5 +1,5 @@
 import { StyleSheet, Image, View, Pressable } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Colors from '../constants/Colors';
 import Fonts from '../constants/Fonts';
 import TextComponent from '../components/TextComponent';
@@ -14,7 +14,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const SelectPaymentType = props => {
   const [manual, setManual] = useState(true);
   const [card, setCard] = useState(false);
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [beneid,setBeneId] = useState("");
+  const [beneAccountName,setBeneAccountName] = useState("");
+  const [userId,setuserId] = useState("");
+  const [userName,setuserName] = useState("");
+  const [userEmail,setuserEmail] = useState("");
+  const [userPhone,setuserPhone] = useState("");
+  const [userDob,setuserDob] = useState("");
+  const [userCountryCode,setuserCountryCode] = useState("");
 
   const toggleHandler = textNumber => {
     if (textNumber === 'manual') {
@@ -25,32 +33,116 @@ const SelectPaymentType = props => {
       setManual(false);
     }
   };
-
+  const getData = async() =>{
+    setBeneId(await AsyncStorage.getItem('beneficiary_id'))
+    setBeneAccountName(await AsyncStorage.getItem('beneficiary_bank_account_name'))
+    setuserId(await AsyncStorage.getItem('login_id'))
+    setuserName(await AsyncStorage.getItem('login_full_name'))
+    setuserEmail(await AsyncStorage.getItem('login_email'))
+    setuserPhone(await AsyncStorage.getItem('login_phone'))
+    setuserDob(await AsyncStorage.getItem('login_date_of_birth'))
+    setuserCountryCode(await AsyncStorage.getItem('login_date_of_birth'))
+  }
+  useEffect(()=>{
+    getData()
+  })
   const initiateTransfer = async () => {
     setLoading(true);
     const exchangerates = await AsyncStorage.getItem('exchangeRates');
     const token = await AsyncStorage.getItem('login_token');
     const login_workspaces_id = await AsyncStorage.getItem('login_workspaces_id');
     const data = JSON.parse(exchangerates)
-    axios.post(Constants.BASE_URL + "API-FX-134-MoneyTransferInitiate", {
-      "amount": data.amount,
-      "currency_code_from": data.currency_code_from,
-      "currency_code_to": data.currency_code_to,
-      "filter": {
-        "workspace_id": login_workspaces_id
+    if (manual) {
+      axios.post(Constants.BASE_URL + "API-FX-134-MoneyTransferInitiate", {
+        "amount": data.amount,
+        "currency_code_from": data.currency_code_from,
+        "currency_code_to": data.currency_code_to,
+        "filter": {
+          "workspace_id": login_workspaces_id
+        }
+      }, {
+        headers: {
+          fx_key: Constants.SUBSCRIPTION_KEY,
+          Authorization: "Bearer " + JSON.parse(token)
+        }
+      }).then(resp => {
+        setLoading(false)
+        props.navigation.push('Preview');
+      }).catch(err => {
+        console.log(err.response.data);
+        setLoading(false)
+      })
+    }
+    else
+      if (card) {
+        await axios.post(Constants.FXMASTER_BASE_URL + "api/v1/gateway/truelayer/create-payment-link", {
+          "type": "single_payment",
+          "expires_at": new Date(new Date().setMinutes(new Date().getMinutes() + 10)),
+          "payment_configuration": {
+            "amount_in_minor": data.amount,
+            "currency": "GBP",
+            "payment_method": {
+              "type": "bank_transfer",
+              "provider_selection": {
+                "type": "user_selected",
+                "filter": {
+                  "countries": [
+                    "GB"
+                  ],
+                  "release_channel": "general_availability",
+                  "customer_segments": [
+                    "retail"
+                  ],
+                  "provider_ids": [
+                    "mock-payments-gb-redirect"
+                  ],
+                  "excludes": {
+                    "provider_ids": [
+                      "ob-exclude-this-bank"
+                    ]
+                  }
+                },
+                "scheme_selection": {
+                  "type": "instant_only",
+                  "allow_remitter_fee": false
+                }
+              },
+              "beneficiary": {
+                "type": "merchant_account",
+                "merchant_account_id": "0e0daaf6-a876-4ad4-a6a8-6150ce63f6ae",
+                "account_holder_name": beneAccountName,
+                "reference": "payment-ref"
+              }
+            },
+            "user": {
+              "id": "f9b48c9d-176b-46dd-b2da-fe1a2b77350c",
+              "name": userName,
+              "email": userEmail,
+              "phone": "+447777777777",
+              "date_of_birth": userDob,
+              "address": {
+                "address_line1": "1 Hardwick St",
+                "address_line2": "Clerkenwell",
+                "city": "London",
+                "state": "London",
+                "zip": "EC1R 4RB",
+                "country_code": "GB"
+              }
+            }
+          },
+          "reference": login_workspaces_id,
+          "return_uri": Constants.FXMASTER_BASE_URL
+        }, {
+          headers: {
+            fx_key: Constants.SUBSCRIPTION_KEY,
+            Authorization: "Bearer " + JSON.parse(token)
+          }
+        }).then(resp=>{
+          console.log(resp.data);
+        }).catch(err=>{
+          console.log(err);
+        })
       }
-    }, {
-      headers: {
-        fx_key: Constants.SUBSCRIPTION_KEY,
-        Authorization: "Bearer " + JSON.parse(token)
-      }
-    }).then(resp=>{
-      setLoading(false)
-      props.navigation.push('Preview');
-    }).catch(err=>{
-      console.log(err.response.data);
-      setLoading(false)
-    })
   }
   return (
     <View style={styles.mainContainer}>
@@ -132,7 +224,7 @@ const SelectPaymentType = props => {
               height: actuatedNormalize(56),
             }}
           />
-          <View style={{flex: 1, marginLeft: actuatedNormalize(22)}}>
+          <View style={{ flex: 1, marginLeft: actuatedNormalize(22) }}>
             <TextComponent
               style={{
                 fontFamily: Fonts.Rubik_Medium,

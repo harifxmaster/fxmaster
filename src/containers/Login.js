@@ -118,6 +118,17 @@ const Login = ({ navigation }) => {
        console.log(error);
      })
  
+     await axios.get(Constants.BASE_URL + "API-FX-156-SENDING-RECEIVING-CURRENCIES", {
+      headers: {
+        fx_key: Constants.SUBSCRIPTION_KEY
+      }
+    }).then(response => {
+      console.log(response.data);
+      setAsyncData('currencies', JSON.stringify(response.data));
+    }).catch(error => {
+      console.log(error);
+    })
+
      await axios.get(Constants.BASE_URL + "API-FX-103-Nationality", {
        headers: {
          fx_key: Constants.SUBSCRIPTION_KEY
@@ -184,6 +195,7 @@ const Login = ({ navigation }) => {
         //}
       }).catch(err => {
         Alert.alert("Invalid Login", err.response.data.message);
+        setPin("");
         setLoading(false);
       })
     }
@@ -247,9 +259,9 @@ const Login = ({ navigation }) => {
               loading={loading}
             />
             <View style={{ flex: 1, width: '80%' }}>
-              <TextComponent onPress={() => navigation.push("ResetPin")} style={styles.forgotPinText}>
+              {/* <TextComponent onPress={() => navigation.push("ResetPin")} style={styles.forgotPinText}>
                 Forgot PIN?
-              </TextComponent>
+              </TextComponent> */}
               {/* <TextComponent
                 onPress={() => navigation.push("FingerPrintLogin")}
                 style={[styles.loginRedText, { marginTop: actuatedNormalize(15) }]}>
