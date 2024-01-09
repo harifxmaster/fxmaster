@@ -51,14 +51,14 @@ export default function SendMoney(props) {
     {
       setfeeCharge(JSON.stringify(data.fees[0].fee_charge))
       setConvertAmount(JSON.stringify(data.fees[0].convert_amount))
-      setExchangeRate((data.fees[0].recipient_amount/data.amount).toFixed(4))
+      setExchangeRate((data.fees[0].recipient_amount/data.fees[0].convert_amount).toFixed(4))
       setReceiveAmount(JSON.stringify(data.fees[0].recipient_amount))
     }
     else
     {
       setfeeCharge(data.fee_charge)
       setConvertAmount(JSON.stringify(data.convert_amount))
-      setExchangeRate((data.recipient_amount/data.amount).toFixed(4))
+      setExchangeRate((data.recipient_amount/data.convert_amount).toFixed(4))
       setReceiveAmount(data.recipient_amount)
     }
     setReceiveCurrency(data.receiver_currency)

@@ -121,7 +121,7 @@ const DatePicker = () => {
               markingType='multi-dot'
               initialDate={customDate.format('YYYY-MM-DD')}
               current={customDate.format('YYYY-MM-DD').toString()} 
-              maxDate={new Date()}
+              maxDate={new Date().setFullYear(new Date().getFullYear()-11)}
             />
             <PrimaryButton
               primaryButtonContainer={{

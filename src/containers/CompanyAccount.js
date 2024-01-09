@@ -84,7 +84,18 @@ const CompanyAccount = ({ navigation,route }) => {
                     isRequired: true,
                 },
             },
-
+            email: {
+                value: '',
+                valid: false,
+                touched: false,
+                errorMsg: '',
+                customErrors: {
+                    MANDATORY_ERR: 'Please enter email',
+                },
+                validationRules: {
+                    isRequired: false,
+                },
+            },
             phoneNumber: {
                 value: '',
                 valid: false,
@@ -96,7 +107,7 @@ const CompanyAccount = ({ navigation,route }) => {
                     MIN_LENGTH_ERR: 'Please enter atleast 10 digits',
                 },
                 validationRules: {
-                    isRequired: true,
+                    isRequired: false,
                 },
 
             },
@@ -106,7 +117,55 @@ const CompanyAccount = ({ navigation,route }) => {
                 touched: false,
                 errorMsg: '',
                 customErrors: {
-                    MANDATORY_ERR: 'Please enter your notes',
+                    MANDATORY_ERR: 'Please enter your address',
+                },
+                validationRules: {
+                    isRequired: false,
+                },
+            },
+            city: {
+                value: '',
+                valid: false,
+                touched: false,
+                errorMsg: '',
+                customErrors: {
+                    MANDATORY_ERR: 'Please enter your city',
+                },
+                validationRules: {
+                    isRequired: false,
+                },
+            },
+            postcode: {
+                value: '',
+                valid: false,
+                touched: false,
+                errorMsg: '',
+                customErrors: {
+                    MANDATORY_ERR: 'Please enter your postcode',
+                },
+                validationRules: {
+                    isRequired: false,
+                },
+            },
+            state: {
+                value: '',
+                valid: false,
+                touched: false,
+                errorMsg: '',
+                customErrors: {
+                    MANDATORY_ERR: 'Please enter your state',
+                },
+                validationRules: {
+                    isRequired: false,
+                },
+            },
+            bankCode: {
+                value: '',
+                valid: false,
+                touched: false,
+                errorMsg: '',
+                customErrors: {
+                    MANDATORY_ERR: 'Please enter your bank code',
                 },
                 validationRules: {
                     isRequired: false,
@@ -203,24 +262,182 @@ const CompanyAccount = ({ navigation,route }) => {
             const token = await AsyncStorage.getItem('login_token');
             const workspaceId = await AsyncStorage.getItem('login_workspaces_id');
             const country = await AsyncStorage.getItem('country');
-            axios.post(Constants.BASE_URL + "API-FX-127-AddBeneficiary", {
-                "workspace_id": workspaceId,
-                "type": "company",
-                "company_name": formData.firstName.value,
-                "is_partner_account": 1,
-                "email": "",
-                "landline": "",
-                "mobile": formData.phoneNumber.value,
-                "avatar": "",
-                "meta": {
-                    "bank_account_number": formData.accountNumber.value,
-                    "bank_code": formData.ifscCode.value,
-                    "bank_code_type": "sort-code",
-                    "bank_account_name": formData.accountName.value,
-                    "bank_country": country,
-                    "beneficiary_type": ["supplier", "customer"]
-                }
-            }, {
+            var obj = {};
+            if (country == 105) {
+                obj = ({
+                    "workspace_id": workspaceId,
+                    "type": "company",
+                    "first_name": formData.firstName.value,
+                    "middle_name": formData.middleName.value,
+                    "last_name": formData.lastName.value,
+                    "email": formData.email.value,
+                    "mobile": formData.phoneNumber.value,
+                    "meta": {
+                        "bank_account_number": formData.accountNumber.value,
+                        "ifsc_code": formData.ifscCode.value,
+                        "bank_code_type": "sort-code",
+                        "bank_account_name": formData.accountName.value,
+                        "bank_country": 105,
+                        "beneficiary_type": ["supplier", "customer"],
+                        "payment_type": "regular",
+                        "beneficiary_address": formData.notes.value,
+                        "beneficiary_city": formData.city.value,
+                        "post_code": formData.postcode.value,
+                        "beneficiary_state": formData.state.value,
+                    }
+                })
+            }
+            else if (country == 234) {
+                obj = ({
+                    "workspace_id": workspaceId,
+                    "type": "company",
+                    "first_name": formData.firstName.value,
+                    "middle_name": formData.middleName.value,
+                    "last_name": formData.lastName.value,
+                    "email": formData.email.value,
+                    "mobile": formData.phoneNumber.value,
+                    "meta": {
+                        "bank_account_number": formData.accountNumber.value,
+                        "aba_number": formData.ifscCode.value,
+                        "bank_code_type": "sort-code",
+                        "bank_account_name": formData.accountName.value,
+                        "bank_country": 234,
+                        "beneficiary_type": ["supplier", "customer"],
+                        "payment_type": "regular",
+                        "beneficiary_address": formData.notes.value,
+                        "beneficiary_city": formData.city.value,
+                        "post_code": formData.postcode.value,
+                        "beneficiary_state": formData.state.value,
+                    }
+                })
+            }
+            else if (country == 231) {
+                obj = ({
+                    "workspace_id": workspaceId,
+                    "type": "company",
+                    "first_name": formData.firstName.value,
+                    "middle_name": formData.middleName.value,
+                    "last_name": formData.lastName.value,
+                    "email": formData.email.value,
+                    "mobile": formData.phoneNumber.value,
+                    "meta": {
+                        "bank_account_number": formData.accountNumber.value,
+                        "sort_code": formData.ifscCode.value,
+                        "bank_code_type": "sort-code",
+                        "bank_account_name": formData.accountName.value,
+                        "bank_country": 231,
+                        "beneficiary_type": ["supplier", "customer"],
+                        "payment_type": "regular",
+                        "beneficiary_address": formData.notes.value,
+                        "beneficiary_city": formData.city.value,
+                        "post_code": formData.postcode.value,
+                        "beneficiary_state": formData.state.value,
+                    }
+                })
+            }
+            else if (country == 38) {
+                obj = ({
+                    "workspace_id": workspaceId,
+                    "type": "company",
+                    "first_name": formData.firstName.value,
+                    "middle_name": formData.middleName.value,
+                    "last_name": formData.lastName.value,
+                    "email": formData.email.value,
+                    "mobile": formData.phoneNumber.value,
+                    "meta": {
+                        "bank_account_number": formData.accountNumber.value,
+                        "branch_code": formData.ifscCode.value,
+                        "bank_code_type": "sort-code",
+                        "bank_account_name": formData.accountName.value,
+                        "bank_country": 38,
+                        "beneficiary_type": ["supplier", "customer"],
+                        "payment_type": "regular",
+                        "beneficiary_address": formData.notes.value,
+                        "beneficiary_city": formData.city.value,
+                        "post_code": formData.postcode.value,
+                        "beneficiary_state": formData.state.value,
+                        "bank_code": formData.bankCode.value,
+                    }
+                })
+            }
+            else if (country == 13) {
+                obj = ({
+                    "workspace_id": workspaceId,
+                    "type": "company",
+                    "first_name": formData.firstName.value,
+                    "middle_name": formData.middleName.value,
+                    "last_name": formData.lastName.value,
+                    "email": formData.email.value,
+                    "mobile": formData.phoneNumber.value,
+                    "meta": {
+                        "bank_account_number": formData.accountNumber.value,
+                        "bsb_number": formData.ifscCode.value,
+                        "bank_code_type": "sort-code",
+                        "bank_account_name": formData.accountName.value,
+                        "bank_country": 13,
+                        "beneficiary_type": ["supplier", "customer"],
+                        "payment_type": "regular",
+                        "beneficiary_address": formData.notes.value,
+                        "beneficiary_city": formData.city.value,
+                        "post_code": formData.postcode.value,
+                        "beneficiary_state": formData.state.value,
+                        "bank_code": formData.bankCode.value,
+                    }
+                })
+            }
+            else if (country == 2) {
+                obj = ({
+                    "workspace_id": workspaceId,
+                    "type": "company",
+                    "first_name": formData.firstName.value,
+                    "middle_name": formData.middleName.value,
+                    "last_name": formData.lastName.value,
+                    "email": formData.email.value,
+                    "mobile": formData.phoneNumber.value,
+                    "meta": {
+                        "bank_account_number": formData.accountNumber.value,
+                        "iban_number": formData.ifscCode.value,
+                        "bank_code_type": "sort-code",
+                        "bank_account_name": formData.accountName.value,
+                        "bank_country": 2,
+                        "beneficiary_type": ["supplier", "customer"],
+                        "payment_type": "Priority",
+                        "beneficiary_address": formData.notes.value,
+                        "beneficiary_city": formData.city.value,
+                        "post_code": formData.postcode.value,
+                        "beneficiary_state": formData.state.value,
+                        "bic_number": formData.bankCode.value,
+                    }
+                })
+            }
+            else if (country == 55) {
+                obj = ({
+                    "workspace_id": workspaceId,
+                    "type": "company",
+                    "first_name": formData.firstName.value,
+                    "middle_name": formData.middleName.value,
+                    "last_name": formData.lastName.value,
+                    "email": formData.email.value,
+                    "mobile": formData.phoneNumber.value,
+                    "meta": {
+                        "bank_account_number": formData.accountNumber.value,
+                        "iban_number": formData.ifscCode.value,
+                        "bank_code_type": "sort-code",
+                        "bank_account_name": formData.accountName.value,
+                        "bank_country": 55,
+                        "beneficiary_type": ["supplier", "customer"],
+                        "payment_type": "regular",
+                        "beneficiary_address": formData.notes.value,
+                        "beneficiary_city": formData.city.value,
+                        "post_code": formData.postcode.value,
+                        "beneficiary_state": formData.state.value,
+                        "bic_number": formData.bankCode.value,
+                    }
+                })
+            }
+
+
+            axios.post(Constants.BASE_URL + "API-FX-127-AddBeneficiary", obj, {
                 headers: {
                     fx_key: Constants.SUBSCRIPTION_KEY,
                     Authorization: "Bearer " + JSON.parse(token)
@@ -241,7 +458,64 @@ const CompanyAccount = ({ navigation,route }) => {
         getData()
     }, [])
     const getData = async () => {
-        setCountries([await AsyncStorage.getItem('countries')]);
+        const countrieslist = JSON.stringify([{
+            "id": 105,
+            "code": "IN",
+            "name": "India",
+            "phone_code": "91",
+            "flag": Constants.FXMASTER_BASE_URL + "flags/IN.png",
+            "currency": "INR",
+            "languages": "hi,en"
+        }, {
+            "id": 55,
+            "code": "CY",
+            "name": "Cyprus",
+            "phone_code": "357",
+            "flag": Constants.FXMASTER_BASE_URL + "flags/CY.png",
+            "currency": "EUR",
+            "languages": "el,tr,hy"
+        }, {
+            "id": 231,
+            "code": "UK",
+            "name": "United Kingdom",
+            "phone_code": "44",
+            "flag": Constants.FXMASTER_BASE_URL + "flags/UK.png",
+            "currency": "GBP",
+            "languages": "en"
+        }, {
+            "id": 234,
+            "code": "US",
+            "name": "United States",
+            "phone_code": "1",
+            "flag": Constants.FXMASTER_BASE_URL + "flags/US.png",
+            "currency": "USD",
+            "languages": "en"
+        }, {
+            "id": 38,
+            "code": "CA",
+            "name": "Canada",
+            "phone_code": "1",
+            "flag": Constants.FXMASTER_BASE_URL + "flags/CA.png",
+            "currency": "CAD",
+            "languages": "en,fr"
+        }, {
+            "id": 13,
+            "code": "AU",
+            "name": "Australia",
+            "phone_code": "61",
+            "flag": Constants.FXMASTER_BASE_URL + "flags/AU.png",
+            "currency": "AUD",
+            "languages": "en"
+        }, {
+            "id": 2,
+            "code": "AE",
+            "name": "United Arab Emirates",
+            "phone_code": "971",
+            "flag": Constants.FXMASTER_BASE_URL + "flags/AE.png",
+            "currency": "AED",
+            "languages": "ar"
+        }])
+        setCountries([countrieslist]);
     }
     return (
         <View style={styles.mainContainer}>
@@ -302,25 +576,7 @@ const CompanyAccount = ({ navigation,route }) => {
                     />
 
                    
-                    <Input
-                        value={state.formData.phoneNumber.value}
-                        editable={true}
-                        returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
-                        viewstyle={[styles.viewStyle, { marginTop: actuatedNormalize(20) }]}
-                        multiline={true}
-                        errorView={[styles.viewStyle, { marginTop: actuatedNormalize(10) }]}
-                        textstyle={styles.textInput}
-                        placeholder={'Phone Number'}
-                        maxLength={50}
-                        errorMsg={state.formData.phoneNumber.errorMsg}
-                        validationRules={state.formData.phoneNumber.validationRules}
-                        borderWidth={1}
-                        onChangeText={value => handleChange(value, 'phoneNumber')}
-                        borderColor={Colors.lightGrey}
-                        keyboardType={'numeric'}
-                    />
-
-                    <Input
+<Input
                         value={state.formData.accountName.value}
                         editable={true}
                         returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
@@ -363,7 +619,7 @@ const CompanyAccount = ({ navigation,route }) => {
                         multiline={false}
                         errorView={[styles.viewStyle, { marginTop: actuatedNormalize(10) }]}
                         textstyle={styles.textInput}
-                        placeholder={'IFSC Code / IBAN'}
+                        placeholder={'IFSC/IBAN/Sort Code/ABA/Branch Code/BSB'}
                         maxLength={50}
                         errorMsg={state.formData.ifscCode.errorMsg}
                         validationRules={state.formData.ifscCode.validationRules}
@@ -372,6 +628,109 @@ const CompanyAccount = ({ navigation,route }) => {
                         borderColor={Colors.lightGrey}
                     />
 
+                    <Input
+                        value={state.formData.bankCode.value}
+                        editable={true}
+                        returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
+                        viewstyle={[styles.viewStyle, { marginTop: actuatedNormalize(20) }]}
+                        multiline={false}
+                        errorView={[styles.viewStyle, { marginTop: actuatedNormalize(10) }]}
+                        textstyle={styles.textInput}
+                        placeholder={'Bank Code / BIC Number'}
+                        maxLength={50}
+                        errorMsg={state.formData.bankCode.errorMsg}
+                        validationRules={state.formData.bankCode.validationRules}
+                        borderWidth={1}
+                        onChangeText={value => handleChange(value, 'bankCode')}
+                        borderColor={Colors.lightGrey}
+                    />
+
+                    <Input
+                        value={state.formData.email.value}
+                        editable={true}
+                        returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
+                        viewstyle={[styles.viewStyle, { marginTop: actuatedNormalize(20) }]}
+                        multiline={false}
+                        errorView={[styles.viewStyle, { marginTop: actuatedNormalize(10) }]}
+                        textstyle={styles.textInput}
+                        placeholder={'Email'}
+                        maxLength={50}
+                        errorMsg={state.formData.email.errorMsg}
+                        validationRules={state.formData.email.validationRules}
+                        borderWidth={1}
+                        onChangeText={value => handleChange(value, 'email')}
+                        borderColor={Colors.lightGrey}
+                    />
+
+                    <Input
+                        value={state.formData.phoneNumber.value}
+                        editable={true}
+                        returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
+                        viewstyle={[styles.viewStyle, { marginTop: actuatedNormalize(20) }]}
+                        multiline={false}
+                        errorView={[styles.viewStyle, { marginTop: actuatedNormalize(10) }]}
+                        textstyle={styles.textInput}
+                        placeholder={'Phone Number'}
+                        maxLength={50}
+                        errorMsg={state.formData.phoneNumber.errorMsg}
+                        validationRules={state.formData.phoneNumber.validationRules}
+                        borderWidth={1}
+                        onChangeText={value => handleChange(value, 'phoneNumber')}
+                        borderColor={Colors.lightGrey}
+                        keyboardType={'numeric'}
+                    />
+
+
+                    <Input
+                        value={state.formData.city.value}
+                        editable={true}
+                        returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
+                        viewstyle={[styles.viewStyle, { marginTop: actuatedNormalize(20) }]}
+                        multiline={false}
+                        errorView={[styles.viewStyle, { marginTop: actuatedNormalize(10) }]}
+                        textstyle={styles.textInput}
+                        placeholder={'City'}
+                        maxLength={50}
+                        errorMsg={state.formData.city.errorMsg}
+                        validationRules={state.formData.city.validationRules}
+                        borderWidth={1}
+                        onChangeText={value => handleChange(value, 'city')}
+                        borderColor={Colors.lightGrey}
+                    />
+
+                    <Input
+                        value={state.formData.postcode.value}
+                        editable={true}
+                        returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
+                        viewstyle={[styles.viewStyle, { marginTop: actuatedNormalize(20) }]}
+                        multiline={false}
+                        errorView={[styles.viewStyle, { marginTop: actuatedNormalize(10) }]}
+                        textstyle={styles.textInput}
+                        placeholder={'Postcode'}
+                        maxLength={50}
+                        errorMsg={state.formData.postcode.errorMsg}
+                        validationRules={state.formData.postcode.validationRules}
+                        borderWidth={1}
+                        onChangeText={value => handleChange(value, 'postcode')}
+                        borderColor={Colors.lightGrey}
+                    />
+
+                    <Input
+                        value={state.formData.state.value}
+                        editable={true}
+                        returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
+                        viewstyle={[styles.viewStyle, { marginTop: actuatedNormalize(20) }]}
+                        multiline={false}
+                        errorView={[styles.viewStyle, { marginTop: actuatedNormalize(10) }]}
+                        textstyle={styles.textInput}
+                        placeholder={'State'}
+                        maxLength={50}
+                        errorMsg={state.formData.state.errorMsg}
+                        validationRules={state.formData.state.validationRules}
+                        borderWidth={1}
+                        onChangeText={value => handleChange(value, 'state')}
+                        borderColor={Colors.lightGrey}
+                    />
 
 
                     <Input
@@ -382,7 +741,7 @@ const CompanyAccount = ({ navigation,route }) => {
                         multiline={true}
                         errorView={[styles.viewStyle, { marginTop: actuatedNormalize(10) }]}
                         textstyle={styles.textInput}
-                        placeholder={'Notes'}
+                        placeholder={'Address'}
                         maxLength={50}
                         errorMsg={state.formData.notes.errorMsg}
                         validationRules={state.formData.notes.validationRules}

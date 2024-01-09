@@ -38,7 +38,64 @@ export default function Convert(props) {
   }, [])
 
   const getData = async () => {
-    setCountries([await AsyncStorage.getItem('countries')]);
+    const countrieslist = JSON.stringify([{
+      "id": 105,
+      "code": "IN",
+      "name": "India",
+      "phone_code": "91",
+      "flag": Constants.FXMASTER_BASE_URL + "flags/IN.png",
+      "currency": "INR",
+      "languages": "hi,en"
+  }, {
+      "id": 55,
+      "code": "CY",
+      "name": "Cyprus",
+      "phone_code": "357",
+      "flag": Constants.FXMASTER_BASE_URL + "flags/CY.png",
+      "currency": "EUR",
+      "languages": "el,tr,hy"
+  }, {
+      "id": 231,
+      "code": "UK",
+      "name": "United Kingdom",
+      "phone_code": "44",
+      "flag": Constants.FXMASTER_BASE_URL + "flags/UK.png",
+      "currency": "GBP",
+      "languages": "en"
+  }, {
+      "id": 234,
+      "code": "US",
+      "name": "United States",
+      "phone_code": "1",
+      "flag": Constants.FXMASTER_BASE_URL + "flags/US.png",
+      "currency": "USD",
+      "languages": "en"
+  }, {
+      "id": 38,
+      "code": "CA",
+      "name": "Canada",
+      "phone_code": "1",
+      "flag": Constants.FXMASTER_BASE_URL + "flags/CA.png",
+      "currency": "CAD",
+      "languages": "en,fr"
+  }, {
+      "id": 13,
+      "code": "AU",
+      "name": "Australia",
+      "phone_code": "61",
+      "flag": Constants.FXMASTER_BASE_URL + "flags/AU.png",
+      "currency": "AUD",
+      "languages": "en"
+  }, {
+      "id": 2,
+      "code": "AE",
+      "name": "United Arab Emirates",
+      "phone_code": "971",
+      "flag": Constants.FXMASTER_BASE_URL + "flags/AE.png",
+      "currency": "AED",
+      "languages": "ar"
+  }])
+    setCountries([countrieslist]);
   }
   const removeData = async () =>{
     await AsyncStorage.removeItem('send');

@@ -69,7 +69,7 @@ const BeneficiaryConfirmation = (props) => {
             Account Number
             </TextComponent>
             <TextComponent style={styles.text}>
-            IFSC Code / IBAN
+            Code
             </TextComponent>
             <TextComponent style={styles.text}>
             Address

@@ -11,7 +11,7 @@ import {
   DevSettings,
   ActivityIndicator
 } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PngLocation from '../constants/PngLocation';
 import Colors from '../constants/Colors';
 import { SCREEN_HEIGHT, SCREEN_WIDTH, actuatedNormalize } from '../constants/PixelScaling';
@@ -35,6 +35,7 @@ const Login = ({ navigation }) => {
   const [emailError, setEmailError] = useState("");
   const [pinError, setPinError] = useState("");
   const [dataFetch,setDataFetch] = useState(false);
+  const dataref =  useRef(null);
 
   const registerHandler = (val) => {
     setModalVisible(val);
@@ -145,7 +146,7 @@ const Login = ({ navigation }) => {
    
   useEffect(() => {
     getData();
-  })
+  },[dataFetch])
 
   const loginHandler = async () => {
     setLoading(true);
@@ -259,9 +260,9 @@ const Login = ({ navigation }) => {
               loading={loading}
             />
             <View style={{ flex: 1, width: '80%' }}>
-              {/* <TextComponent onPress={() => navigation.push("ResetPin")} style={styles.forgotPinText}>
+              <TouchableOpacity onPress={() => navigation.push("ResetPin")} ><TextComponent style={styles.forgotPinText}>
                 Forgot PIN?
-              </TextComponent> */}
+              </TextComponent></TouchableOpacity>
               {/* <TextComponent
                 onPress={() => navigation.push("FingerPrintLogin")}
                 style={[styles.loginRedText, { marginTop: actuatedNormalize(15) }]}>

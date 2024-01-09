@@ -42,8 +42,8 @@ const DobAddress = ({ navigation }) => {
   const [addressInfo, setAddressInfo] = useState("");
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
-  const [buttonLoading,setButtonLoading] = useState("");
-  const [searchFocussed,setSearchFocussed] = useState(false);
+  const [buttonLoading, setButtonLoading] = useState("");
+  const [searchFocussed, setSearchFocussed] = useState(false);
   const addressList = [];
   const searchAddress = async () => {
     setLoading(true);
@@ -70,30 +70,38 @@ const DobAddress = ({ navigation }) => {
     setButtonLoading(true)
     const token = await AsyncStorage.getItem('registrationToken');
     const user_country_id = await AsyncStorage.getItem('user_country_id');
-    axios.post(Constants.BASE_URL + "API-FX-114-AddAddress", {
-      "postcode": postCode,
-      "house_no": houseNumber,
-      "street": street,
-      "address_info": addressInfo,
-      "city": city,
-      "county": country,
-      "country_id": user_country_id,
-      "type": "home"
-    }, {
-      headers: {
-        fx_key: Constants.SUBSCRIPTION_KEY,
-        Authorization: "Bearer " + token
-      }
-    }).then(response => {
-      if (response.data.message == "Address Added Successfully") {
-        updatedob()
-      }
-    }).catch(error => {
+    const user_dob = await AsyncStorage.getItem('user_dob');
+    if (user_dob != "" && user_dob != null && addressInfo!="" && addressInfo!=null) {
+      axios.post(Constants.BASE_URL + "API-FX-114-AddAddress", {
+        "postcode": postCode,
+        "house_no": houseNumber,
+        "street": street,
+        "address_info": addressInfo,
+        "city": city,
+        "county": country,
+        "country_id": user_country_id,
+        "type": "home"
+      }, {
+        headers: {
+          fx_key: Constants.SUBSCRIPTION_KEY,
+          Authorization: "Bearer " + token
+        }
+      }).then(response => {
+        if (response.data.message == "Address Added Successfully") {
+          updatedob()
+        }
+      }).catch(error => {
 
-      console.log(error.response.data);
+        console.log(error.response.data);
+        setButtonLoading(false)
+        Alert.alert("Error", error.response.data)
+      })
+    }
+    else
+    {
+      Alert.alert('Validation Error','Please enter DOB and Address');
       setButtonLoading(false)
-      Alert.alert("Error", error.response.data)
-    })
+    }
   }
   function pad(number) {
     return number.toString().padStart(2, '0');
@@ -109,7 +117,7 @@ const DobAddress = ({ navigation }) => {
 
     axios.put(Constants.BASE_URL + "API-FX-123-Update",
       {
-        "date_of_birth": pad(day)+"-"+pad(month)+"-"+year
+        "date_of_birth": pad(day) + "-" + pad(month) + "-" + year
       },
       {
         headers: {
@@ -217,7 +225,7 @@ const DobAddress = ({ navigation }) => {
             flex: 1,
             width: '100%',
           }}>
-          <View style={[styles.modalTopBg,{flex: searchFocussed ? 0.5 : 0.3 }]}>
+          <View style={[styles.modalTopBg, { flex: searchFocussed ? 0.5 : 0.3 }]}>
             <View
               style={{ flexDirection: 'row', marginTop: actuatedNormalize(25) }}>
               <Pressable
@@ -251,8 +259,8 @@ const DobAddress = ({ navigation }) => {
                   color: Colors.black
                 }}
                 onChangeText={(val) => { setSearch(val); }}
-                onFocus={()=>setSearchFocussed(true)}
-                onBlur={()=>setSearchFocussed(false)}
+                onFocus={() => setSearchFocussed(true)}
+                onBlur={() => setSearchFocussed(false)}
               />
               <PrimaryButton
                 primaryButtonContainer={{ borderRadius: 25, width: "22%", marginTop: actuatedNormalize(20), marginLeft: 10 }}
@@ -280,11 +288,11 @@ const DobAddress = ({ navigation }) => {
                 <ActivityIndicator size={'large'} color={Colors.lightGreen} />
               </View>
               : ""}
-              {!loading && data.length==0 && (
-                <View style={{justifyContent:'center',alignItems:'center'}}>
-                  <TextComponent>No Data</TextComponent>
-                </View>
-              )}
+            {!loading && data.length == 0 && (
+              <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                <TextComponent>No Data</TextComponent>
+              </View>
+            )}
             <ScrollView>
               {data.map(value => {
                 return (

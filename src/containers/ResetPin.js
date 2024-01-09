@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, Image, Dimensions,Pressable} from 'react-native';
+import {StyleSheet, Text, View, Image, Dimensions,Pressable, Alert} from 'react-native';
 import PngLocation from '../constants/PngLocation';
 import TextComponent from '../components/TextComponent';
 import React, {useState} from 'react';
@@ -11,12 +11,36 @@ import Fonts from '../constants/Fonts';
 import Input from '../components/Input';
 import {PrimaryButton} from '../components/ButtonCollection';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import axios from 'axios';
+import Constants from '../constants/Constants';
+import { StackActions } from '@react-navigation/native';
 
 const ResetPin = ({navigation}) => {
   const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const submitHandler = () => {
-    navigation.push('Instructions');
+  const submitHandler = async () => {
+    if(email!='')
+    {
+      setLoading(true)
+      await axios.post(Constants.BASE_URL+"API-FX-121-ForgotPassword",{
+        "email": email
+      },{
+        headers: {
+          fx_key: Constants.SUBSCRIPTION_KEY
+        }
+      }).then(resp=>{
+        console.log(resp.data);
+        navigation.dispatch(StackActions.replace('Instructions'));
+        setLoading(false)
+      }).catch(err=>{
+        console.log(err.response.data);
+        Alert.alert('Validation Error',err.response.data.message)
+        setLoading(false)
+      })
+    }
+    else
+    Alert.alert('Validation Error','Please enter your registered email');
   };
   return (
     <View style={{flex: 1}}>
@@ -51,6 +75,7 @@ const ResetPin = ({navigation}) => {
         <View style={styles.buttonContainer}>
           <PrimaryButton
             primaryButtonContainer={{width: '100%', borderRadius: 8}}
+            loading={loading}
             primaryButtonText={{
               fontFamily: Fonts.Rubik_Medium,
               fontSize: actuatedNormalize(14),

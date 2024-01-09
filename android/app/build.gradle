@@ -79,7 +79,7 @@ android {
         applicationId "com.fxmaster"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3
+        versionCode 5
         versionName "1"
          vectorDrawables.useSupportLibrary = true
     }

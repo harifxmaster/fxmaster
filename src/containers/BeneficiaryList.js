@@ -39,7 +39,55 @@ const BeneficiaryList = ({ navigation }) => {
     }).then(resp => {
 
       resp.data.data.forEach(element => {
-        beneficiaryLists.push({ "id": element.id, "display_name": element.display_name, "bank_account_number": element.meta.bank_account_number, "country_flag": element.country_flag, "avatar": element.avatar, "code": element.meta.iban_number ? element.meta.iban_number : element.meta.bank_code, "bank_code_type": element.meta.bank_code_type, "type": element.type, "country": element.meta.benficiary_address, "bank_account_name": element.meta.bank_account_name })
+        if(element.meta.bank_country == 105)
+        {
+          beneficiaryLists.push({
+            "id": element.id, "display_name": element.display_name, "bank_account_number": element.meta.bank_account_number, "country_flag": element.country_flag, "avatar": element.avatar,
+            "code": element.meta.ifsc_code , "bank_code_type": element.meta.bank_code_type, "type": element.type, "country": element.meta.beneficiary_address, "bank_account_name": element.meta.bank_account_name
+          }) 
+        }
+        if(element.meta.bank_country == 234)
+        {
+          beneficiaryLists.push({
+            "id": element.id, "display_name": element.display_name, "bank_account_number": element.meta.bank_account_number, "country_flag": element.country_flag, "avatar": element.avatar,
+            "code": element.meta.aba_number , "bank_code_type": element.meta.bank_code_type, "type": element.type, "country": element.meta.beneficiary_address, "bank_account_name": element.meta.bank_account_name
+          }) 
+        }
+        if(element.meta.bank_country == 231)
+        {
+          beneficiaryLists.push({
+            "id": element.id, "display_name": element.display_name, "bank_account_number": element.meta.bank_account_number, "country_flag": element.country_flag, "avatar": element.avatar,
+            "code": element.meta.sort_code , "bank_code_type": element.meta.bank_code_type, "type": element.type, "country": element.meta.beneficiary_address, "bank_account_name": element.meta.bank_account_name
+          }) 
+        }
+        if(element.meta.bank_country == 38)
+        {
+          beneficiaryLists.push({
+            "id": element.id, "display_name": element.display_name, "bank_account_number": element.meta.bank_account_number, "country_flag": element.country_flag, "avatar": element.avatar,
+            "code": element.meta.branch_code , "bank_code_type": element.meta.bank_code_type, "type": element.type, "country": element.meta.beneficiary_address, "bank_account_name": element.meta.bank_account_name
+          }) 
+        }
+        if(element.meta.bank_country == 13)
+        {
+          beneficiaryLists.push({
+            "id": element.id, "display_name": element.display_name, "bank_account_number": element.meta.bank_account_number, "country_flag": element.country_flag, "avatar": element.avatar,
+            "code": element.meta.bsb_number , "bank_code_type": element.meta.bank_code_type, "type": element.type, "country": element.meta.beneficiary_address, "bank_account_name": element.meta.bank_account_name
+          }) 
+        }
+        if(element.meta.bank_country == 2)
+        {
+          beneficiaryLists.push({
+            "id": element.id, "display_name": element.display_name, "bank_account_number": element.meta.bank_account_number, "country_flag": element.country_flag, "avatar": element.avatar,
+            "code": element.meta.iban_number , "bank_code_type": element.meta.bank_code_type, "type": element.type, "country": element.meta.beneficiary_address, "bank_account_name": element.meta.bank_account_name
+          }) 
+        }
+        if(element.meta.bank_country == 55)
+        {
+          beneficiaryLists.push({
+            "id": element.id, "display_name": element.display_name, "bank_account_number": element.meta.bank_account_number, "country_flag": element.country_flag, "avatar": element.avatar,
+            "code": element.meta.iban_number , "bank_code_type": element.meta.bank_code_type, "type": element.type, "country": element.meta.beneficiary_address, "bank_account_name": element.meta.bank_account_name
+          }) 
+        }
       });
 
       setbeneficiaries(beneficiaryLists)
