@@ -54,7 +54,6 @@ const DobAddress = ({ navigation }) => {
         Authorization: "Bearer " + token,
       }
     }).then(response => {
-
       for (var i = 0; i < response.data.data.length; i++) {
         if (!addressList.includes(response.data.data[i]))
           addressList.push(response.data.data[i]);
@@ -303,7 +302,7 @@ const DobAddress = ({ navigation }) => {
                       setPostCode(value.postcode);
                       setHouseNumber(value.house_no);
                       setStreet(value.street);
-                      setAddressInfo(value.address_info);
+                      setAddressInfo(JSON.stringify(value.postcode + "," + value.house_no + "," + value.street + "," + value.address_info + "," + value.city + "," + value.county));
                       setCity(value.city);
                       setCountry(value.county);
                     }}

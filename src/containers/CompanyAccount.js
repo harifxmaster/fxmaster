@@ -29,6 +29,8 @@ const CompanyAccount = ({ navigation,route }) => {
     { route.params ? transferflow = route.params.flow : transferflow = '' }
     const [countries, setCountries] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [ifscPLaceholder, setIfscPlaceholder] = useState("");
+    const [bankCodePLaceholder, setbankCodePLaceholder] = useState("");
     const initialState = {
         formData: {
             firstName: {
@@ -228,7 +230,43 @@ const CompanyAccount = ({ navigation,route }) => {
             payload: tempState,
         });
     };
-
+    const choosePLaceholder = (message) => {
+        if(message==105)
+        {
+            setIfscPlaceholder("IFSC Code");
+            setbankCodePLaceholder("");
+        }
+        if(message==234)
+        {
+            setIfscPlaceholder("ABA Code");
+            setbankCodePLaceholder("");
+        }
+        if(message==231)
+        {
+            setIfscPlaceholder("Sort Code");
+            setbankCodePLaceholder("");
+        }
+        if(message==38)
+        {
+            setIfscPlaceholder("Branch Code");
+            setbankCodePLaceholder("Bank Code");
+        }
+        if(message==13)
+        {
+            setIfscPlaceholder("BSB Number");
+            setbankCodePLaceholder("");
+        }
+        if(message==2)
+        {
+            setIfscPlaceholder("IBAN Number");
+            setbankCodePLaceholder("BIC Number");
+        }
+        if(message==55)
+        {
+            setIfscPlaceholder("IBAN Number");
+            setbankCodePLaceholder("");
+        }
+      };
     const submitHandler = async() => {
         setLoading(true)
         let isFormValid = true;
@@ -554,6 +592,7 @@ const CompanyAccount = ({ navigation,route }) => {
                                 placeholder={"Country"}
                                 data={countries}
                                 textStyle={styles.text}
+                                choosePLaceholder={choosePLaceholder}
                             />
                             :
                             ""}
@@ -611,39 +650,41 @@ const CompanyAccount = ({ navigation,route }) => {
                         keyboardType={'numeric'}
                     />
 
-                    <Input
-                        value={state.formData.ifscCode.value}
-                        editable={true}
-                        returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
-                        viewstyle={[styles.viewStyle, { marginTop: actuatedNormalize(20) }]}
-                        multiline={false}
-                        errorView={[styles.viewStyle, { marginTop: actuatedNormalize(10) }]}
-                        textstyle={styles.textInput}
-                        placeholder={'IFSC/IBAN/Sort Code/ABA/Branch Code/BSB'}
-                        maxLength={50}
-                        errorMsg={state.formData.ifscCode.errorMsg}
-                        validationRules={state.formData.ifscCode.validationRules}
-                        borderWidth={1}
-                        onChangeText={value => handleChange(value, 'ifscCode')}
-                        borderColor={Colors.lightGrey}
-                    />
+{ifscPLaceholder != "" ?
+                        <Input
+                            value={state.formData.ifscCode.value}
+                            editable={true}
+                            returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
+                            viewstyle={[styles.viewStyle, { marginTop: actuatedNormalize(20) }]}
+                            multiline={false}
+                            errorView={[styles.viewStyle, { marginTop: actuatedNormalize(10) }]}
+                            textstyle={styles.textInput}
+                            placeholder={ifscPLaceholder}
+                            maxLength={50}
+                            errorMsg={state.formData.ifscCode.errorMsg}
+                            validationRules={state.formData.ifscCode.validationRules}
+                            borderWidth={1}
+                            onChangeText={value => handleChange(value, 'ifscCode')}
+                            borderColor={Colors.lightGrey}
+                        /> : ""}
 
-                    <Input
-                        value={state.formData.bankCode.value}
-                        editable={true}
-                        returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
-                        viewstyle={[styles.viewStyle, { marginTop: actuatedNormalize(20) }]}
-                        multiline={false}
-                        errorView={[styles.viewStyle, { marginTop: actuatedNormalize(10) }]}
-                        textstyle={styles.textInput}
-                        placeholder={'Bank Code / BIC Number'}
-                        maxLength={50}
-                        errorMsg={state.formData.bankCode.errorMsg}
-                        validationRules={state.formData.bankCode.validationRules}
-                        borderWidth={1}
-                        onChangeText={value => handleChange(value, 'bankCode')}
-                        borderColor={Colors.lightGrey}
-                    />
+                    {bankCodePLaceholder != "" ?
+                        <Input
+                            value={state.formData.bankCode.value}
+                            editable={true}
+                            returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
+                            viewstyle={[styles.viewStyle, { marginTop: actuatedNormalize(20) }]}
+                            multiline={false}
+                            errorView={[styles.viewStyle, { marginTop: actuatedNormalize(10) }]}
+                            textstyle={styles.textInput}
+                            placeholder={bankCodePLaceholder}
+                            maxLength={50}
+                            errorMsg={state.formData.bankCode.errorMsg}
+                            validationRules={state.formData.bankCode.validationRules}
+                            borderWidth={1}
+                            onChangeText={value => handleChange(value, 'bankCode')}
+                            borderColor={Colors.lightGrey}
+                        /> : ""}
 
                     <Input
                         value={state.formData.email.value}

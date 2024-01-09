@@ -50,12 +50,18 @@ const CustomDropdown = props => {
           data={JSON.parse(props.data)}
           onSelect={(selectedItem, index) => {
             {
-              if (selectedOption.toLowerCase() != 'nationality')
-                setAsyncData(selectedItem.id);
+              if (selectedOption.toLowerCase() != 'nationality') {
+                if (selectedOption.toLowerCase() == 'country') {
+                  setAsyncData(selectedItem.id);
+                  props.choosePLaceholder(selectedItem.id)
+                }
+                else
+                  setAsyncData(selectedItem.id);
+              }
               else
-              if(selectedOption.toLowerCase() == 'transfer reason')
-              setAsyncData(selectedItem.reason);
-              else setAsyncData(selectedItem.name);
+                if (selectedOption.toLowerCase() == 'transfer reason')
+                  setAsyncData(selectedItem.reason);
+                else setAsyncData(selectedItem.name);
             }
             setCurrentSelection(selectedItem);
           }}
@@ -115,7 +121,7 @@ const CustomDropdown = props => {
                   selectedOption.toLowerCase() == 'purpose of account' ||
                   selectedOption.toLowerCase() == 'destination country' ||
                   selectedOption.toLowerCase() == 'country of residence' ||
-                  selectedOption.toLowerCase() == 'nationality'||
+                  selectedOption.toLowerCase() == 'nationality' ||
                   selectedOption.toLowerCase() == 'country' ? (
                   <TextComponent style={styles.listItem}>
                     {item.name}
