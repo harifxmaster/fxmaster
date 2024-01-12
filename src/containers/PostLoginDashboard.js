@@ -110,7 +110,7 @@ const PostLoginDashboard = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [fromdate, setFromDate] = useState(new Date().getDate() + "-" + (+new Date().getMonth() + 1) + "-" + new Date().getFullYear());
+  const [fromdate, setFromDate] = useState(new Date().getDate() + "-" + (+new Date().getMonth() + 1) + "-" + (+new Date().getFullYear() - 1));
   const [todate, setToDate] = useState(new Date().getDate() + "-" + (+new Date().getMonth() + 1) + "-" + new Date().getFullYear());
   const [key, setKey] = useState("");
   const dataref = useRef();
@@ -162,22 +162,23 @@ const PostLoginDashboard = ({ navigation }) => {
       navigation.dispatch(StackActions.replace('auth'))
     }
     else {
-      let from = fromdate.split("-")[2]+"-"+fromdate.split("-")[1]+"-"+fromdate.split("-")[0];
-      let to = todate.split("-")[2]+"-"+todate.split("-")[1]+"-"+todate.split("-")[0];
-      console.log(Constants.BASE_URL + 'API-FX-124-ListTransaction?filter[workspace_id]=' + login_workspaces_id + '&page=' + pageNumber+'&from='+from+'&to='+to);
-      console.log("Bearer " + JSON.parse(login_token));
-      axios.get(Constants.BASE_URL + 'API-FX-124-ListTransaction?filter[workspace_id]=' + login_workspaces_id + '&page=' + pageNumber+'&from='+from+'&to='+to, {
-        headers: {
-          Authorization: "Bearer " + JSON.parse(login_token),
-          fx_key: Constants.SUBSCRIPTION_KEY
-        }
-      }).then(resp => {
-        setTransactions(resp.data.data)
-        setLoading(false)
-      }).catch(err => {
-        console.log(err);
-        setLoading(false)
-      })
+      let from = fromdate.split("-")[2] + "-" + fromdate.split("-")[1] + "-" + fromdate.split("-")[0];
+      let to = todate.split("-")[2] + "-" + todate.split("-")[1] + "-" + todate.split("-")[0];
+      if (!loading) {
+        axios.get(Constants.BASE_URL + 'API-FX-124-ListTransaction?filter[workspace_id]=' + login_workspaces_id + '&page=' + pageNumber + '&from=' + from + '&to=' + to, {
+          headers: {
+            Authorization: "Bearer " + JSON.parse(login_token),
+            fx_key: Constants.SUBSCRIPTION_KEY
+          }
+        }).then(resp => {
+          console.log(resp.data.data);
+          setTransactions((transactions) => [...transactions, ...resp.data.data])
+          setLoading(false)
+        }).catch(err => {
+          console.log(err);
+          setLoading(false)
+        })
+      }
     }
   }
   const logout = async () => {
@@ -272,7 +273,7 @@ const PostLoginDashboard = ({ navigation }) => {
         </View> */}
       </View>
       <View style={styles.bottomLayer}>
-        <View
+        {/* <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
@@ -283,27 +284,24 @@ const PostLoginDashboard = ({ navigation }) => {
           <TextComponent style={{ color: '#6B6E67' }}>
             Transactions (Page No: {page})
           </TextComponent>
-          {/* <TextComponent style={{color: Colors.lightGreen}}>
-            View All
-          </TextComponent> */}
-        </View>
+        </View> */}
 
-        <View style={{ width: "100%", flexDirection: 'row', justifyContent: 'space-evenly', marginBottom: 10,alignItems:'center' }}>
-          <View style={{justifyContent:'center',alignItems:'center',width: "40%", }}>
+        <View style={{ width: "100%", flexDirection: 'row', justifyContent: 'space-evenly', marginBottom: 10, alignItems: 'center' }}>
+          <View style={{ justifyContent: 'center', alignItems: 'center', width: "35%", }}>
             <TextComponent>From Date</TextComponent>
             <TouchableOpacity style={styles.datePicker} onPress={() => showDatePicker('from')}>
               <TextComponent>{fromdate != "" && fromdate != null ? fromdate : "Select From Date"}</TextComponent>
             </TouchableOpacity>
           </View>
-          <View style={{justifyContent:'center',alignItems:'center',width: "40%", }}>
+          <View style={{ justifyContent: 'center', alignItems: 'center', width: "35%", }}>
             <TextComponent>To Date</TextComponent>
             <TouchableOpacity style={styles.datePicker} onPress={() => showDatePicker('to')}>
               <TextComponent>{todate != "" && todate != null ? todate : "Select To Date"}</TextComponent>
             </TouchableOpacity>
           </View>
 
-          <TouchableOpacity style={{justifyContent:'center',alignItems:'center',width: "10%",marginTop:20 }} onPress={()=>getData(0)}>
-              <Ionicons name={'search-circle'} size={35} color={Colors.lightGreen}/>
+          <TouchableOpacity style={{ justifyContent: 'center', alignItems: 'center', width: "10%", marginTop: 20 }} onPress={() => getData(0)}>
+            <Ionicons name={'search-circle'} size={35} color={Colors.lightGreen} />
           </TouchableOpacity>
         </View>
         <DateTimePicker
@@ -314,7 +312,7 @@ const PostLoginDashboard = ({ navigation }) => {
         />
 
 
-        {!loading ?
+        {/* {!loading ?
           <View style={{ justifyContent: 'space-between', alignItems: 'center', width: "100%", flexDirection: 'row', paddingLeft: 25, paddingRight: 20 }}>
             <Pressable onPress={prevPage}>
               <TextComponent style={{ color: Colors.lightGreen }}>Prev</TextComponent>
@@ -323,12 +321,15 @@ const PostLoginDashboard = ({ navigation }) => {
               <TextComponent style={{ color: Colors.lightGreen }}>Next</TextComponent>
             </Pressable>
           </View>
-          : ""}
-
+          : ""} */}
         {loading ?
-          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
             <ActivityIndicator size={'large'} color={Colors.lightGreen} />
-          </View> :
+          </View> : ""}
+        <View style={{ marginLeft: 18,marginBottom:10 }}>
+          <TextComponent style={{ color: Colors.lightGreen, fontWeight: 'bold' }}>Recent Transactions</TextComponent>
+        </View>
+        {
           transactions.length > 0 ?
             <FlatList
               data={transactions}
@@ -352,7 +353,7 @@ const PostLoginDashboard = ({ navigation }) => {
                        marginVertical: actuatedNormalize(15),
                        alignItems: 'center',
                      }}> */}
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: "100%", borderBottomColor: Colors.lightGrey, borderBottomWidth: 0.5, paddingBottom: 8 }}>
                       {/* <Image
                     source={item.image}
                     style={{
@@ -360,27 +361,45 @@ const PostLoginDashboard = ({ navigation }) => {
                       width: actuatedNormalize(42),
                     }}
                   /> */}
-                      <View style={{ paddingLeft: actuatedNormalize(18) }}>
-                        <TextComponent style={{ color: Colors.black }}>
-                          {item.meta.second_beneficiary_name}
-                        </TextComponent>
+                      <View style={{ flexDirection: 'row' }}>
+                        <Ionicons name="arrow-up-circle" size={40} color={Colors.lightGrey} />
+                        <View style={{ marginLeft: 5 }}>
+                          <TextComponent style={{ color: Colors.black, fontWeight: 'bold' }}>
+                            {JSON.parse(item.meta).second_beneficiary_name.toUpperCase()}
+                          </TextComponent>
+                          <TextComponent
+                            style={{
+                              color: '#545F7A',
+                              marginTop: actuatedNormalize(5),
+                              fontSize: 11
+                            }}>
+                            Sent on {new Date(item.created_at).getDate() + "-" + new Date(item.created_at).getMonth() + "-" + new Date(item.created_at).getFullYear()}
+                          </TextComponent>
+                        </View>
+                      </View>
+
+                      <View style={{ paddingRight: actuatedNormalize(8), alignItems: 'flex-end', justifyContent: 'flex-end' }}>
                         <TextComponent
                           style={{
-                            color: '#545F7A',
-                            marginTop: actuatedNormalize(5),
+                            color: Colors.black,
+                            fontFamily: Fonts.Rubik_Medium,
+                            fontSize: actuatedNormalize(14),
+                            alignItems: 'flex-end', justifyContent: 'flex-end'
                           }}>
-                          {item.urn} ({new Date(item.created_at).getDate() + "-" + new Date(item.created_at).getMonth() + "-" + new Date(item.created_at).getFullYear()})
+                          {JSON.parse(item.meta).recipient_amount} {JSON.parse(item.meta).exchange_currency}
+                        </TextComponent>
+
+                        <TextComponent
+                          style={{
+                            color: "#545F7A",
+                            fontFamily: Fonts.Rubik_Medium,
+                            fontSize: actuatedNormalize(11),
+                            alignItems: 'flex-end', justifyContent: 'flex-end'
+                          }}>
+                          {item.amount} {JSON.parse(item.meta).base_currency}
                         </TextComponent>
                       </View>
                     </View>
-                    <TextComponent
-                      style={{
-                        color: '#ED2330',
-                        fontFamily: Fonts.Rubik_Medium,
-                        fontSize: actuatedNormalize(14),
-                      }}>
-                      {item.meta.base_currency} {item.amount}
-                    </TextComponent>
                     {/* </Pressable> */}
                   </View>
                 );
@@ -388,6 +407,7 @@ const PostLoginDashboard = ({ navigation }) => {
 
 
               }}
+              onEndReached={() => nextPage()}
             />
             :
             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -395,63 +415,6 @@ const PostLoginDashboard = ({ navigation }) => {
             </View>
         }
 
-        {/* <SectionList
-          sections={userList}
-          renderItem={({item}) => {
-            return (
-              <Pressable
-              onPress={() => navigation.push('TransactionDetails')}
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  marginHorizontal: actuatedNormalize(15),
-                  marginVertical: actuatedNormalize(15),
-                  alignItems: 'center',
-                }}>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <Image
-                    source={item.image}
-                    style={{
-                      height: actuatedNormalize(42),
-                      width: actuatedNormalize(42),
-                    }}
-                  />
-                  <View style={{paddingLeft: actuatedNormalize(18)}}>
-                    <TextComponent style={{color: Colors.black}}>
-                      {item.title}
-                    </TextComponent>
-                    <TextComponent
-                      style={{
-                        color: '#545F7A',
-                        marginTop: actuatedNormalize(5),
-                      }}>
-                      {item.subtitle}
-                    </TextComponent>
-                  </View>
-                </View>
-                <TextComponent
-                  style={{
-                    color: '#ED2330',
-                    fontFamily: Fonts.Rubik_Medium,
-                    fontSize: actuatedNormalize(14),
-                  }}>
-                  £{item.amount}
-                </TextComponent>
-              </Pressable>
-            );
-          }}
-          // renderSectionHeader={({section}) => (
-          //   <TextComponent
-          //     style={{
-          //       color: Colors.tintGrey,
-          //       marginVertical: actuatedNormalize(5),
-          //       marginLeft: actuatedNormalize(15),
-          //       fontFamily: Fonts.Rubik_Regular,
-          //     }}>
-          //     {section.date}
-          //   </TextComponent>
-          // )}
-        /> */}
       </View>
       <StatusBar
         animated
@@ -466,7 +429,7 @@ const PostLoginDashboard = ({ navigation }) => {
 export default PostLoginDashboard;
 
 const styles = StyleSheet.create({
-  datePicker: { width:"100%",justifyContent: 'center', alignItems: 'center', borderColor: Colors.lightGrey, borderWidth: 1, padding: 8, borderRadius: 5 },
+  datePicker: { width: "100%", justifyContent: 'center', alignItems: 'center', borderColor: Colors.lightGrey, borderWidth: 1, padding: 8, borderRadius: 5 },
   mainContainer: {
     alignSelf: 'center',
     justifyContent: 'center',

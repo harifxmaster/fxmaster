@@ -185,8 +185,10 @@ const Login = ({ navigation }) => {
         setAsyncData("login_workspaces", JSON.stringify(resp.data.data.workspaces))
         setAsyncData("login_workspaces_id", JSON.stringify(resp.data.data.workspaces[0].id))
         setAsyncData("login_token", JSON.stringify(resp.data.token))
-        console.log(resp.data.data.id);
-        console.log(resp.data.token);
+        setAsyncData("login_address", JSON.stringify(resp.data.data.addresses[0].address+resp.data.data.addresses[0].street))
+        setAsyncData("login_postcode", JSON.stringify(resp.data.data.addresses[0].postcode))
+        setAsyncData("login_city", JSON.stringify(resp.data.data.addresses[0].city))
+        setAsyncData("login_currency_code_iso", resp.data.data.addresses[0].country.currency)
         setLoading(false);
         //console.log(resp.data.data.registration_step);
         //if (resp.data.data.registration_step == 'account_preview')
@@ -203,6 +205,7 @@ const Login = ({ navigation }) => {
   };
   const setAsyncData = async (key, value) => {
     await AsyncStorage.setItem(key, value);
+    await AsyncStorage.removeItem('yotiurl')
   }
   return (
     <View style={{ flex: 1 }}>

@@ -23,6 +23,7 @@ import AddBeneficiary from '../containers/AddBeneficiary';
 import SelfAccount from '../containers/SelfAccount';
 import CompanyAccount from '../containers/CompanyAccount';
 import BeneficiaryOtpScreen from '../containers/BeneficiaryOtp';
+import WebsiteView from '../containers/WebView';
 
 const Stack = createNativeStackNavigator();
 
@@ -138,6 +139,11 @@ const MainStack = () => {
         options={{ headerShown: false }}
         name="TransferDetails"
         component={TransferDetails}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="WebsiteView"
+        component={WebsiteView}
       />
     </Stack.Navigator>
   );

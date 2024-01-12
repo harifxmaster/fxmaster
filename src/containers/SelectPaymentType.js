@@ -1,4 +1,4 @@
-import { StyleSheet, Image, View, Pressable } from 'react-native';
+import { StyleSheet, Image, View, Pressable, Alert } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Colors from '../constants/Colors';
 import Fonts from '../constants/Fonts';
@@ -15,14 +15,14 @@ const SelectPaymentType = props => {
   const [manual, setManual] = useState(true);
   const [card, setCard] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [beneid,setBeneId] = useState("");
-  const [beneAccountName,setBeneAccountName] = useState("");
-  const [userId,setuserId] = useState("");
-  const [userName,setuserName] = useState("");
-  const [userEmail,setuserEmail] = useState("");
-  const [userPhone,setuserPhone] = useState("");
-  const [userDob,setuserDob] = useState("");
-  const [userCountryCode,setuserCountryCode] = useState("");
+  const [beneid, setBeneId] = useState("");
+  const [beneAccountName, setBeneAccountName] = useState("");
+  const [userId, setuserId] = useState("");
+  const [userName, setuserName] = useState("");
+  const [userEmail, setuserEmail] = useState("");
+  const [userPhone, setuserPhone] = useState("");
+  const [userDob, setuserDob] = useState("");
+  const [userCountryCode, setuserCountryCode] = useState("");
 
   const toggleHandler = textNumber => {
     if (textNumber === 'manual') {
@@ -33,7 +33,7 @@ const SelectPaymentType = props => {
       setManual(false);
     }
   };
-  const getData = async() =>{
+  const getData = async () => {
     setBeneId(await AsyncStorage.getItem('beneficiary_id'))
     setBeneAccountName(await AsyncStorage.getItem('beneficiary_bank_account_name'))
     setuserId(await AsyncStorage.getItem('login_id'))
@@ -43,9 +43,14 @@ const SelectPaymentType = props => {
     setuserDob(await AsyncStorage.getItem('login_date_of_birth'))
     setuserCountryCode(await AsyncStorage.getItem('login_date_of_birth'))
   }
-  useEffect(()=>{
+  useEffect(() => {
     getData()
   })
+  function randomString(length, chars) {
+    var result = '';
+    for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
+    return result;
+  }
   const initiateTransfer = async () => {
     setLoading(true);
     const exchangerates = await AsyncStorage.getItem('exchangeRates');
@@ -75,74 +80,62 @@ const SelectPaymentType = props => {
     }
     else
       if (card) {
-        await axios.post(Constants.FXMASTER_BASE_URL + "api/v1/gateway/truelayer/create-payment-link", {
-          "type": "single_payment",
-          "expires_at": new Date(new Date().setMinutes(new Date().getMinutes() + 10)),
-          "payment_configuration": {
-            "amount_in_minor": data.amount,
-            "currency": "GBP",
-            "payment_method": {
-              "type": "bank_transfer",
-              "provider_selection": {
-                "type": "user_selected",
-                "filter": {
-                  "countries": [
-                    "GB"
-                  ],
-                  "release_channel": "general_availability",
-                  "customer_segments": [
-                    "retail"
-                  ],
-                  "provider_ids": [
-                    "mock-payments-gb-redirect"
-                  ],
-                  "excludes": {
-                    "provider_ids": [
-                      "ob-exclude-this-bank"
-                    ]
-                  }
-                },
-                "scheme_selection": {
-                  "type": "instant_only",
-                  "allow_remitter_fee": false
-                }
-              },
-              "beneficiary": {
-                "type": "merchant_account",
-                "merchant_account_id": "0e0daaf6-a876-4ad4-a6a8-6150ce63f6ae",
-                "account_holder_name": beneAccountName,
-                "reference": "payment-ref"
-              }
-            },
+        const beneficiary_id = await AsyncStorage.getItem('beneficiary_id');
+        const transfer_reason = await AsyncStorage.getItem('transfer_reason');
+        const exchangerates = await AsyncStorage.getItem('exchangeRates');
+        const login_id = await AsyncStorage.getItem('login_id');
+        const login_currency_code_iso = await AsyncStorage.getItem('login_currency_code_iso');
+        const login_address = await AsyncStorage.getItem('login_address');
+        const login_city = await AsyncStorage.getItem('login_city');
+        const login_postcode = await AsyncStorage.getItem('login_postcode');
+        const data = JSON.parse(exchangerates)
+        await axios.post(Constants.BASE_URL + "API-FX-157-TRUELAYER",
+          {
+            "beneficiary_id": beneficiary_id,
+            "workspace_id": login_workspaces_id,
+            "amount": data.amount.toString(),
+            "currency": data.sender_currency,
+            "base_currency": data.sender_currency,
+            "exchange_currency": data.receiver_currency,
+            "transaction_fee": data.fees.length > 0 ? data.fees[0].fee_charge.toString() : data.fee_charge.toString(),
+            "exchange_rate": data.fees.length > 0 ? (data.fees[0].recipient_amount / data.fees[0].convert_amount).toFixed(4) : (data.recipient_amount / data.convert_amount).toFixed(4),
+            "guaranteed_rate": data.amount.toString(),
+            "reference_number": randomString(12, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') + Math.random(),
+            "transfer_reason": "Payment Transfer",
+            "return_uri": "https://webhook.site/73789409-f506-439c-80b7-790e34ef6fba",
             "user": {
-              "id": "f9b48c9d-176b-46dd-b2da-fe1a2b77350c",
-              "name": userName,
-              "email": userEmail,
-              "phone": "+447777777777",
-              "date_of_birth": userDob,
+              "id": login_id,
               "address": {
-                "address_line1": "1 Hardwick St",
-                "address_line2": "Clerkenwell",
-                "city": "London",
+                "address_line1": login_address,
+                "city": login_city,
                 "state": "London",
-                "zip": "EC1R 4RB",
-                "country_code": "GB"
+                "zip": login_postcode,
+                "country_code": login_currency_code_iso[0] + login_currency_code_iso[1]
               }
             }
-          },
-          "reference": login_workspaces_id,
-          "return_uri": Constants.FXMASTER_BASE_URL
-        }, {
+          }, {
           headers: {
             fx_key: Constants.SUBSCRIPTION_KEY,
             Authorization: "Bearer " + JSON.parse(token)
           }
-        }).then(resp=>{
-          console.log(resp.data);
-        }).catch(err=>{
-          console.log(err);
+        }).then(resp => {
+          setAsyncData('truelayer_id',resp.data.id);
+          setAsyncData('truelayer_transaction_id',JSON.stringify(resp.data.transaction_id));
+          setAsyncData('truelayer_uri',resp.data.uri);
+          setLoading(false);
+          props.navigation.navigate('WebsiteView');
+        }).catch(err => {
+          console.log(err.response.data);
+          if (err.response.data.message != "" && err.response.data.message != null)
+            Alert.alert('Validation Error', err.response.data.message)
+          else
+            Alert.alert('Validation Error', err)
+          setLoading(false);
         })
       }
+  }
+  const setAsyncData = async (key, value) => {
+    await AsyncStorage.setItem(key, value);
   }
   return (
     <View style={styles.mainContainer}>
@@ -209,7 +202,7 @@ const SelectPaymentType = props => {
             }}
           />
         </Pressable>
-        {/* <Pressable
+        <Pressable
           onPress={() => toggleHandler('card')}
           style={{
             flexDirection: 'row',
@@ -249,7 +242,7 @@ const SelectPaymentType = props => {
               height: actuatedNormalize(24),
             }}
           />
-        </Pressable> */}
+        </Pressable>
 
         <View style={styles.buttonContainer}>
           <PrimaryButton
