@@ -224,7 +224,7 @@ const SelectPaymentType = props => {
                 fontSize: actuatedNormalize(14),
                 color: Colors.lightGreen,
               }}>
-              Card
+              Bank Transfer
             </TextComponent>
             <TextComponent
               style={{

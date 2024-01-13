@@ -110,7 +110,7 @@ const PostLoginDashboard = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [fromdate, setFromDate] = useState(new Date().getDate() + "-" + (+new Date().getMonth() + 1) + "-" + (+new Date().getFullYear() - 1));
+  const [fromdate, setFromDate] = useState(new Date().getDate() + "-" + (+new Date().getMonth() + 1) + "-" + (+new Date().getFullYear() - 100));
   const [todate, setToDate] = useState(new Date().getDate() + "-" + (+new Date().getMonth() + 1) + "-" + new Date().getFullYear());
   const [key, setKey] = useState("");
   const dataref = useRef();
@@ -286,7 +286,7 @@ const PostLoginDashboard = ({ navigation }) => {
           </TextComponent>
         </View> */}
 
-        <View style={{ width: "100%", flexDirection: 'row', justifyContent: 'space-evenly', marginBottom: 10, alignItems: 'center' }}>
+        {/* <View style={{ width: "100%", flexDirection: 'row', justifyContent: 'space-evenly', marginBottom: 10, alignItems: 'center' }}>
           <View style={{ justifyContent: 'center', alignItems: 'center', width: "35%", }}>
             <TextComponent>From Date</TextComponent>
             <TouchableOpacity style={styles.datePicker} onPress={() => showDatePicker('from')}>
@@ -309,7 +309,7 @@ const PostLoginDashboard = ({ navigation }) => {
           mode="date"
           onConfirm={handleConfirm}
           onCancel={hideDatePicker}
-        />
+        /> */}
 
 
         {/* {!loading ?
@@ -326,7 +326,7 @@ const PostLoginDashboard = ({ navigation }) => {
           <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
             <ActivityIndicator size={'large'} color={Colors.lightGreen} />
           </View> : ""}
-        <View style={{ marginLeft: 18,marginBottom:10 }}>
+        <View style={{ marginLeft: 18,marginBottom:10,marginTop:10 }}>
           <TextComponent style={{ color: Colors.lightGreen, fontWeight: 'bold' }}>Recent Transactions</TextComponent>
         </View>
         {
@@ -373,7 +373,7 @@ const PostLoginDashboard = ({ navigation }) => {
                               marginTop: actuatedNormalize(5),
                               fontSize: 11
                             }}>
-                            Sent on {new Date(item.created_at).getDate() + "-" + new Date(item.created_at).getMonth() + "-" + new Date(item.created_at).getFullYear()}
+                            Sent on {new Date(item.created_at).getDate() + "-" + (new Date(item.created_at).getMonth()+1) + "-" + new Date(item.created_at).getFullYear()}
                           </TextComponent>
                         </View>
                       </View>
