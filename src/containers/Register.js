@@ -27,6 +27,9 @@ import Validate from '../utils/Validate';
 import CommonHelper from '../constants/CommonHelper';
 import CustomDropdown from '../constants/CustomDropdown';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import Constants from '../constants/Constants';
+import DeviceInfo from 'react-native-device-info';
 
 
 const Register = ({ navigation }) => {
@@ -35,7 +38,7 @@ const Register = ({ navigation }) => {
   const [purposeOfAccount, setPurposeOfAccount] = useState([]);
   const [countries, setCountries] = useState([]);
 
-  const [firstName, setFirstName] = useState("");
+  const [loading, setLoading] = useState("");
   const [middleName, setMiddleName] = useState("");
   const [lastName, setLastName] = useState("");
   const [pin, setPin] = useState("");
@@ -213,6 +216,7 @@ const Register = ({ navigation }) => {
 
 
   const submitHandler = async () => {
+    setLoading(true);
     let isFormValid = true;
     let formData = state.formData;
     for (let key in formData) {
@@ -236,19 +240,39 @@ const Register = ({ navigation }) => {
     if (isFormValid) {
       if(formData.reEnterPin.value===formData.enterPin.value)
       {
+        var deviceId = DeviceInfo.getDeviceId();
       await AsyncStorage.setItem('firstName',formData.firstName.value)
       await AsyncStorage.setItem('middleName',formData.middleName.value)
       await AsyncStorage.setItem('lastName',formData.lastName.value)
       await AsyncStorage.setItem('enterPin',formData.enterPin.value)
-      navigation.push("NationalityScreen")
+      await AsyncStorage.setItem('deviceid',deviceId)
+      console.log(deviceId);
+      axios.post(Constants.BASE_URL+"API-FX-159-DROPSCREEN",{
+        screen_name:"CREATE_ACCOUNT_1",
+        meta:{firstName:formData.firstName.value, middleName:formData.middleName.value, lastName:formData.lastName.value, enterPin: formData.enterPin.value},
+        device_id: deviceId,
+        user_id: Date.now()
+      },{headers:{
+        fx_key:Constants.SUBSCRIPTION_KEY
+      }}).then(dropresponse=>{
+        console.log(dropresponse.data);
+        setLoading(false);
+        navigation.push("NationalityScreen");
+      }).catch(dropError=>{
+        console.log(dropError.response.data);
+        setLoading(false);
+        Alert.alert("Dropscreen Error",dropError.response.data.message)
+      })
     }
     else
     {
       Alert.alert('Validation Error','PIN Mismatch')
+      setLoading(false);
     }
     }
     else {
       Alert.alert("Validation Error.", "Please fill all the mandatory fields.")
+      setLoading(false);
     }
   };
   return (
@@ -392,6 +416,7 @@ const Register = ({ navigation }) => {
           <View style={styles.buttonContainer}>
             <PrimaryButtonSmall
               primaryButtonContainer={{ width: '100%' }}
+              loading={loading}
               onPress={() => submitHandler()}
               label={'Continue'}
             />

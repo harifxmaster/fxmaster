@@ -71,6 +71,8 @@ const OtpScreen = (props) => {
     setLoading(true)
     let enteredOtp = f1 + f2 + f3 + f4 + f5 + f6;
     const token = await AsyncStorage.getItem('registrationToken');
+    var deviceId = await AsyncStorage.getItem('deviceid');
+    var userid = await AsyncStorage.getItem('userid');
     var url = "";
     if (props.name == "mobile") {
       url = Constants.BASE_URL + 'API-FX-106-MobileVerification'
@@ -89,7 +91,42 @@ const OtpScreen = (props) => {
     }).then(resp => {
       console.log(resp.data);
       if (resp.data.message == 'Phone OTP Verified' || resp.data.message == 'Email OTP Verified') {
-        props.onPress();
+
+        if (props.name == "mobile") {
+
+          axios.post(Constants.BASE_URL+"API-FX-159-DROPSCREEN",{
+            screen_name:"MOBILE_OTP_3",
+            meta:{enteredOtp:enteredOtp},
+            device_id: deviceId,
+            user_id: userid
+          },{headers:{
+            fx_key:Constants.SUBSCRIPTION_KEY
+          }}).then(dropresponse=>{
+            console.log(dropresponse.data);
+            props.onPress();
+          }).catch(dropError=>{
+            Alert.alert("Dropscreen Error",dropError.response.data.message)
+          })
+  
+        }
+        else
+        if (props.name == "email") {
+  
+          axios.post(Constants.BASE_URL+"API-FX-159-DROPSCREEN",{
+            screen_name:"EMAIL_OTP_4",
+            meta:{enteredOtp:enteredOtp},
+            device_id: deviceId,
+            user_id: userid
+          },{headers:{
+            fx_key:Constants.SUBSCRIPTION_KEY
+          }}).then(dropresponse=>{
+            console.log(dropresponse.data);
+            props.onPress();
+          }).catch(dropError=>{
+            Alert.alert("Dropscreen Error",dropError.response.data.message)
+          })
+  
+        }
       }
       else {
         Alert.alert('OTP Validation', 'Invalid OTP')

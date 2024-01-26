@@ -135,6 +135,8 @@ const DobAddress = ({ navigation }) => {
   }
   const kycVerification = async () => {
     const token = await AsyncStorage.getItem('registrationToken');
+    var deviceId = await AsyncStorage.getItem('deviceid');
+    var userid = await AsyncStorage.getItem('userid');
     axios.get(Constants.BASE_URL + "API-FX-129-KYC", {
       headers: {
         fx_key: Constants.SUBSCRIPTION_KEY,
@@ -145,7 +147,20 @@ const DobAddress = ({ navigation }) => {
       setAsyncData("yotisessionToken", response.data.data.sessionToken);
       setAsyncData("yotiurl", response.data.data.url);
       setButtonLoading(false)
-      navigation.dispatch(StackActions.replace('WebsiteView'));
+      axios.post(Constants.BASE_URL+"API-FX-159-DROPSCREEN",{
+        screen_name:"DOB_ADDRESS_5",
+        meta:{yotisessionID:response.data.data.sessionID,yotisessionToken:response.data.data.sessionToken,yotiurl:response.data.data.url},
+        device_id: deviceId,
+        user_id: userid
+      },{headers:{
+        fx_key:Constants.SUBSCRIPTION_KEY
+      }}).then(dropresponse=>{
+        console.log(dropresponse.data);
+        navigation.dispatch(StackActions.replace('WebsiteView'));
+      }).catch(dropError=>{
+        console.log(dropError);
+        Alert.alert("Dropscreen Error",dropError.response.data.message)
+      })
     }).catch(error => {
       setButtonLoading(false)
       Alert.alert("Error", error.response.data)

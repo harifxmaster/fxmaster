@@ -89,6 +89,35 @@ const SelectPaymentType = props => {
         const login_city = await AsyncStorage.getItem('login_city');
         const login_postcode = await AsyncStorage.getItem('login_postcode');
         const data = JSON.parse(exchangerates)
+        console.log(Constants.BASE_URL + "API-FX-157-TRUELAYER");
+        console.log(JSON.stringify({
+          "beneficiary_id": beneficiary_id,
+          "workspace_id": login_workspaces_id,
+          "amount": data.amount.toString(),
+          "currency": data.sender_currency,
+          "base_currency": data.sender_currency,
+          "exchange_currency": data.receiver_currency,
+          "transaction_fee": data.fees.length > 0 ? data.fees[0].fee_charge.toString() : data.fee_charge.toString(),
+          "exchange_rate": data.fees.length > 0 ? (data.fees[0].recipient_amount / data.fees[0].convert_amount).toFixed(4) : (data.recipient_amount / data.convert_amount).toFixed(4),
+          "guaranteed_rate": data.amount.toString(),
+          "reference_number": randomString(12, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') + Math.random(),
+          "transfer_reason": "Payment Transfer",
+          "return_uri": "https://webhook.site/73789409-f506-439c-80b7-790e34ef6fba",
+          "user": {
+            "id": login_id,
+            "address": {
+              "address_line1": login_address,
+              "city": login_city,
+              "state": "London",
+              "zip": login_postcode,
+              "country_code": login_currency_code_iso[0] + login_currency_code_iso[1]
+            }
+          }
+        }));
+        console.log(JSON.stringify({
+          fx_key: Constants.SUBSCRIPTION_KEY,
+          Authorization: "Bearer " + JSON.parse(token)
+        }));
         await axios.post(Constants.BASE_URL + "API-FX-157-TRUELAYER",
           {
             "beneficiary_id": beneficiary_id,
@@ -97,6 +126,7 @@ const SelectPaymentType = props => {
             "currency": data.sender_currency,
             "base_currency": data.sender_currency,
             "exchange_currency": data.receiver_currency,
+            "recepient_amount": data.fees.length > 0 ? data.fees[0].recipient_amount : data.recipient_amount,
             "transaction_fee": data.fees.length > 0 ? data.fees[0].fee_charge.toString() : data.fee_charge.toString(),
             "exchange_rate": data.fees.length > 0 ? (data.fees[0].recipient_amount / data.fees[0].convert_amount).toFixed(4) : (data.recipient_amount / data.convert_amount).toFixed(4),
             "guaranteed_rate": data.amount.toString(),
@@ -119,7 +149,8 @@ const SelectPaymentType = props => {
             Authorization: "Bearer " + JSON.parse(token)
           }
         }).then(resp => {
-          setAsyncData('truelayer_id',resp.data.id);
+          console.log(resp.data);
+          setAsyncData('truelayer_id',resp.data.payment_id);
           setAsyncData('truelayer_transaction_id',JSON.stringify(resp.data.transaction_id));
           setAsyncData('truelayer_uri',resp.data.uri);
           setLoading(false);

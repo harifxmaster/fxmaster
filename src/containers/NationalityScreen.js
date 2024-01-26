@@ -20,6 +20,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Constants from '../constants/Constants';
 import { StackActions } from '@react-navigation/native';
+import DeviceInfo from 'react-native-device-info';
 
 
 const NationalityScreen = ({ navigation }) => {
@@ -45,7 +46,7 @@ const NationalityScreen = ({ navigation }) => {
       const middleName = await AsyncStorage.getItem('middleName')
       const lastName = await AsyncStorage.getItem('lastName')
       const enterPin = await AsyncStorage.getItem('enterPin')
-
+      var deviceId = await AsyncStorage.getItem('deviceid');
       await axios.post(Constants.BASE_URL + "API-FX-105-CustomerSignup", {
         "title_id": selectedTitle,
         "first_name": firstName,
@@ -83,7 +84,20 @@ const NationalityScreen = ({ navigation }) => {
         setAsyncData('registrationToken',response.data.token)
         setAsyncData('user_workspaces',JSON.stringify(response.data.data.workspaces))
         setLoading(false)
-        navigation.dispatch(StackActions.replace("VerifyPhone"));
+        axios.post(Constants.BASE_URL+"API-FX-159-DROPSCREEN",{
+          screen_name:"NATIONALITY_2",
+          meta:{title_id:selectedTitle, country_code:"44", nationality:nationality, password: enterPin, country_id:"231",phone:mobile,email:email,is_banking_user:2,type:"standard",destination_country:destinationCountry,first_name:firstName,middle_name:middleName,last_name:lastName,registrationToken:response.data.token,user_registration_step:response.data.data.registration_step},
+          device_id: deviceId,
+          user_id: response.data.data.id
+        },{headers:{
+          fx_key:Constants.SUBSCRIPTION_KEY
+        }}).then(dropresponse=>{
+          console.log(dropresponse.data);
+          navigation.dispatch(StackActions.replace("VerifyPhone"));
+        }).catch(dropError=>{
+          console.log(dropError);
+          Alert.alert("Dropscreen Error",dropError.response.data.message)
+        })
       }).catch(error => {
         console.log(error.response.data);
         Alert.alert('Validation Error.',error.response.data.message);

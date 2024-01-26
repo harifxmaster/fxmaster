@@ -24,6 +24,7 @@ import axios from 'axios';
 import Constants from '../constants/Constants';
 import { StackActions } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import DeviceInfo from 'react-native-device-info';
 
 const Login = ({ navigation }) => {
 
@@ -35,6 +36,7 @@ const Login = ({ navigation }) => {
   const [emailError, setEmailError] = useState("");
   const [pinError, setPinError] = useState("");
   const [dataFetch,setDataFetch] = useState(false);
+  const [pageName,setPageName] = useState("");
   const dataref =  useRef(null);
 
   const registerHandler = (val) => {
@@ -169,33 +171,36 @@ const Login = ({ navigation }) => {
           fx_key: Constants.SUBSCRIPTION_KEY
         }
       }).then(resp => {
-        setAsyncData("login_id", JSON.stringify(resp.data.data.id))
-        setAsyncData("login_full_name", resp.data.data.full_name)
-        setAsyncData("login_email", resp.data.data.email)
-        setAsyncData("login_phone", resp.data.data.phone)
-        setAsyncData("login_date_of_birth", resp.data.data.date_of_birth)
-        setAsyncData("login_country_code", resp.data.data.country_code)
-        setAsyncData("login_country_id", JSON.stringify(resp.data.data.country_id))
-        setAsyncData("login_country_name", resp.data.data.country_name)
-        setAsyncData("login_nationality", resp.data.data.nationality)
-        setAsyncData("login_registration_step", resp.data.data.registration_step)
-        setAsyncData("login_is_banking_user", JSON.stringify(resp.data.data.is_banking_user))
-        setAsyncData("login_status", resp.data.data.status)
-        setAsyncData("login_yoti_status", resp.data.data.yoti_status)
-        setAsyncData("login_workspaces", JSON.stringify(resp.data.data.workspaces))
-        setAsyncData("login_workspaces_id", JSON.stringify(resp.data.data.workspaces[0].id))
-        setAsyncData("login_token", JSON.stringify(resp.data.token))
-        setAsyncData("login_address", JSON.stringify(resp.data.data.addresses[0].address+resp.data.data.addresses[0].street))
-        setAsyncData("login_postcode", JSON.stringify(resp.data.data.addresses[0].postcode))
-        setAsyncData("login_city", JSON.stringify(resp.data.data.addresses[0].city))
-        setAsyncData("login_currency_code_iso", resp.data.data.addresses[0].country.currency)
-        setLoading(false);
-        //console.log(resp.data.data.registration_step);
-        //if (resp.data.data.registration_step == 'account_preview')
-          navigation.dispatch(StackActions.replace('main'))
-        //else {
-          //navigate to registration flow
-        //}
+        console.log(resp.data.data.registration_step);
+        if (resp.data.data.registration_step == 'account_preview')
+          {
+            setAsyncData("login_id", JSON.stringify(resp.data.data.id))
+            setAsyncData("login_full_name", resp.data.data.full_name)
+            setAsyncData("login_email", resp.data.data.email)
+            setAsyncData("login_phone", resp.data.data.phone)
+            setAsyncData("login_date_of_birth", resp.data.data.date_of_birth)
+            setAsyncData("login_country_code", resp.data.data.country_code)
+            setAsyncData("login_country_id", JSON.stringify(resp.data.data.country_id))
+            setAsyncData("login_country_name", resp.data.data.country_name)
+            setAsyncData("login_nationality", resp.data.data.nationality)
+            setAsyncData("login_registration_step", resp.data.data.registration_step)
+            setAsyncData("login_is_banking_user", JSON.stringify(resp.data.data.is_banking_user))
+            setAsyncData("login_status", resp.data.data.status)
+            setAsyncData("login_yoti_status", resp.data.data.yoti_status)
+            setAsyncData("login_workspaces", JSON.stringify(resp.data.data.workspaces))
+            setAsyncData("login_workspaces_id", JSON.stringify(resp.data.data.workspaces[0].id))
+            setAsyncData("login_token", JSON.stringify(resp.data.token))
+            setAsyncData("login_address", JSON.stringify(resp.data.data.addresses[0].address+resp.data.data.addresses[0].street))
+            setAsyncData("login_postcode", JSON.stringify(resp.data.data.addresses[0].postcode))
+            setAsyncData("login_city", JSON.stringify(resp.data.data.addresses[0].city))
+            setAsyncData("login_currency_code_iso", resp.data.data.addresses[0].country.currency)
+            setLoading(false);
+            navigation.dispatch(StackActions.replace('main'))
+          }
+        else {
+          dropscreens(resp.data.data.id)
+          setLoading(false);
+        }
       }).catch(err => {
         Alert.alert("Invalid Login", err.response.data.message);
         setPin("");
@@ -203,9 +208,68 @@ const Login = ({ navigation }) => {
       })
     }
   };
+  const dropscreens = async(userid) =>{
+   await axios.get(Constants.BASE_URL+"API-FX-160-DROPSCREENDETAILS?user-id="+userid, {
+      headers:{
+        fx_key : Constants.SUBSCRIPTION_KEY
+      }
+    }).then(dropresp=>{
+      var pagename="";
+      for(var d=0;d<dropresp.data.length;d++)
+      {
+        console.log(dropresp.data[d]);
+        if(dropresp.data[d].screen_name=="NATIONALITY_2")
+        {
+          setAsyncData('userid',JSON.stringify(userid))
+          setAsyncData('user_full_name',dropresp.data[d].meta.first_name)
+          setAsyncData('user_email',dropresp.data[d].meta.email)
+          setAsyncData('user_phone',dropresp.data[d].meta.phone)
+          setAsyncData('user_first_name',dropresp.data[d].meta.first_name)
+          setAsyncData('user_middle_name',dropresp.data[d].meta.middle_name)
+          setAsyncData('user_last_name',dropresp.data[d].meta.last_name)
+          setAsyncData('user_country_code',dropresp.data[d].meta.country_code)
+          setAsyncData('user_country_id',dropresp.data[d].meta.country_id)
+          setAsyncData('registrationToken',dropresp.data[d].meta.registrationToken)
+          setAsyncData('deviceid',DeviceInfo.getDeviceId())
+          setAsyncData('firstName',dropresp.data[d].meta.first_name)
+          setAsyncData('middleName',dropresp.data[d].meta.middle_name)
+          setAsyncData('lastName',dropresp.data[d].meta.last_name)
+          pagename = 'VerifyPhone';
+        }
+        if(dropresp.data[d].screen_name=="MOBILE_OTP_3")
+        {
+          pagename = 'PhoneNumberVerified';
+        }
+        if(dropresp.data[d].screen_name=="EMAIL_OTP_4")
+        {
+          pagename = 'EmailVerified';
+        }
+        if(dropresp.data[d].screen_name=="DOB_ADDRESS_5")
+        {
+          setAsyncData("yotisessionID", dropresp.data[d].meta.yotisessionID);
+          setAsyncData("yotisessionToken", dropresp.data[d].meta.yotisessionToken);
+          setAsyncData("yotiurl", dropresp.data[d].meta.yotiurl);
+          pagename = 'WebsiteView';
+        }
+        if(dropresp.data[d].screen_name=="YOTI_COMPLETED_6")
+        {
+          pagename = 'ApplicationPreview';
+        }
+        console.log(pagename);
+        if(pagename!="" && pagename!=null)
+        {
+          navigation.dispatch(StackActions.replace(pagename));
+        }
+      }
+      setLoading(false);
+    }).catch(droperr=>{
+      console.log(droperr.response.data);
+      setLoading(false);
+    })
+  }
   const setAsyncData = async (key, value) => {
-    await AsyncStorage.setItem(key, value);
     await AsyncStorage.removeItem('yotiurl')
+    await AsyncStorage.setItem(key, value);
   }
   return (
     <View style={{ flex: 1 }}>
