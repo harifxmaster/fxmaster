@@ -233,7 +233,7 @@ const SelectPaymentType = props => {
             }}
           />
         </Pressable>
-        <Pressable
+        {/* <Pressable
           onPress={() => toggleHandler('card')}
           style={{
             flexDirection: 'row',
@@ -273,7 +273,7 @@ const SelectPaymentType = props => {
               height: actuatedNormalize(24),
             }}
           />
-        </Pressable>
+        </Pressable> */}
 
         <View style={styles.buttonContainer}>
           <PrimaryButton

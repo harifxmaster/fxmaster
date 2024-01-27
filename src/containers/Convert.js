@@ -26,18 +26,29 @@ import axios from 'axios';
 import Constants from '../constants/Constants';
 
 export default function Convert(props) {
+  const [sendcountries, setsendCountries] = useState([]);
   const [countries, setCountries] = useState([]);
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState(0);
   const ref = useRef(null);
   useEffect(() => {
-    if(ref.current) return;
-    ref.current=true;
+    if (ref.current) return;
+    ref.current = true;
     getData()
     removeData()
   }, [])
 
   const getData = async () => {
+    const sendcountrieslist = JSON.stringify([{
+      "id": 231,
+      "code": "UK",
+      "name": "United Kingdom",
+      "phone_code": "44",
+      "flag": Constants.FXMASTER_BASE_URL + "flags/UK.png",
+      "currency": "GBP",
+      "languages": "en"
+    }])
+
     const countrieslist = JSON.stringify([{
       "id": 105,
       "code": "IN",
@@ -46,7 +57,7 @@ export default function Convert(props) {
       "flag": Constants.FXMASTER_BASE_URL + "flags/IN.png",
       "currency": "INR",
       "languages": "hi,en"
-  }, {
+    }, {
       "id": 55,
       "code": "CY",
       "name": "Cyprus",
@@ -54,7 +65,7 @@ export default function Convert(props) {
       "flag": Constants.FXMASTER_BASE_URL + "flags/CY.png",
       "currency": "EUR",
       "languages": "el,tr,hy"
-  }, {
+    }, {
       "id": 231,
       "code": "UK",
       "name": "United Kingdom",
@@ -62,7 +73,7 @@ export default function Convert(props) {
       "flag": Constants.FXMASTER_BASE_URL + "flags/UK.png",
       "currency": "GBP",
       "languages": "en"
-  }, {
+    }, {
       "id": 234,
       "code": "US",
       "name": "United States",
@@ -70,7 +81,7 @@ export default function Convert(props) {
       "flag": Constants.FXMASTER_BASE_URL + "flags/US.png",
       "currency": "USD",
       "languages": "en"
-  }, {
+    }, {
       "id": 38,
       "code": "CA",
       "name": "Canada",
@@ -78,7 +89,7 @@ export default function Convert(props) {
       "flag": Constants.FXMASTER_BASE_URL + "flags/CA.png",
       "currency": "CAD",
       "languages": "en,fr"
-  }, {
+    }, {
       "id": 13,
       "code": "AU",
       "name": "Australia",
@@ -86,7 +97,7 @@ export default function Convert(props) {
       "flag": Constants.FXMASTER_BASE_URL + "flags/AU.png",
       "currency": "AUD",
       "languages": "en"
-  }, {
+    }, {
       "id": 2,
       "code": "AE",
       "name": "United Arab Emirates",
@@ -94,10 +105,12 @@ export default function Convert(props) {
       "flag": Constants.FXMASTER_BASE_URL + "flags/AE.png",
       "currency": "AED",
       "languages": "ar"
-  }])
+    }])
+
     setCountries([countrieslist]);
+    setsendCountries([sendcountrieslist])
   }
-  const removeData = async () =>{
+  const removeData = async () => {
     await AsyncStorage.removeItem('send');
     await AsyncStorage.removeItem('receive');
   }
@@ -119,19 +132,19 @@ export default function Convert(props) {
       setLoading(false);
     }
     else {
-      await axios.post(Constants.BASE_URL + "API-FX-141-ExchangeRate", 
-      {
-        "from_id": from_id,
-        "to_id": to_id,
-        "amount": amount,
-        "transaction_type": "money_transfer"
-      }, {
+      await axios.post(Constants.BASE_URL + "API-FX-141-ExchangeRate",
+        {
+          "from_id": from_id,
+          "to_id": to_id,
+          "amount": amount,
+          "transaction_type": "money_transfer"
+        }, {
         headers: {
           fx_key: Constants.SUBSCRIPTION_KEY,
-          Authorization: "Bearer "+JSON.parse(token)
+          Authorization: "Bearer " + JSON.parse(token)
         }
       }).then(resp => {
-        setAsyncData('exchangeRates',JSON.stringify(resp.data.data));
+        setAsyncData('exchangeRates', JSON.stringify(resp.data.data));
         setLoading(false);
         props.navigation.navigate('SendMoney');
       }).catch(error => {
@@ -140,7 +153,7 @@ export default function Convert(props) {
       })
     }
   }
-  const setAsyncData = async(key,value) =>{
+  const setAsyncData = async (key, value) => {
     await AsyncStorage.setItem(key, value);
   }
   return (
@@ -172,11 +185,11 @@ export default function Convert(props) {
 
               <Text>Send Currency</Text>
               <View style={{ width: "100%", marginRight: 5 }}>
-                {countries && countries.length != 0 ?
+                {sendcountries && sendcountries.length != 0 ?
                   <CustomDropdown
                     containerStyle={{ width: "100%", }}
                     placeholder={"Send"}
-                    data={countries}
+                    data={sendcountries}
                   />
                   :
                   ""}
