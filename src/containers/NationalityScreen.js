@@ -83,7 +83,7 @@ const NationalityScreen = ({ navigation }) => {
         setAsyncData('user_registration_step',response.data.data.registration_step)
         setAsyncData('registrationToken',response.data.token)
         setAsyncData('user_workspaces',JSON.stringify(response.data.data.workspaces))
-        setLoading(false)
+       
         axios.post(Constants.BASE_URL+"API-FX-159-DROPSCREEN",{
           screen_name:"NATIONALITY_2",
           meta:{title_id:selectedTitle, country_code:"44", nationality:nationality, password: enterPin, country_id:"231",phone:mobile,email:email,is_banking_user:2,type:"standard",destination_country:destinationCountry,first_name:firstName,middle_name:middleName,last_name:lastName,registrationToken:response.data.token,user_registration_step:response.data.data.registration_step},
@@ -93,9 +93,11 @@ const NationalityScreen = ({ navigation }) => {
           fx_key:Constants.SUBSCRIPTION_KEY
         }}).then(dropresponse=>{
           console.log(dropresponse.data);
+          setLoading(false)
           navigation.dispatch(StackActions.replace("VerifyPhone"));
         }).catch(dropError=>{
           console.log(dropError);
+          setLoading(false)
           Alert.alert("Dropscreen Error",dropError.response.data.message)
         })
       }).catch(error => {
