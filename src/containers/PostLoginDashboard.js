@@ -11,7 +11,7 @@ import {
   TouchableOpacity
 } from 'react-native';
 import TextComponent from '../components/TextComponent';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Colors from '../constants/Colors';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import PngLocation from '../constants/PngLocation';
@@ -19,7 +19,7 @@ import { actuatedNormalize } from '../constants/PixelScaling';
 import Fonts from '../constants/Fonts';
 import { PrimaryButtonSmall } from '../components/ButtonCollection';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { StackActions } from '@react-navigation/native';
+import { StackActions, useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import Constants from '../constants/Constants';
 import DateTimePicker from 'react-native-modal-datetime-picker';
@@ -106,8 +106,10 @@ const PostLoginDashboard = ({ navigation }) => {
     },
   ];
   const [transactions, setTransactions] = useState([]);
+  const [balances, setBalances] = useState([]);
   const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [balanceloading, setbalanceloading] = useState(false);
   const [page, setPage] = useState(1);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [fromdate, setFromDate] = useState(new Date().getDate() + "-" + (+new Date().getMonth() + 1) + "-" + (+new Date().getFullYear() - 100));
@@ -118,6 +120,7 @@ const PostLoginDashboard = ({ navigation }) => {
     if (dataref.current) return true;
     dataref.current = true;
     getData(page);
+    getBalances()
   }, [])
   const nextPage = async () => {
     setPage(page + 1);
@@ -171,7 +174,6 @@ const PostLoginDashboard = ({ navigation }) => {
             fx_key: Constants.SUBSCRIPTION_KEY
           }
         }).then(resp => {
-          console.log(resp.data.data);
           setTransactions((transactions) => [...transactions, ...resp.data.data])
           setLoading(false)
         }).catch(err => {
@@ -181,10 +183,65 @@ const PostLoginDashboard = ({ navigation }) => {
       }
     }
   }
+
+  const getBalances = async () => {
+
+      setbalanceloading(true)
+      var login_workspaces_id = await AsyncStorage.getItem('login_workspaces_id');
+      var login_token = await AsyncStorage.getItem('login_token');
+      axios.get(Constants.BASE_URL + 'API-FX-161-BALANCES/' + login_workspaces_id, {
+        headers: {
+          Authorization: "Bearer " + JSON.parse(login_token),
+          fx_key: Constants.SUBSCRIPTION_KEY
+        }
+      }).then(resp => {
+        setBalances([resp.data])
+        setbalanceloading(false)
+      }).catch(err => {
+        console.log(err);
+        setbalanceloading(false)
+      })
+  }
+  function getDarkColor() {
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += Math.floor(Math.random() * 10);
+    }
+    return color;
+  }
+
   const logout = async () => {
     await AsyncStorage.removeItem('login_id')
     await AsyncStorage.removeItem('login_token')
     navigation.dispatch(StackActions.replace('auth'))
+  }
+  const balancesRender = ({ item, index }) => {
+    return (
+      <View style={[styles.whiteContainer, { backgroundColor: getDarkColor() }]}>
+        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+          <Image source={{ uri: item.meta.flag }} style={{ width: 20, height: 20, marginRight: 5, borderRadius: 10 }} />
+          <TextComponent
+            style={{
+              fontSize: actuatedNormalize(18),
+              color: Colors.white,
+              fontFamily: Fonts.Rubik_Regular,
+              fontWeight: '400'
+            }}>
+            {item.currency}
+          </TextComponent>
+        </View>
+
+        <TextComponent
+          style={{
+            fontSize: actuatedNormalize(20),
+            color: Colors.white,
+            fontFamily: Fonts.Rubik_Regular,
+            fontWeight: 'bold'
+          }}>
+          {item.balance}
+        </TextComponent>
+      </View>
+    )
   }
   return (
     <View style={styles.mainContainer}>
@@ -246,31 +303,20 @@ const PostLoginDashboard = ({ navigation }) => {
             />
           </TouchableOpacity>
         </View>
-        {/* <View style={styles.whiteContainer}>
-          <TextComponent
-            style={{
-              fontSize: actuatedNormalize(14),
-              color: '#6B6E67',
-              fontFamily: Fonts.Rubik_Regular,
-              marginRight: actuatedNormalize(24),
-            }}>
-            Fill your KYC Documentation
-          </TextComponent>
-          <PrimaryButtonSmall
-            primaryButtonSmallContainer={{
-              borderRadius: 5,
-              height: actuatedNormalize(36),
-              width: actuatedNormalize(110),
-            }}
-            primaryButtonSmallText={{
-              fontFamily: Fonts.Rubik_Medium,
-              fontSize: actuatedNormalize(14),
-              color: Colors.white,
-            }}
-            // onPress={() => navigation.push('DobAddress')}
-            label={'Submit KYC'}
-          />
-        </View> */}
+        {balanceloading ?
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <ActivityIndicator size={'large'} color={Colors.lightGreen} />
+          </View> :
+          balances.length > 0 ?
+            <FlatList
+              data={balances[0]}
+              keyExtractor={(x, i) => i.toString()}
+              renderItem={balancesRender}
+              horizontal={true}
+            />
+            : ""
+        }
+
       </View>
       <View style={styles.bottomLayer}>
         {/* <View
@@ -326,12 +372,13 @@ const PostLoginDashboard = ({ navigation }) => {
           <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
             <ActivityIndicator size={'large'} color={Colors.lightGreen} />
           </View> : ""}
-        <View style={{ marginLeft: 18,marginBottom:10,marginTop:10 }}>
+        <View style={{ marginLeft: 18, marginBottom: 10, marginTop: 10 }}>
           <TextComponent style={{ color: Colors.lightGreen, fontWeight: 'bold' }}>Recent Transactions</TextComponent>
         </View>
         {
           transactions.length > 0 ?
             <FlatList
+              keyExtractor={(x, i) => i.toString()}
               data={transactions}
               renderItem={({ item }) => {
 
@@ -373,7 +420,7 @@ const PostLoginDashboard = ({ navigation }) => {
                               marginTop: actuatedNormalize(5),
                               fontSize: 11
                             }}>
-                            Sent on {new Date(item.created_at).getDate() + "-" + (new Date(item.created_at).getMonth()+1) + "-" + new Date(item.created_at).getFullYear()}
+                            Sent on {new Date(item.created_at).getDate() + "-" + (new Date(item.created_at).getMonth() + 1) + "-" + new Date(item.created_at).getFullYear()}
                           </TextComponent>
                         </View>
                       </View>
@@ -437,7 +484,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   topLayer: {
-    flex: 0.25,
+    flex: 0.35,
     width: '100%',
     backgroundColor: Colors.backgroundColor,
     borderBottomStartRadius: 16,
@@ -449,14 +496,13 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   whiteContainer: {
-    width: '90%',
-    backgroundColor: Colors.white,
-    borderRadius: 10,
-    marginHorizontal: actuatedNormalize(15),
-    flexDirection: 'row',
-    paddingVertical: actuatedNormalize(10),
-    paddingHorizontal: actuatedNormalize(10),
+    width: 120,
+    height: 60,
+    borderRadius: 8,
+    marginHorizontal: actuatedNormalize(5),
     marginTop: actuatedNormalize(10),
+    marginBottom: 5,
     alignItems: 'center',
+    justifyContent: 'center',
   },
 });
