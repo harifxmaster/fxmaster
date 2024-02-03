@@ -49,7 +49,6 @@ const App = () => {
         fx_key: Constants.SUBSCRIPTION_KEY
       }
     }).then(response => {
-      console.log(response);
       setAsyncData('salutation_title', JSON.stringify(response.data.data));
     }).catch(error => {
       console.log("title"+error.response.data);

@@ -171,7 +171,6 @@ const Login = ({ navigation }) => {
           fx_key: Constants.SUBSCRIPTION_KEY
         }
       }).then(resp => {
-        console.log(resp.data.data.registration_step);
         if (resp.data.data.registration_step == 'account_preview')
           {
             setAsyncData("login_id", JSON.stringify(resp.data.data.id))
@@ -217,7 +216,6 @@ const Login = ({ navigation }) => {
       var pagename="";
       for(var d=0;d<dropresp.data.length;d++)
       {
-        console.log(dropresp.data[d]);
         if(dropresp.data[d].screen_name=="NATIONALITY_2")
         {
           setAsyncData('userid',JSON.stringify(userid))
@@ -255,7 +253,6 @@ const Login = ({ navigation }) => {
         {
           pagename = 'ApplicationPreview';
         }
-        console.log(pagename);
         if(pagename!="" && pagename!=null)
         {
           navigation.dispatch(StackActions.replace(pagename));

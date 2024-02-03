@@ -25,7 +25,7 @@ import Constants from '../constants/Constants';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const PostLoginDashboard = ({ navigation }) => {
+const PostLoginDashboard = ({ navigation, route }) => {
   let userList = [
     {
       date: 'Today',
@@ -115,6 +115,8 @@ const PostLoginDashboard = ({ navigation }) => {
   const [fromdate, setFromDate] = useState(new Date().getDate() + "-" + (+new Date().getMonth() + 1) + "-" + (+new Date().getFullYear() - 100));
   const [todate, setToDate] = useState(new Date().getDate() + "-" + (+new Date().getMonth() + 1) + "-" + new Date().getFullYear());
   const [key, setKey] = useState("");
+  const [countries, setcountries] = useState([]);
+  const [noLoading,setNoLoading] = useState(false);
   const dataref = useRef();
   useEffect(() => {
     if (dataref.current) return true;
@@ -154,42 +156,60 @@ const PostLoginDashboard = ({ navigation }) => {
   };
 
   const getData = async (pageNumber) => {
-    setLoading(true)
+    
     var login_registration_step = await AsyncStorage.getItem('login_registration_step');
     var login_id = await AsyncStorage.getItem('login_id');
     var login_token = await AsyncStorage.getItem('login_token');
     var login_workspaces_id = await AsyncStorage.getItem('login_workspaces_id');
+    const countries = await AsyncStorage.getItem('countries');
+    setcountries(countries);
     setFullName(await AsyncStorage.getItem('login_full_name'));
     if (login_id == "" || login_id == null || login_token == "" || login_token == null) {
       await AsyncStorage.clear();
       navigation.dispatch(StackActions.replace('auth'))
     }
-    else {
+    else 
+    {
       let from = fromdate.split("-")[2] + "-" + fromdate.split("-")[1] + "-" + fromdate.split("-")[0];
       let to = todate.split("-")[2] + "-" + todate.split("-")[1] + "-" + todate.split("-")[0];
-      if (!loading) {
+      if (!loading && !noLoading) {
+        setLoading(true)
         axios.get(Constants.BASE_URL + 'API-FX-124-ListTransaction?filter[workspace_id]=' + login_workspaces_id + '&page=' + pageNumber + '&from=' + from + '&to=' + to, {
           headers: {
             Authorization: "Bearer " + JSON.parse(login_token),
             fx_key: Constants.SUBSCRIPTION_KEY
           }
         }).then(resp => {
-          setTransactions((transactions) => [...transactions, ...resp.data.data])
-          setLoading(false)
+          if(resp.data.data.length==0)
+          {
+            setNoLoading(true);
+            setLoading(false)
+            return true;
+          }
+          else
+          {setTransactions((transactions) => [...transactions, ...resp.data.data])
+          setLoading(false)}
         }).catch(err => {
           console.log(err);
           setLoading(false)
         })
       }
-    }
+      else
+      {
+        setLoading(false)
+      }
   }
+}
 
   const getBalances = async () => {
 
-      setbalanceloading(true)
-      var login_workspaces_id = await AsyncStorage.getItem('login_workspaces_id');
-      var login_token = await AsyncStorage.getItem('login_token');
-      axios.get(Constants.BASE_URL + 'API-FX-161-BALANCES/' + login_workspaces_id, {
+    setbalanceloading(true)
+    var login_workspaces_id = await AsyncStorage.getItem('login_workspaces_id');
+    var login_token = await AsyncStorage.getItem('login_token');
+    if (login_workspaces_id == "" || login_workspaces_id == null)
+      navigation.dispatch(StackActions.replace('main'))
+    else {
+      await axios.get(Constants.BASE_URL + 'API-FX-161-BALANCES/' + login_workspaces_id, {
         headers: {
           Authorization: "Bearer " + JSON.parse(login_token),
           fx_key: Constants.SUBSCRIPTION_KEY
@@ -201,6 +221,7 @@ const PostLoginDashboard = ({ navigation }) => {
         console.log(err);
         setbalanceloading(false)
       })
+    }
   }
   function getDarkColor() {
     var color = '#';
@@ -213,13 +234,25 @@ const PostLoginDashboard = ({ navigation }) => {
   const logout = async () => {
     await AsyncStorage.removeItem('login_id')
     await AsyncStorage.removeItem('login_token')
+    await AsyncStorage.removeItem('login_workspaces_id')
     navigation.dispatch(StackActions.replace('auth'))
   }
+  function search(nameKey, myArray) {
+    for (let i = 0; i < myArray.length; i++) {
+      if (myArray[i].currency === nameKey) {
+        return myArray[i];
+      }
+    }
+  }
+
   const balancesRender = ({ item, index }) => {
+    let obj = search(item.currency, JSON.parse(countries));
     return (
       <View style={[styles.whiteContainer, { backgroundColor: getDarkColor() }]}>
         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-          <Image source={{ uri: item.meta.flag }} style={{ width: 20, height: 20, marginRight: 5, borderRadius: 10 }} />
+
+          <Image source={{ uri: obj.flag }} style={{ width: 20, height: 20, marginRight: 5, borderRadius: 10 }} />
+
           <TextComponent
             style={{
               fontSize: actuatedNormalize(18),
@@ -308,13 +341,65 @@ const PostLoginDashboard = ({ navigation }) => {
             <ActivityIndicator size={'large'} color={Colors.lightGreen} />
           </View> :
           balances.length > 0 ?
-            <FlatList
-              data={balances[0]}
-              keyExtractor={(x, i) => i.toString()}
-              renderItem={balancesRender}
-              horizontal={true}
-            />
-            : ""
+            balances[0].length > 0 ?
+              <FlatList
+                data={balances[0]}
+                keyExtractor={(x, i) => i.toString()}
+                renderItem={balancesRender}
+                horizontal={true}
+              />
+              :
+              <View style={[styles.whiteContainer, { backgroundColor: getDarkColor() }]}>
+                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                  <Image source={{ uri: Constants.FXMASTER_BASE_URL + "flags/UK.png" }} style={{ width: 20, height: 20, marginRight: 5, borderRadius: 10 }} />
+                  <TextComponent
+                    style={{
+                      fontSize: actuatedNormalize(18),
+                      color: Colors.white,
+                      fontFamily: Fonts.Rubik_Regular,
+                      fontWeight: '400'
+                    }}>
+                    GBP
+                  </TextComponent>
+                </View>
+
+                <TextComponent
+                  style={{
+                    fontSize: actuatedNormalize(20),
+                    color: Colors.white,
+                    fontFamily: Fonts.Rubik_Regular,
+                    fontWeight: 'bold'
+                  }}>
+                  0.00
+                </TextComponent>
+              </View>
+            :
+
+            <View style={[styles.whiteContainer, { backgroundColor: getDarkColor() }]}>
+              <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                <Image source={{ uri: Constants.FXMASTER_BASE_URL + "flags/UK.png" }} style={{ width: 20, height: 20, marginRight: 5, borderRadius: 10 }} />
+                <TextComponent
+                  style={{
+                    fontSize: actuatedNormalize(18),
+                    color: Colors.white,
+                    fontFamily: Fonts.Rubik_Regular,
+                    fontWeight: '400'
+                  }}>
+                  GBP
+                </TextComponent>
+              </View>
+
+              <TextComponent
+                style={{
+                  fontSize: actuatedNormalize(20),
+                  color: Colors.white,
+                  fontFamily: Fonts.Rubik_Regular,
+                  fontWeight: 'bold'
+                }}>
+                0.00
+              </TextComponent>
+            </View>
+
         }
 
       </View>

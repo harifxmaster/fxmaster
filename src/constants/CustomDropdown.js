@@ -92,7 +92,7 @@ const CustomDropdown = props => {
                   <Text style={styles.dropdown3BtnTxt}>
                     {selectedItem ? selectedItem.occupation : selectedOption}
                   </Text>
-                ) : selectedOption.toLowerCase() == 'receive' || selectedOption.toLowerCase() == 'send' ? (
+                ) : selectedOption.toLowerCase() == 'receive' || selectedOption.toLowerCase() == 'send' || selectedOption.toLowerCase() == 'sell' || selectedOption.toLowerCase() == 'buy' ? (
                   <Text style={styles.dropdown3BtnTxt}>
                     {selectedItem ? selectedItem.currency : selectedOption}
                   </Text>
@@ -130,7 +130,7 @@ const CustomDropdown = props => {
                   <TextComponent style={styles.listItem}>
                     {item.occupation}
                   </TextComponent>
-                ) : selectedOption.toLowerCase() == 'receive' || selectedOption.toLowerCase() == 'send' ? (
+                ) : selectedOption.toLowerCase() == 'receive' || selectedOption.toLowerCase() == 'send' || selectedOption.toLowerCase() == 'sell' || selectedOption.toLowerCase() == 'buy' ? (
 
                   <TextComponent style={[styles.listItem, { width: "100%" }]}>
                     {item.name} ({item.currency})

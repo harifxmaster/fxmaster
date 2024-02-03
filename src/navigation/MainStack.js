@@ -24,6 +24,7 @@ import SelfAccount from '../containers/SelfAccount';
 import CompanyAccount from '../containers/CompanyAccount';
 import BeneficiaryOtpScreen from '../containers/BeneficiaryOtp';
 import WebsiteView from '../containers/WebView';
+import ConvertPreview from '../containers/ConvertPreview';
 
 const Stack = createNativeStackNavigator();
 
@@ -44,6 +45,11 @@ const MainStack = () => {
         options={{ headerShown: false }}
         name="BottomTabs"
         component={BottomTabs}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="ConvertPreview"
+        component={ConvertPreview}
       />
       <Stack.Screen
         options={{ headerShown: false }}
