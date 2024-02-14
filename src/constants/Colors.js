@@ -8,5 +8,6 @@ export default {
     backgroundColor: "#dfeaf0",
     bodyBackgroundColor: "#ffffff",
     radioButton: "#5cd169",
-    lightGreen:"#95CB39"
+    lightGreen:"#95CB39",
+    backgroundColors:['#cc0033','#380096','#0d5a06','#914c08','#ad990a','#4e4a4a'],
 }

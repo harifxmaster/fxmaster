@@ -84,7 +84,8 @@ export default function ConvertPreview({ navigation, route }) {
             navigation.dispatch(StackActions.replace('BottomTabs'));
         }).catch(err=>{
             setConvertLoading(false)
-            console.log(err.response.data);
+            console.log(err);
+            Alert.alert("Convert Error",err.response.data.message);
         })
     }
     return (

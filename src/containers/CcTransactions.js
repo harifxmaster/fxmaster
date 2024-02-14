@@ -25,7 +25,7 @@ import Constants from '../constants/Constants';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const PostLoginDashboard = ({ navigation, route }) => {
+const CcTransactions = ({ navigation, route }) => {
   let userList = [
     {
       date: 'Today',
@@ -111,12 +111,8 @@ const PostLoginDashboard = ({ navigation, route }) => {
   const [loading, setLoading] = useState(false);
   const [balanceloading, setbalanceloading] = useState(false);
   const [page, setPage] = useState(0);
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [fromdate, setFromDate] = useState(new Date().getDate() + "-" + (+new Date().getMonth() + 1) + "-" + (+new Date().getFullYear() - 100));
-  const [todate, setToDate] = useState(new Date().getDate() + "-" + (+new Date().getMonth() + 1) + "-" + new Date().getFullYear());
-  const [key, setKey] = useState("");
   const [countries, setcountries] = useState([]);
-  const [noLoading,setNoLoading] = useState(false);
+  const [noLoading, setNoLoading] = useState(false);
   const dataref = useRef();
   useEffect(() => {
     if (dataref.current) return true;
@@ -128,39 +124,14 @@ const PostLoginDashboard = ({ navigation, route }) => {
     setPage(page + 1);
     getData(page + 1)
   }
-  const prevPage = async () => {
-    if (page - 1 <= 1)
-      var pagenum = 1
-    else
-      var pagenum = page - 1
-    setPage(pagenum);
-    getData(pagenum)
-  }
-  const showDatePicker = (key) => {
-    setKey(key)
-    setDatePickerVisibility(true);
-  };
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
-  };
-
-  const handleConfirm = (date) => {
-    const selectedDate = new Date(date).getDate() + "-" + (+new Date(date).getMonth() + 1) + "-" + new Date(date).getFullYear()
-    if (key == 'from')
-      setFromDate(selectedDate)
-    else
-      if (key == 'to')
-        setToDate(selectedDate)
-
-    hideDatePicker();
-  };
 
   const getData = async (pageNumber) => {
-    
+
     var login_registration_step = await AsyncStorage.getItem('login_registration_step');
     var login_id = await AsyncStorage.getItem('login_id');
     var login_token = await AsyncStorage.getItem('login_token');
     var login_workspaces_id = await AsyncStorage.getItem('login_workspaces_id');
+    console.log(login_workspaces_id);
     const countries = await AsyncStorage.getItem('countries');
     setcountries(countries);
     setFullName(await AsyncStorage.getItem('login_full_name'));
@@ -168,38 +139,37 @@ const PostLoginDashboard = ({ navigation, route }) => {
       await AsyncStorage.clear();
       navigation.dispatch(StackActions.replace('auth'))
     }
-    else 
-    {
-      let from = fromdate.split("-")[2] + "-" + fromdate.split("-")[1] + "-" + fromdate.split("-")[0];
-      let to = todate.split("-")[2] + "-" + todate.split("-")[1] + "-" + todate.split("-")[0];
+    else {
+      var from = new Date().getFullYear() + "-" + (+new Date().getMonth() + 1) + "-" + (+new Date().getDate() - 100);
+      var to = new Date().getFullYear() + "-" + (+new Date().getMonth() + 1) + "-" + new Date().getDate();
       if (!loading && !noLoading) {
         setLoading(true)
-        axios.get(Constants.BASE_URL + 'API-FX-124-ListTransaction?filter[workspace_id]=' + login_workspaces_id + '&page=' + pageNumber + '&from=' + from + '&to=' + to, {
+        axios.get(Constants.BASE_URL + 'API-FX-165-CCTRANSACTIONS/' + login_workspaces_id + '?page=' + pageNumber + '&from=' + from + '&to=' + to, {
           headers: {
             Authorization: "Bearer " + JSON.parse(login_token),
             fx_key: Constants.SUBSCRIPTION_KEY
           }
         }).then(resp => {
-          if(resp.data.data.length==0)
-          {
+          console.log(resp.data.data);
+          if (resp.data.data.length == 0) {
             setNoLoading(true);
             setLoading(false)
             return true;
           }
-          else
-          {setTransactions((transactions) => [...transactions, ...resp.data.data])
-          setLoading(false)}
+          else {
+            setTransactions((transactions) => [...transactions, ...resp.data.data])
+            setLoading(false)
+          }
         }).catch(err => {
           console.log(err);
           setLoading(false)
         })
       }
-      else
-      {
+      else {
         setLoading(false)
       }
+    }
   }
-}
 
   const getBalances = async () => {
 
@@ -223,13 +193,6 @@ const PostLoginDashboard = ({ navigation, route }) => {
       })
     }
   }
-  function getDarkColor() {
-    var color = '#';
-    for (var i = 0; i < 6; i++) {
-      color += Math.floor(Math.random() * 10);
-    }
-    return color;
-  }
 
   const logout = async () => {
     await AsyncStorage.removeItem('login_id')
@@ -247,8 +210,10 @@ const PostLoginDashboard = ({ navigation, route }) => {
 
   const balancesRender = ({ item, index }) => {
     let obj = search(item.currency, JSON.parse(countries));
+    let rand = Math.round(Math.random() * 6);
+
     return (
-      <View style={[styles.whiteContainer, { backgroundColor: getDarkColor() }]}>
+      <View style={[styles.whiteContainer, { backgroundColor: Colors.backgroundColors[index] ? Colors.backgroundColors[index] : Colors.backgroundColors[rand] }]}>
         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
 
           <Image source={{ uri: obj.flag }} style={{ width: 20, height: 20, marginRight: 5, borderRadius: 10 }} />
@@ -289,8 +254,8 @@ const PostLoginDashboard = ({ navigation, route }) => {
           }}>
           <View style={{ flexDirection: 'row' }}>
             {/* <Pressable onPress={() => navigation.push("Profile", {
-              profile: PngLocation.Profile
-            })}> */}
+                profile: PngLocation.Profile
+              })}> */}
             <Image
               source={PngLocation.Profile}
               style={{
@@ -299,15 +264,15 @@ const PostLoginDashboard = ({ navigation, route }) => {
               }}
             />
             {/* <Image
-                source={PngLocation.Edit}
-                style={{
-                  width: actuatedNormalize(16),
-                  height: actuatedNormalize(16),
-                  left: actuatedNormalize(25),
-                  position: 'absolute',
-                  top: actuatedNormalize(25),
-                }}
-              /> */}
+                  source={PngLocation.Edit}
+                  style={{
+                    width: actuatedNormalize(16),
+                    height: actuatedNormalize(16),
+                    left: actuatedNormalize(25),
+                    position: 'absolute',
+                    top: actuatedNormalize(25),
+                  }}
+                /> */}
             {/* </Pressable> */}
             <View style={{ marginLeft: actuatedNormalize(13) }}>
               <TextComponent
@@ -336,20 +301,48 @@ const PostLoginDashboard = ({ navigation, route }) => {
             />
           </TouchableOpacity>
         </View>
-        {/* {balanceloading ?
-          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-            <ActivityIndicator size={'large'} color={Colors.lightGreen} />
-          </View> :
-          balances.length > 0 ?
-            balances[0].length > 0 ?
-              <FlatList
-                data={balances[0]}
-                keyExtractor={(x, i) => i.toString()}
-                renderItem={balancesRender}
-                horizontal={true}
-              />
+
+        {
+          balanceloading ?
+            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+              <ActivityIndicator size={'large'} color={Colors.lightGreen} />
+            </View> :
+            balances.length > 0 ?
+              balances[0].length > 0 ?
+                <FlatList
+                  data={balances[0]}
+                  keyExtractor={(x, i) => i.toString()}
+                  renderItem={balancesRender}
+                  horizontal={true}
+                />
+                :
+                <View style={[styles.whiteContainer, { backgroundColor: Colors.backgroundColors[0] ? Colors.backgroundColors[0] : Colors.backgroundColors[rand] }]}>
+                  <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                    <Image source={{ uri: Constants.FXMASTER_BASE_URL + "flags/UK.png" }} style={{ width: 20, height: 20, marginRight: 5, borderRadius: 10 }} />
+                    <TextComponent
+                      style={{
+                        fontSize: actuatedNormalize(18),
+                        color: Colors.white,
+                        fontFamily: Fonts.Rubik_Regular,
+                        fontWeight: '400'
+                      }}>
+                      GBP
+                    </TextComponent>
+                  </View>
+
+                  <TextComponent
+                    style={{
+                      fontSize: actuatedNormalize(20),
+                      color: Colors.white,
+                      fontFamily: Fonts.Rubik_Regular,
+                      fontWeight: 'bold'
+                    }}>
+                    0.00
+                  </TextComponent>
+                </View>
               :
-              <View style={[styles.whiteContainer, { backgroundColor: getDarkColor() }]}>
+
+              <View style={[styles.whiteContainer, { backgroundColor: Colors.backgroundColors[0] ? Colors.backgroundColors[0] : Colors.backgroundColors[rand] }]}>
                 <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                   <Image source={{ uri: Constants.FXMASTER_BASE_URL + "flags/UK.png" }} style={{ width: 20, height: 20, marginRight: 5, borderRadius: 10 }} />
                   <TextComponent
@@ -373,86 +366,12 @@ const PostLoginDashboard = ({ navigation, route }) => {
                   0.00
                 </TextComponent>
               </View>
-            :
 
-            <View style={[styles.whiteContainer, { backgroundColor: getDarkColor() }]}>
-              <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                <Image source={{ uri: Constants.FXMASTER_BASE_URL + "flags/UK.png" }} style={{ width: 20, height: 20, marginRight: 5, borderRadius: 10 }} />
-                <TextComponent
-                  style={{
-                    fontSize: actuatedNormalize(18),
-                    color: Colors.white,
-                    fontFamily: Fonts.Rubik_Regular,
-                    fontWeight: '400'
-                  }}>
-                  GBP
-                </TextComponent>
-              </View>
 
-              <TextComponent
-                style={{
-                  fontSize: actuatedNormalize(20),
-                  color: Colors.white,
-                  fontFamily: Fonts.Rubik_Regular,
-                  fontWeight: 'bold'
-                }}>
-                0.00
-              </TextComponent>
-            </View>
-
-        } */}
+        }
 
       </View>
       <View style={styles.bottomLayer}>
-        {/* <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginTop: actuatedNormalize(43),
-            marginHorizontal: actuatedNormalize(15),
-            marginBottom: actuatedNormalize(31),
-          }}>
-          <TextComponent style={{ color: '#6B6E67' }}>
-            Transactions (Page No: {page})
-          </TextComponent>
-        </View> */}
-
-        {/* <View style={{ width: "100%", flexDirection: 'row', justifyContent: 'space-evenly', marginBottom: 10, alignItems: 'center' }}>
-          <View style={{ justifyContent: 'center', alignItems: 'center', width: "35%", }}>
-            <TextComponent>From Date</TextComponent>
-            <TouchableOpacity style={styles.datePicker} onPress={() => showDatePicker('from')}>
-              <TextComponent>{fromdate != "" && fromdate != null ? fromdate : "Select From Date"}</TextComponent>
-            </TouchableOpacity>
-          </View>
-          <View style={{ justifyContent: 'center', alignItems: 'center', width: "35%", }}>
-            <TextComponent>To Date</TextComponent>
-            <TouchableOpacity style={styles.datePicker} onPress={() => showDatePicker('to')}>
-              <TextComponent>{todate != "" && todate != null ? todate : "Select To Date"}</TextComponent>
-            </TouchableOpacity>
-          </View>
-
-          <TouchableOpacity style={{ justifyContent: 'center', alignItems: 'center', width: "10%", marginTop: 20 }} onPress={() => getData(0)}>
-            <Ionicons name={'search-circle'} size={35} color={Colors.lightGreen} />
-          </TouchableOpacity>
-        </View>
-        <DateTimePicker
-          isVisible={isDatePickerVisible}
-          mode="date"
-          onConfirm={handleConfirm}
-          onCancel={hideDatePicker}
-        /> */}
-
-
-        {/* {!loading ?
-          <View style={{ justifyContent: 'space-between', alignItems: 'center', width: "100%", flexDirection: 'row', paddingLeft: 25, paddingRight: 20 }}>
-            <Pressable onPress={prevPage}>
-              <TextComponent style={{ color: Colors.lightGreen }}>Prev</TextComponent>
-            </Pressable>
-            <Pressable onPress={nextPage}>
-              <TextComponent style={{ color: Colors.lightGreen }}>Next</TextComponent>
-            </Pressable>
-          </View>
-          : ""} */}
         {loading ?
           <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
             <ActivityIndicator size={'large'} color={Colors.lightGreen} />
@@ -467,7 +386,10 @@ const PostLoginDashboard = ({ navigation, route }) => {
               data={transactions}
               renderItem={({ item }) => {
 
-
+                const conversionCheck = item.action.includes('conversion');
+                const convertAmount = item.amount.split(",");
+                const convertAmountType = item.type.split(",");
+                const convertAmountCurrency = item.currency.split(",");
                 return (
                   <View style={{
                     flexDirection: 'row',
@@ -476,28 +398,13 @@ const PostLoginDashboard = ({ navigation, route }) => {
                     marginVertical: actuatedNormalize(15),
                     alignItems: 'center',
                   }}>
-                    {/* <Pressable
-                     onPress={() => navigation.push('TransactionDetails')}
-                     style={{
-                       flexDirection: 'row',
-                       justifyContent: 'space-between',
-                       marginHorizontal: actuatedNormalize(15),
-                       marginVertical: actuatedNormalize(15),
-                       alignItems: 'center',
-                     }}> */}
+
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: "100%", borderBottomColor: Colors.lightGrey, borderBottomWidth: 0.5, paddingBottom: 8 }}>
-                      {/* <Image
-                    source={item.image}
-                    style={{
-                      height: actuatedNormalize(42),
-                      width: actuatedNormalize(42),
-                    }}
-                  /> */}
                       <View style={{ flexDirection: 'row' }}>
                         <Ionicons name="arrow-up-circle" size={40} color={Colors.lightGrey} />
                         <View style={{ marginLeft: 5 }}>
                           <TextComponent style={{ color: Colors.black, fontWeight: 'bold' }}>
-                            {JSON.parse(item.meta).second_beneficiary_name.toUpperCase()}
+                            {conversionCheck ? "CONVERSION" : item.action.toUpperCase()}
                           </TextComponent>
                           <TextComponent
                             style={{
@@ -505,7 +412,9 @@ const PostLoginDashboard = ({ navigation, route }) => {
                               marginTop: actuatedNormalize(5),
                               fontSize: 11
                             }}>
-                            Sent on {new Date(item.created_at).getDate() + "-" + (new Date(item.created_at).getMonth() + 1) + "-" + new Date(item.created_at).getFullYear()}
+                            {conversionCheck ? "Converted on":"Sent on"} {new Date(item.created_at).getDate() + "-" + (new Date(item.created_at).getMonth() + 1) + "-" + new Date(item.created_at).getFullYear()}
+
+                            {/* | {item.status.toUpperCase()} */}
                           </TextComponent>
                         </View>
                       </View>
@@ -518,17 +427,36 @@ const PostLoginDashboard = ({ navigation, route }) => {
                             fontSize: actuatedNormalize(14),
                             alignItems: 'flex-end', justifyContent: 'flex-end'
                           }}>
-                          {JSON.parse(item.meta).recipient_amount} {JSON.parse(item.meta).exchange_currency}
+                          {conversionCheck ?
+                            convertAmountType[0] == 'credit' ? convertAmount[0] + ' ' + convertAmountCurrency[0] : ""
+                            :
+                            ""
+                          }
+                          {conversionCheck ?
+                            convertAmountType[1] == 'credit' ? convertAmount[1] + ' ' + convertAmountCurrency[1] : ""
+                            :
+                            ""
+                          }
+                          {!conversionCheck ? item.amount + " " + item.currency : ""}
                         </TextComponent>
-
                         <TextComponent
                           style={{
-                            color: "#545F7A",
-                            fontFamily: Fonts.Rubik_Medium,
-                            fontSize: actuatedNormalize(11),
-                            alignItems: 'flex-end', justifyContent: 'flex-end'
+                            color: '#545F7A',
+                            marginTop: actuatedNormalize(5),
+                            fontSize: 11
                           }}>
-                          {item.amount} {JSON.parse(item.meta).base_currency}
+
+                          {conversionCheck ?
+                            convertAmountType[0] == 'debit' ? convertAmount[0] + ' ' + convertAmountCurrency[0] : ""
+                            :
+                            ""
+                          }
+                          {conversionCheck ?
+                            convertAmountType[1] == 'debit' ? convertAmount[1] + ' ' + convertAmountCurrency[1] : ""
+                            :
+                            ""
+                          }
+
                         </TextComponent>
                       </View>
                     </View>
@@ -558,7 +486,7 @@ const PostLoginDashboard = ({ navigation, route }) => {
   );
 };
 
-export default PostLoginDashboard;
+export default CcTransactions;
 
 const styles = StyleSheet.create({
   datePicker: { width: "100%", justifyContent: 'center', alignItems: 'center', borderColor: Colors.lightGrey, borderWidth: 1, padding: 8, borderRadius: 5 },
@@ -569,7 +497,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   topLayer: {
-    flex: 0.25,
+    flex: 0.35,
     width: '100%',
     backgroundColor: Colors.backgroundColor,
     borderBottomStartRadius: 16,
