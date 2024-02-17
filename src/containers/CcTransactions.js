@@ -113,6 +113,7 @@ const CcTransactions = ({ navigation, route }) => {
   const [page, setPage] = useState(0);
   const [countries, setcountries] = useState([]);
   const [noLoading, setNoLoading] = useState(false);
+  const [senderName, setSenderName] = useState("");
   const dataref = useRef();
   useEffect(() => {
     if (dataref.current) return true;
@@ -240,6 +241,18 @@ const CcTransactions = ({ navigation, route }) => {
         </TextComponent>
       </View>
     )
+  }
+
+  const getSenderDetails = async (id) => {
+    await axios.get(Constants.BASE_URL + "API-FX-166-INBOUND-SENDER-DETAILS/" + id, {
+      headers: {
+        fx_key: Constants.SUBSCRIPTION_KEY
+      }
+    }).then(resp => {
+      setSenderName(resp.data.data.sender)
+    }).catch(err => {
+
+    })
   }
   return (
     <View style={styles.mainContainer}>
@@ -401,10 +414,20 @@ const CcTransactions = ({ navigation, route }) => {
 
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: "100%", borderBottomColor: Colors.lightGrey, borderBottomWidth: 0.5, paddingBottom: 8 }}>
                       <View style={{ flexDirection: 'row' }}>
-                        <Ionicons name="arrow-up-circle" size={40} color={Colors.lightGrey} />
+                        {item.type == 'credit' ?
+                          <Ionicons name="arrow-down-circle" size={40} color={Colors.lightGrey} />
+                          :
+                          <Ionicons name="arrow-up-circle" size={40} color={Colors.lightGrey} />
+                        }
                         <View style={{ marginLeft: 5 }}>
                           <TextComponent style={{ color: Colors.black, fontWeight: 'bold' }}>
-                            {conversionCheck ? "CONVERSION" : item.action.toUpperCase()}
+                            {conversionCheck ? "CONVERSION" :
+
+                              item.related_entity_type == 'inbound_funds' && item.sender != "" && item.sender != null ?
+                                (item.sender).split(";;")[0]
+                                :
+                                item.action.toUpperCase()
+                            }
                           </TextComponent>
                           <TextComponent
                             style={{
@@ -412,7 +435,7 @@ const CcTransactions = ({ navigation, route }) => {
                               marginTop: actuatedNormalize(5),
                               fontSize: 11
                             }}>
-                            {conversionCheck ? "Converted on":"Sent on"} {new Date(item.created_at).getDate() + "-" + (new Date(item.created_at).getMonth() + 1) + "-" + new Date(item.created_at).getFullYear()}
+                            {conversionCheck ? "Converted on" : "Sent on"} {new Date(item.created_at).getDate() + "-" + (new Date(item.created_at).getMonth() + 1) + "-" + new Date(item.created_at).getFullYear()}
 
                             {/* | {item.status.toUpperCase()} */}
                           </TextComponent>
@@ -421,12 +444,26 @@ const CcTransactions = ({ navigation, route }) => {
 
                       <View style={{ paddingRight: actuatedNormalize(8), alignItems: 'flex-end', justifyContent: 'flex-end' }}>
                         <TextComponent
-                          style={{
-                            color: Colors.black,
+                          style={item.type == 'credit' ? {
+                            color: Colors.lightGreen,
                             fontFamily: Fonts.Rubik_Medium,
                             fontSize: actuatedNormalize(14),
                             alignItems: 'flex-end', justifyContent: 'flex-end'
-                          }}>
+                          } :
+                            item.type == 'debit' ?
+                              {
+                                color: Colors.primary,
+                                fontFamily: Fonts.Rubik_Medium,
+                                fontSize: actuatedNormalize(14),
+                                alignItems: 'flex-end', justifyContent: 'flex-end'
+                              }
+                              :
+                              {
+                                color: Colors.black,
+                                fontFamily: Fonts.Rubik_Medium,
+                                fontSize: actuatedNormalize(14),
+                                alignItems: 'flex-end', justifyContent: 'flex-end'
+                              }}>
                           {conversionCheck ?
                             convertAmountType[0] == 'credit' ? convertAmount[0] + ' ' + convertAmountCurrency[0] : ""
                             :
