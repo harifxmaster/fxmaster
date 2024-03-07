@@ -55,6 +55,9 @@ const CustomDropdown = props => {
                   setAsyncData(selectedItem.id);
                   props.choosePLaceholder(selectedItem.id)
                 }
+                if (selectedOption.toLowerCase() == 'company type') {
+                  setAsyncData(selectedItem.name);
+                }
                 else
                   setAsyncData(selectedItem.id);
               }
@@ -84,7 +87,8 @@ const CustomDropdown = props => {
                   selectedOption.toLowerCase() == 'destination country' ||
                   selectedOption.toLowerCase() == 'country of residence' ||
                   selectedOption.toLowerCase() == 'nationality' ||
-                  selectedOption.toLowerCase() == 'country' ? (
+                  selectedOption.toLowerCase() == 'country' || 
+                  selectedOption.toLowerCase() == 'company type' ? (
                   <Text style={styles.dropdown3BtnTxt}>
                     {selectedItem ? selectedItem.name : selectedOption}
                   </Text>
@@ -122,7 +126,8 @@ const CustomDropdown = props => {
                   selectedOption.toLowerCase() == 'destination country' ||
                   selectedOption.toLowerCase() == 'country of residence' ||
                   selectedOption.toLowerCase() == 'nationality' ||
-                  selectedOption.toLowerCase() == 'country' ? (
+                  selectedOption.toLowerCase() == 'country' ||
+                  selectedOption.toLowerCase() == 'company type' ? (
                   <TextComponent style={styles.listItem}>
                     {item.name}
                   </TextComponent>

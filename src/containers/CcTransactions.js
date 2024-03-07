@@ -26,85 +26,6 @@ import DateTimePicker from 'react-native-modal-datetime-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const CcTransactions = ({ navigation, route }) => {
-  let userList = [
-    {
-      date: 'Today',
-      data: [
-        {
-          title: 'Dropbox',
-          subtitle: 'Standard plan fee',
-          image: PngLocation.User,
-          amount: 20,
-        },
-        {
-          title: 'Mark Roller',
-          subtitle: 'Transaction',
-          image: PngLocation.User2,
-          amount: 250,
-        },
-      ],
-    },
-
-    {
-      date: 'Dec 21',
-      data: [
-        {
-          title: 'Sheldon Nolan ||',
-          subtitle: 'Transaction',
-          image: PngLocation.User3,
-          amount: 250,
-        },
-        {
-          title: 'Eve Ferryr',
-          subtitle: 'Transaction',
-          image: PngLocation.User4,
-          amount: 250,
-        },
-      ],
-    },
-
-    {
-      date: 'Dec 20',
-      data: [
-        {
-          title: 'Shannon Rice',
-          subtitle: 'Transaction',
-          image: PngLocation.User5,
-          amount: 250,
-        },
-        {
-          title: 'Mohr',
-          subtitle: 'Transaction',
-          image: PngLocation.User6,
-          amount: 250,
-        },
-      ],
-    },
-
-    {
-      date: 'Dec 19',
-      data: [
-        {
-          title: 'Shari Hill',
-          subtitle: 'Transaction',
-          image: PngLocation.User7,
-          amount: 250,
-        },
-        {
-          title: 'Gabriel Lang',
-          subtitle: 'Transaction',
-          image: PngLocation.User8,
-          amount: 250,
-        },
-        {
-          title: 'Alexander Schmitt',
-          subtitle: 'Transaction',
-          image: PngLocation.User9,
-          amount: 250,
-        },
-      ],
-    },
-  ];
   const [transactions, setTransactions] = useState([]);
   const [balances, setBalances] = useState([]);
   const [fullName, setFullName] = useState("");
@@ -116,8 +37,8 @@ const CcTransactions = ({ navigation, route }) => {
   const [senderName, setSenderName] = useState("");
   const dataref = useRef();
   useEffect(() => {
-    if (dataref.current) return true;
-    dataref.current = true;
+    // if (dataref.current) return true;
+    // dataref.current = true;
     getData(page);
     getBalances()
   }, [])
@@ -424,9 +345,12 @@ const CcTransactions = ({ navigation, route }) => {
                             {conversionCheck ? "CONVERSION" :
 
                               item.related_entity_type == 'inbound_funds' && item.sender != "" && item.sender != null ?
-                                (item.sender).split(";;")[0]
+                                (item.sender).split(";;")[0].toUpperCase()
                                 :
-                                item.action.toUpperCase()
+                                item.transactionMeta ?
+                                  JSON.parse(item.transactionMeta).second_beneficiary_name.toUpperCase()
+                                  :
+                                  item.action.toUpperCase()
                             }
                           </TextComponent>
                           <TextComponent

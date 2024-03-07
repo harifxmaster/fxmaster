@@ -44,6 +44,7 @@ const DobAddress = ({ navigation }) => {
   const [country, setCountry] = useState("");
   const [buttonLoading, setButtonLoading] = useState("");
   const [searchFocussed, setSearchFocussed] = useState(false);
+  const [registrationType, setRegistrationType] = useState("personal");
   const addressList = [];
   const searchAddress = async () => {
     setLoading(true);
@@ -70,7 +71,7 @@ const DobAddress = ({ navigation }) => {
     const token = await AsyncStorage.getItem('registrationToken');
     const user_country_id = await AsyncStorage.getItem('user_country_id');
     const user_dob = await AsyncStorage.getItem('user_dob');
-    if (user_dob != "" && user_dob != null && addressInfo!="" && addressInfo!=null) {
+    if (user_dob != "" && user_dob != null && addressInfo != "" && addressInfo != null) {
       axios.post(Constants.BASE_URL + "API-FX-114-AddAddress", {
         "postcode": postCode,
         "house_no": houseNumber,
@@ -96,9 +97,8 @@ const DobAddress = ({ navigation }) => {
         Alert.alert("Error", error.response.data)
       })
     }
-    else
-    {
-      Alert.alert('Validation Error','Please enter DOB and Address');
+    else {
+      Alert.alert('Validation Error', 'Please enter DOB and Address');
       setButtonLoading(false)
     }
   }
@@ -147,19 +147,24 @@ const DobAddress = ({ navigation }) => {
       setAsyncData("yotisessionToken", response.data.data.sessionToken);
       setAsyncData("yotiurl", response.data.data.url);
       setButtonLoading(false)
-      axios.post(Constants.BASE_URL+"API-FX-159-DROPSCREEN",{
-        screen_name:"DOB_ADDRESS_5",
-        meta:{yotisessionID:response.data.data.sessionID,yotisessionToken:response.data.data.sessionToken,yotiurl:response.data.data.url},
+      axios.post(Constants.BASE_URL + "API-FX-159-DROPSCREEN", {
+        screen_name: "DOB_ADDRESS_5",
+        meta: { yotisessionID: response.data.data.sessionID, yotisessionToken: response.data.data.sessionToken, yotiurl: response.data.data.url,regType:registrationType },
         device_id: deviceId,
         user_id: userid
-      },{headers:{
-        fx_key:Constants.SUBSCRIPTION_KEY
-      }}).then(dropresponse=>{
+      }, {
+        headers: {
+          fx_key: Constants.SUBSCRIPTION_KEY
+        }
+      }).then(dropresponse => {
         console.log(dropresponse.data);
+        if(registrationType=='personal')
         navigation.dispatch(StackActions.replace('WebsiteView'));
-      }).catch(dropError=>{
+        else
+        navigation.dispatch(StackActions.replace('BusinessDetails'));
+      }).catch(dropError => {
         console.log(dropError);
-        Alert.alert("Dropscreen Error",dropError.response.data.message)
+        Alert.alert("Dropscreen Error", dropError.response.data.message)
       })
     }).catch(error => {
       setButtonLoading(false)
@@ -217,6 +222,12 @@ const DobAddress = ({ navigation }) => {
             : null
         } */}
         <View style={styles.buttonContainer}>
+          <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center',marginBottom:15}}>
+            <TouchableOpacity onPress={()=>setRegistrationType('personal')} style={registrationType=='personal' ? {backgroundColor:Colors.lightGreen,borderColor:Colors.lightGreen,padding:15,borderRadius:5,borderWidth:1,marginRight:5} : {borderColor:Colors.lightGreen,padding:15,borderWidth:1,borderRadius:5,marginRight:5}}><TextComponent style={registrationType=='personal' ? {color:Colors.white} : {color:Colors.black}}>Personal</TextComponent></TouchableOpacity>
+
+            <TouchableOpacity onPress={()=>setRegistrationType('business')} style={registrationType=='business' ? {backgroundColor:Colors.lightGreen,borderColor:Colors.lightGreen,padding:15,borderRadius:5,borderWidth:1} : {borderColor:Colors.lightGreen,padding:15,borderWidth:1,borderRadius:5}}><TextComponent style={registrationType=='business' ? {color:Colors.white} : {color:Colors.black}}>Business</TextComponent></TouchableOpacity>
+          </View>
+
           <PrimaryButton
             primaryButtonContainer={{ width: '100%', borderRadius: 25 }}
             primaryButtonText={{

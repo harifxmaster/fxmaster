@@ -20,6 +20,10 @@ import DocumentSelect from '../containers/DocumentSelect';
 import WebsiteView from '../containers/WebView';
 import NormalWebsiteView from '../containers/NormalWebViews';
 import ApplicationPreview from '../containers/ApplicationPreview';
+import BusinessDetails from '../containers/BusinessDetails';
+import AboutBusiness from '../containers/AboutBusiness';
+import BusinessAddress from '../containers/BusinessAddress';
+import SelectOfficer from '../containers/SelectOfficer';
 
 const Stack = createNativeStackNavigator();
 
@@ -133,6 +137,30 @@ const MainStack = () => {
         options={{ headerShown: false }}
         name="NormalWebsiteView"
         component={NormalWebsiteView}
+      />
+
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="BusinessDetails"
+        component={BusinessDetails}
+      />
+
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="AboutBusiness"
+        component={AboutBusiness}
+      />
+
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="BusinessAddress"
+        component={BusinessAddress}
+      />
+
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="SelectOfficer"
+        component={SelectOfficer}
       />
     </Stack.Navigator>
   );

@@ -247,6 +247,40 @@ const Login = ({ navigation }) => {
           setAsyncData("yotisessionID", dropresp.data[d].meta.yotisessionID);
           setAsyncData("yotisessionToken", dropresp.data[d].meta.yotisessionToken);
           setAsyncData("yotiurl", dropresp.data[d].meta.yotiurl);
+          if(dropresp.data[d].meta.yotiurl=='personal')
+          pagename = 'WebsiteView';
+          else
+          pagename = 'BusinessDetails';
+        }
+        if(dropresp.data[d].screen_name=="BUSINESS_DETAILS_6")
+        {
+          setAsyncData('activity',dropresp.data[d].meta.activity);
+          setAsyncData('turnover',dropresp.data[d].meta.turnover);
+          setAsyncData('selectedAddress',dropresp.data[d].meta.selectedAddress);
+          setAsyncData('selectedcompanyName',dropresp.data[d].meta.selectedcompanyName);
+          setAsyncData('selectedcompanyNumber',dropresp.data[d].meta.selectedcompanyNumber);
+          setAsyncData('selectedcompanyAddress',dropresp.data[d].meta.selectedcompanyAddress);
+          setAsyncData('selectedcompanyPostalCode',dropresp.data[d].meta.selectedcompanyPostalCode);
+          setAsyncData('selectedcompanyStatus',dropresp.data[d].meta.selectedcompanyStatus);
+          setAsyncData('selectedcompanyCountry',dropresp.data[d].meta.selectedcompanyCountry);
+          setAsyncData('selectedcompanyStreet',dropresp.data[d].meta.selectedcompanyStreet);
+          setAsyncData('selectedcompanyHouseNumber',dropresp.data[d].meta.selectedcompanyHouseNumber);
+          pagename = 'AboutBusiness';
+        }
+        if(dropresp.data[d].screen_name=="ABOUT_BUSINESS_7")
+        {
+          setAsyncData('businessWebsite',dropresp.data[d].meta.website);
+          setAsyncData('businessEmail',dropresp.data[d].meta.email);
+          setAsyncData('businessPhone',dropresp.data[d].meta.phone);
+          setAsyncData('businessAbout',dropresp.data[d].meta.about);
+          pagename = 'BusinessAddress';
+        }
+        if(dropresp.data[d].screen_name=="BUSINESS_ADDRESS_8")
+        {
+          pagename = 'SelectOfficer';
+        }
+        if(dropresp.data[d].screen_name=="SELECT_OFFICER_9")
+        {
           pagename = 'WebsiteView';
         }
         if(dropresp.data[d].screen_name=="YOTI_COMPLETED_6")
