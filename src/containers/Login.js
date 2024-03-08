@@ -54,7 +54,7 @@ const Login = ({ navigation }) => {
     }
     if ( login_id != "" && login_id != null && login_token != "" && login_token != null) {
       
-      navigation.dispatch(StackActions.replace('main'))
+      // navigation.dispatch(StackActions.replace('main'))
     }
     else {
       //navigate to registration flow

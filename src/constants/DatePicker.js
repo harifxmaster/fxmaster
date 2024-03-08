@@ -29,7 +29,7 @@ const DatePicker = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
-    for (let i = dayjs().year(); i > dayjs().year() - 50; i--) {
+    for (let i = dayjs().year(); i > dayjs().year() - 75; i--) {
       setArr((prev) => [...prev, i]);
     }
   }, []);

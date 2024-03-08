@@ -167,7 +167,7 @@ const BusinessAddress = ({ navigation }) => {
                     onPress={() => {
                         navigation.goBack()
                     }}>
-                    <Ionicons color={Colors.black} name="arrow-back-outline" size={30} />
+                    {/* <Ionicons color={Colors.black} name="arrow-back-outline" size={30} /> */}
                 </Pressable>
             <ScrollView contentContainerStyle={styles.centerBg} style={{}}>
                 <TextComponent style={styles.title}>Add Address</TextComponent>

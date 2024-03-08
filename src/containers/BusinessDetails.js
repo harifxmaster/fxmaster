@@ -132,7 +132,7 @@ const BusinessDetails = ({ navigation }) => {
             else
               navigation.goBack()
           }}>
-          <Ionicons color={Colors.black} name="arrow-back-outline" size={30} />
+          {/* <Ionicons color={Colors.black} name="arrow-back-outline" size={30} /> */}
         </Pressable>
       </View>
       <View style={styles.centerBg}>

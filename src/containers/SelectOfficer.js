@@ -137,7 +137,7 @@ const SelectOfficer = ({ navigation }) => {
                 onPress={() => {
                     navigation.goBack()
                 }}>
-                <Ionicons color={Colors.black} name="arrow-back-outline" size={30} />
+                {/* <Ionicons color={Colors.black} name="arrow-back-outline" size={30} /> */}
             </Pressable>
             <View style={styles.centerBg} >
                 <TextComponent style={styles.title}>Select Officer</TextComponent>
