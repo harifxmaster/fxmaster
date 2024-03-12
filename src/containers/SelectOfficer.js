@@ -74,32 +74,30 @@ const SelectOfficer = ({ navigation }) => {
             }
         }).then(resp => {
             setButtonLoading(false);
-           
+            axios.post(Constants.BASE_URL + "API-FX-159-DROPSCREEN", {
+                screen_name: "SELECT_OFFICER_9",
+                meta: { firstName: firstName, lastName: lastName, dateOfBirth: dateOfBirth, role: role,joiningDate:joiningDate },
+                device_id: deviceId,
+                user_id: userid
+            }, {
+                headers: {
+                    fx_key: Constants.SUBSCRIPTION_KEY
+                }
+            }).then(dropresponse => {
+                setButtonLoading(false);
+                navigation.dispatch(StackActions.replace('WebsiteView'));
+                
+            }).catch(dropError => {
+                setButtonLoading(false);
+                console.log(dropError);
+                Alert.alert("Dropscreen Error", dropError.response.data.message)
+            })
+            
         }).catch(err => {
             setButtonLoading(false);
             console.log(err);
             Alert.alert("Error", err.response.data.message)
-        })
-
-        await axios.post(Constants.BASE_URL + "API-FX-159-DROPSCREEN", {
-            screen_name: "SELECT_OFFICER_9",
-            meta: { firstName: firstName, lastName: lastName, dateOfBirth: dateOfBirth, role: role,joiningDate:joiningDate },
-            device_id: deviceId,
-            user_id: userid
-        }, {
-            headers: {
-                fx_key: Constants.SUBSCRIPTION_KEY
-            }
-        }).then(dropresponse => {
-            setButtonLoading(false);
-            navigation.dispatch(StackActions.replace('WebsiteView'));
-            
-        }).catch(dropError => {
-            setButtonLoading(false);
-            console.log(dropError);
-            Alert.alert("Dropscreen Error", dropError.response.data.message)
-        })
-        
+        })  
 
     }
     const loadData = async () => {

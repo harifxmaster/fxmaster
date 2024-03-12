@@ -106,7 +106,7 @@ const BusinessDetails = ({ navigation }) => {
       }
     }).then(dropresponse => {
       setButtonLoading(false);
-      navigation.dispatch(StackActions.replace('AboutBusiness'));
+      navigation.navigate('AboutBusiness');
     }).catch(dropError => {
       setButtonLoading(false);
       console.log(dropError);
@@ -182,6 +182,7 @@ const BusinessDetails = ({ navigation }) => {
           borderWidth={1}
           onChangeText={(value) => setTurnover(value)}
           borderColor={Colors.lightGrey}
+          keyboardType='numeric'
         />
 
         <View style={styles.buttonContainer}>

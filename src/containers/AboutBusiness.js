@@ -51,6 +51,8 @@ const AboutBusiness = ({ navigation }) => {
         const selectedcompanyPostalCode = await AsyncStorage.getItem('selectedcompanyPostalCode');
         const selectedcompanyCountry = await AsyncStorage.getItem('selectedcompanyCountry');
         const selectedcompanyStatus = await AsyncStorage.getItem('selectedcompanyStatus');
+        await AsyncStorage.setItem('businessEmail',email);
+        await AsyncStorage.setItem('businessPhone',phone);
         var deviceId = await AsyncStorage.getItem('deviceid');
         var userid = await AsyncStorage.getItem('userid');
         await axios.post(Constants.BASE_URL + "API-FX-175-BUSINESS-REGISTRATION-COMPANY-DETAILS",{
@@ -116,7 +118,7 @@ const AboutBusiness = ({ navigation }) => {
                         else
                             navigation.goBack()
                     }}>
-                    {/* <Ionicons color={Colors.black} name="arrow-back-outline" size={30} /> */}
+                    <Ionicons color={Colors.black} name="arrow-back-outline" size={30} />
                 </Pressable>
             </View>
             <View style={styles.centerBg}>
@@ -169,6 +171,7 @@ const AboutBusiness = ({ navigation }) => {
                     borderWidth={1}
                     onChangeText={(value) => setPhone(value)}
                     borderColor={Colors.lightGrey}
+                    keyboardType='numeric'
                 />
 
                 <Input
