@@ -37,8 +37,8 @@ const CcTransactions = ({ navigation, route }) => {
   const [senderName, setSenderName] = useState("");
   const dataref = useRef();
   useEffect(() => {
-    // if (dataref.current) return true;
-    // dataref.current = true;
+    if (dataref.current) return true;
+    dataref.current = true;
     getData(page);
     getBalances()
   }, [])
@@ -143,9 +143,9 @@ const CcTransactions = ({ navigation, route }) => {
           <TextComponent
             style={{
               fontSize: actuatedNormalize(18),
-              color: Colors.white,
+              color: Colors.tintGrey,
               fontFamily: Fonts.Rubik_Regular,
-              fontWeight: '400'
+              fontWeight: 'bold'
             }}>
             {item.currency}
           </TextComponent>
@@ -154,7 +154,7 @@ const CcTransactions = ({ navigation, route }) => {
         <TextComponent
           style={{
             fontSize: actuatedNormalize(20),
-            color: Colors.white,
+            color: Colors.tintGrey,
             fontFamily: Fonts.Rubik_Regular,
             fontWeight: 'bold'
           }}>
@@ -282,7 +282,7 @@ const CcTransactions = ({ navigation, route }) => {
                   <TextComponent
                     style={{
                       fontSize: actuatedNormalize(18),
-                      color: Colors.white,
+                      color: Colors.lightGreen,
                       fontFamily: Fonts.Rubik_Regular,
                       fontWeight: '400'
                     }}>
@@ -336,9 +336,9 @@ const CcTransactions = ({ navigation, route }) => {
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: "100%", borderBottomColor: Colors.lightGrey, borderBottomWidth: 0.5, paddingBottom: 8 }}>
                       <View style={{ flexDirection: 'row' }}>
                         {item.type == 'credit' ?
-                          <Ionicons name="arrow-down-circle" size={40} color={Colors.lightGrey} />
+                          <Ionicons name="arrow-down-circle" size={40} color={Colors.lighBlue} />
                           :
-                          <Ionicons name="arrow-up-circle" size={40} color={Colors.lightGrey} />
+                          <Ionicons name="arrow-up-circle" size={40} color={Colors.lighBlue} />
                         }
                         <View style={{ marginLeft: 5 }}>
                           <TextComponent style={{ color: Colors.black, fontWeight: 'bold' }}>
@@ -369,14 +369,14 @@ const CcTransactions = ({ navigation, route }) => {
                       <View style={{ paddingRight: actuatedNormalize(8), alignItems: 'flex-end', justifyContent: 'flex-end' }}>
                         <TextComponent
                           style={item.type == 'credit' ? {
-                            color: Colors.lightGreen,
+                            color: Colors.lighBlue,
                             fontFamily: Fonts.Rubik_Medium,
                             fontSize: actuatedNormalize(14),
                             alignItems: 'flex-end', justifyContent: 'flex-end'
                           } :
                             item.type == 'debit' ?
                               {
-                                color: Colors.primary,
+                                color: Colors.lighBlue,
                                 fontFamily: Fonts.Rubik_Medium,
                                 fontSize: actuatedNormalize(14),
                                 alignItems: 'flex-end', justifyContent: 'flex-end'

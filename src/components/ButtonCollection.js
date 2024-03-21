@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     primaryButtonText: {
         fontFamily: Fonts.Rubik_Regular,
         fontSize: actuatedNormalize(12),
-        color: "#F5F5F5"
+        color: Colors.white
     },
     primaryButtonSmallContainer: {
         width: "50%",
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     primaryButtonSmallText: {
         fontFamily: Fonts.Rubik_Regular,
         fontSize: actuatedNormalize(12),
-        color: "#F5F5F5"
+        color: Colors.white
     }
 
 })

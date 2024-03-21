@@ -288,11 +288,12 @@ const DobAddress = ({ navigation }) => {
                 onBlur={() => setSearchFocussed(false)}
               />
               <PrimaryButton
-                primaryButtonContainer={{ borderRadius: 25, width: "22%", marginTop: actuatedNormalize(20), marginLeft: 10 }}
+                primaryButtonContainer={{ borderRadius: 25, width: "22%", marginTop: actuatedNormalize(20), marginLeft: 10,backgroundColor: Colors.smokeWhite }}
                 primaryButtonText={{
                   fontFamily: Fonts.Rubik_Medium,
                   fontSize: actuatedNormalize(14),
-                  color: Colors.white,
+                  color: Colors.black,
+                  backgroundColor: Colors.smokeWhite
                 }}
                 onPress={() => searchAddress()}
                 label={'Search'}
