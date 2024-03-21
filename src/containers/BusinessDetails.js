@@ -152,7 +152,7 @@ const BusinessDetails = ({ navigation }) => {
         <TouchableOpacity
           onPress={() => setVisible(true)}
           style={styles.button}>
-          <TextComponent style={styles.buttonText}>{selectedcompanyName === "" ? "+ Company Name" : selectedcompanyName}</TextComponent>
+          <TextComponent style={styles.buttonText}>{selectedcompanyName === "" ? "+ Company Name *" : selectedcompanyName}</TextComponent>
         </TouchableOpacity>
         <Input
           value={activity}
@@ -177,7 +177,7 @@ const BusinessDetails = ({ navigation }) => {
           multiline={false}
           errorView={[styles.viewStyle, { marginTop: actuatedNormalize(10) }]}
           textstyle={styles.textInput}
-          placeholder={'Enter Your Expected TurnOver Per Annum'}
+          placeholder={'Enter Your Expected TurnOver Per Annum *'}
           maxLength={50}
           borderWidth={1}
           onChangeText={(value) => setTurnover(value)}

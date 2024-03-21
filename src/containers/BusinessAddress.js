@@ -184,7 +184,7 @@ const BusinessAddress = ({ navigation }) => {
                     viewstyle={[styles.button, { marginTop: actuatedNormalize(20) }]}
                     multiline={false}
                     textstyle={styles.textInput}
-                    placeholder={'+ Add Private Address'}
+                    placeholder={'+ Add Private Address *'}
                     maxLength={50}
                     borderWidth={0}
                     onChangeText={(value) => setPrivateAddress(value)}
@@ -219,7 +219,7 @@ const BusinessAddress = ({ navigation }) => {
                     multiline={false}
                     errorView={[styles.viewStyle, { marginTop: actuatedNormalize(10) }]}
                     textstyle={styles.textInput}
-                    placeholder={'+ Add Shipping Address'}
+                    placeholder={'+ Add Shipping Address *'}
                     maxLength={50}
                     borderWidth={1}
                     onChangeText={(value) => setShippingAddress(value)}
@@ -254,7 +254,7 @@ const BusinessAddress = ({ navigation }) => {
                     multiline={false}
                     errorView={[styles.viewStyle, { marginTop: actuatedNormalize(10) }]}
                     textstyle={styles.textInput}
-                    placeholder={'+ Add Invoice Address'}
+                    placeholder={'+ Add Invoice Address *'}
                     maxLength={50}
                     borderWidth={1}
                     onChangeText={(value) => setInvoiceAddress(value)}
@@ -289,7 +289,7 @@ const BusinessAddress = ({ navigation }) => {
                     multiline={false}
                     errorView={[styles.viewStyle, { marginTop: actuatedNormalize(10) }]}
                     textstyle={styles.textInput}
-                    placeholder={'+ Add Correspondence Address'}
+                    placeholder={'+ Add Correspondence Address *'}
                     borderWidth={1}
                     onChangeText={(value) => setCorrespondenceAddress(value)}
                     borderColor={Colors.lightGrey}

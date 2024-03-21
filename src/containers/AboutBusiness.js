@@ -136,7 +136,7 @@ const AboutBusiness = ({ navigation }) => {
                     multiline={false}
                     errorView={[styles.viewStyle, { marginTop: actuatedNormalize(10) }]}
                     textstyle={styles.textInput}
-                    placeholder={'Company Website'}
+                    placeholder={'Company Website *'}
                     maxLength={50}
                     borderWidth={1}
                     onChangeText={(value) => setWebsite(value)}
@@ -151,7 +151,7 @@ const AboutBusiness = ({ navigation }) => {
                     multiline={false}
                     errorView={[styles.viewStyle, { marginTop: actuatedNormalize(10) }]}
                     textstyle={styles.textInput}
-                    placeholder={'Company Email'}
+                    placeholder={'Company Email *'}
                     maxLength={50}
                     borderWidth={1}
                     onChangeText={(value) => setEmail(value)}
@@ -166,7 +166,7 @@ const AboutBusiness = ({ navigation }) => {
                     multiline={false}
                     errorView={[styles.viewStyle, { marginTop: actuatedNormalize(10) }]}
                     textstyle={styles.textInput}
-                    placeholder={'Company Phone'}
+                    placeholder={'Company Phone *'}
                     maxLength={50}
                     borderWidth={1}
                     onChangeText={(value) => setPhone(value)}

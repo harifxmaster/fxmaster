@@ -39,7 +39,7 @@ const SelectOfficer = ({ navigation }) => {
     const [dateOfBirth, setdateOfBirth] = useState("");
     const [role, setrole] = useState("");
     const [joiningDate, setjoiningDate] = useState("");
-    const [selectedOfficer, setselectedOfficer] = useState("");
+    const [selectedOfficer, setselectedOfficer] = useState();
     const [data, setData] = useState([]);
 
     const submitData = async () => {
@@ -103,8 +103,8 @@ const SelectOfficer = ({ navigation }) => {
     const loadData = async () => {
         setloading(true)
         const token = await AsyncStorage.getItem('registrationToken');
-        // const regNumber = await AsyncStorage.getItem('selectedcompanyNumber');
-        const regNumber = "04631206";
+        const regNumber = await AsyncStorage.getItem('selectedcompanyNumber');
+        // const regNumber = "04631206";
         console.log(Constants.BASE_URL + "API-FX-170-COMPANY-OFFICERS?number=" + regNumber);
         await axios.get(Constants.BASE_URL + "API-FX-170-COMPANY-OFFICERS?number=" + regNumber, {
             headers: {
